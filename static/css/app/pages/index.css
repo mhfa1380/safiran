@@ -1,0 +1,188 @@
+/**
+ * صفحه اصلی - index
+ * استایل‌های اختصاصی صفحه اول (بنر، فیچرها، اخبار، خدمات)
+ */
+
+/* بنر */
+.index_banner { direction: rtl; text-align: right; }
+.index_banner .banner_text_iner { max-width: 540px; }
+.index_banner .btn_2 { margin-right: 0.75rem; }
+
+/* فیچر کشورها */
+.index_feature { direction: rtl; }
+.index_feature .single_feature_part p,
+.index_feature .single_feature_text p { text-align: right; }
+
+/* بخش «درباره ما» */
+.index_learning { direction: rtl; }
+.index_learning .learning_member_text { text-align: right; }
+.index_learning .learning_member_text ul { padding-right: 1.5rem; list-style: none; }
+.index_learning .learning_member_text ul li { position: relative; padding-right: 2rem; padding-left: 0; }
+.index_learning .learning_member_text ul li span { right: 0; left: auto; margin-right: 0; margin-top: -8px; }
+
+/* --- بخش اخبار موسسه (صفحه اول) - مثل صفحه رشته‌ها --- */
+.index_blog {
+    direction: rtl;
+    padding: 60px 0;
+    background-color: #f7f9fc;
+}
+.index_blog_intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.index_blog_title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f2137;
+    margin: 0;
+}
+.index_blog_btn {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+}
+
+/* کارت اخبار - استایل مشابه major-card */
+.index_blog_card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px rgba(15, 35, 95, 0.12);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    height: 100%;
+}
+.index_blog_card__image-link {
+    display: block;
+    overflow: hidden;
+    line-height: 0;
+    position: relative;
+}
+.index_blog_card__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.index_blog_card__image-link:hover .index_blog_card__image {
+    transform: scale(1.05);
+}
+.index_blog_card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(15, 35, 95, 0.18);
+}
+.index_blog_card__badge {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+.index_blog_card__header {
+    padding: 1.5rem 1.5rem 0.75rem;
+    border-bottom: 1px solid #edeff2;
+    text-align: right;
+}
+.index_blog_card__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+.index_blog_card__title a {
+    color: #0f2137;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.index_blog_card__title a:hover {
+    color: var(--color-primary-light);
+}
+.index_blog_card__date {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+.index_blog_card__body {
+    padding: 1rem 1.5rem 1.5rem;
+    flex: 1;
+    text-align: right;
+}
+.index_blog_card__desc {
+    font-size: 0.9rem;
+    color: #4a4a4a;
+    line-height: 1.7;
+    text-align: justify;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.index_blog_card__footer {
+    padding: 10px 1.5rem 1.25rem;
+    border-top: 1px solid #edeff2;
+    text-align: right;
+}
+.index_blog_card__footer .btn_2 {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+/* بخش خدمات صفحه اول */
+.index_services { direction: rtl; }
+.index_services .feature_box { text-align: center; }
+.index_services .feature_box p { text-align: center; }
+
+/* شمارنده‌های صفحه اول */
+.member_counter .single_member_counter h3 {
+    color: #ffffff;
+}
+
+/* دکمه‌ها و فاصله‌ها */
+.index_btn { padding: 10px 24px; font-size: 13px; border-radius: 50px; }
+.index_banner .btn_1,
+.index_banner .btn_2 { padding: 10px 24px; font-size: 13px; }
+.index_learning .btn_1,
+.index_feature .btn_1 { padding: 10px 24px; font-size: 13px; }
+.index_feature_row { direction: rtl; }
+.index_feature_title { text-align: right; }
+.index_feature_btn { float: right; }
+.index_blog_margin { margin-top: 5.5rem; }
+.index_services_margin { margin-top: -7rem; }
+
+@media (max-width: 576px) {
+    .index_banner .banner_text_iner { max-width: 100%; padding: 0 16px !important; }
+    .index_banner .banner_text { justify-content: flex-end; align-items: flex-end; }
+    .index_banner .btn_1,
+    .index_banner .btn_2 { font-size: 12px; padding: 8px 16px; }
+}
+
+@media (max-width: 767.98px) {
+    .index_banner .banner_text_iner { max-width: 100%; padding: 0 20px !important; }
+}
+
+@media (max-width: 991px) {
+    .index_banner .banner_text_iner { max-width: 100%; }
+}
+
+@media (max-width: 767.98px) {
+    .index_blog { padding: 40px 0; }
+    .index_blog_title { font-size: 1.35rem; }
+    .index_blog_card__header,
+    .index_blog_card__body { padding: 1rem 1.25rem; }
+    .index_blog_card__title { font-size: 1rem; }
+    .index_blog_card__image { height: 180px; }
+}
+
+@media (max-width: 576px) {
+    .index_blog { padding: 2rem 0; }
+    .index_blog_title { font-size: 1.2rem; }
+}
+

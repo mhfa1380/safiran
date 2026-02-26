@@ -1,0 +1,594 @@
+/**
+ * صفحات دانشگاه‌ها - schools list & detail
+ */
+/* Schools list */
+.schools_list_area {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background-color: #f7f9fc;
+}
+.schools_list_area .filter-card {
+    border-radius: 16px;
+    border: 1px solid #e3e6ef;
+    box-shadow: 0 10px 30px rgba(12, 46, 96, 0.06);
+}
+.schools-filter-select,
+.schools-filter-input {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 17px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.schools-filter-select { cursor: pointer; }
+
+/* Schools list - کارت‌های مدرن، هر دانشگاه یک ردیف با عکس و توضیحات */
+.schools_list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.uni-card {
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
+    overflow: hidden;
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.uni-card:hover {
+    box-shadow: 0 16px 48px rgba(15, 35, 95, 0.14);
+    transform: translateY(-4px);
+}
+.uni-card__image {
+    flex-shrink: 0;
+    width: 320px;
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+.uni-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.uni-card:hover .uni-card__image img {
+    transform: scale(1.06);
+}
+.uni-card__country {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+.uni-card__body {
+    flex: 1;
+    padding: 2rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: right;
+    min-width: 0;
+}
+.uni-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+.uni-card__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.uni-card__meta i { font-size: 1rem; opacity: 0.8; }
+.uni-card__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 0.35rem 0;
+    line-height: 1.4;
+}
+.uni-card__title a {
+    color: #0f2137;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.uni-card__title a:hover { color: var(--color-primary-light); }
+.uni-card__subtitle {
+    font-size: 0.95rem;
+    color: #8a8a8a;
+    margin: 0 0 1rem 0;
+}
+.uni-card__desc {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: #4a4a4a;
+    margin: 0 0 1.25rem 0;
+}
+.uni-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.uni-card__badge {
+    font-size: 0.8rem;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+.uni-card__badge--science {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+.uni-card__badge--health {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+.uni-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.uni-card__btn {
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+@media (max-width: 991.98px) {
+    .uni-card__image { width: 260px; height: 180px; }
+    .uni-card__body { padding: 1.5rem 1.75rem; }
+    .uni-card__title { font-size: 1.25rem; }
+}
+/* Intro - متن و دکمه‌ها در یک ردیف */
+.schools_intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+.schools_intro_text {
+    flex: 1;
+    min-width: 280px;
+    margin: 0;
+    text-align: justify;
+    line-height: 1.7;
+    color: #4a4a4a;
+}
+.schools_intro_actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+.schools_consult_btn {
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+.schools_filter_toggle_btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+.schools_filter_toggle_btn .ti-filter { font-size: 0.9rem; }
+.schools_filter_wrap {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 1.5rem;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+.schools_filter_wrap.is_open {
+    max-height: 800px;
+    opacity: 1;
+}
+.schools_filter_wrap .filter-card { margin-top: 0; }
+.schools_filter_form { text-align: right; background-color: #fff; }
+.schools_btn_minwidth {
+    min-width: 140px;
+    padding: 8px 18px !important;
+    font-size: 0.9rem !important;
+}
+.schools_list .schools_empty_center {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    margin: 0;
+    color: #6c757d;
+}
+
+/* Consult modal */
+.consult-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.4);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.consult-modal.show { display: flex; }
+.consult-modal__box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    text-align: right;
+    position: relative;
+}
+.consult-modal__title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+.consult-modal__uni { font-size: 0.9rem; color: #0c2340; margin-bottom: 0.75rem; }
+.consult-modal__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #e8f5e9;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #2e7d32;
+}
+.consult-modal__phone a { color: inherit; text-decoration: none; }
+.consult-modal .form-control { font-size: 0.9rem; }
+.consult-modal .btn_1 { padding: 8px 24px; font-size: 0.9rem; width: 100%; }
+.consult-modal__close {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #6c757d;
+}
+.consult-modal__close:hover { color: #000; }
+.consult-modal__success { color: #2e7d32; font-weight: 500; display: none; }
+.consult-modal__success.show { display: block; }
+.consult-modal__form.hide { display: none; }
+.consult-modal__hint { font-size: 0.85rem; color: #6c757d; margin-bottom: 1rem; }
+
+@media (max-width: 767.98px) {
+    .schools_list_area { padding-top: 40px; padding-bottom: 40px; }
+    .schools_intro {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .schools_intro_text { min-width: 100%; }
+    .schools_intro_actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .uni-card {
+        flex-direction: column;
+    }
+    .uni-card__image {
+        width: 100%;
+        height: 200px;
+    }
+    .uni-card__body {
+        padding: 1.5rem 1.25rem;
+    }
+    .uni-card__title { font-size: 1.2rem; }
+    .uni-card__desc { font-size: 0.9rem; margin-bottom: 1rem; }
+    .uni-card__actions {
+        flex-direction: column;
+    }
+    .uni-card__btn { width: 100%; text-align: center; }
+}
+
+/* School detail - طراحی مینیمال و شیک */
+.school-detail {
+    padding-top: 40px;
+    padding-bottom: 70px;
+    background: #f8fafc;
+}
+.school-detail__hero {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.06);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+.school-detail__hero-img {
+    height: 280px;
+    overflow: hidden;
+    position: relative;
+}
+.school-detail__hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.school-detail__hero-badge {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+.school-detail__hero-body {
+    padding: 2rem 2.25rem;
+    text-align: right;
+}
+.school-detail__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0f2137;
+    margin: 0 0 0.35rem 0;
+    line-height: 1.4;
+}
+.school-detail__subtitle {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin: 0 0 1.25rem 0;
+}
+.school-detail__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2rem;
+}
+.school-detail__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #495057;
+}
+.school-detail__icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: #0c2e60;
+    opacity: 0.85;
+}
+.school-detail__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+}
+.school-detail__badge {
+    font-size: 0.8rem;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+.school-detail__badge--science {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+.school-detail__badge--health {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+.school-detail__section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0f2137;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid #e8eef5;
+    text-align: right;
+}
+.school-detail__gallery { margin-bottom: 2.5rem; }
+.school-detail__gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+.school-detail__gallery-item {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    aspect-ratio: 4/3;
+}
+.school-detail__gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+.school-detail__gallery-item:hover img { transform: scale(1.06); }
+.school-detail__gallery-item figcaption {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-align: right;
+}
+.school-detail__block {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(15, 35, 95, 0.05);
+    margin-bottom: 1.5rem;
+}
+.school-detail__block-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; color: #0f2137; }
+.school-detail__block-content {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: #4a4a4a;
+    text-align: right;
+    direction: rtl;
+}
+.school-detail__block-content.ck-content,
+.school-detail__block-content .ck-content { text-align: right; }
+.school-detail__block-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 0.85rem 0;
+}
+.school-detail__sidebar {
+    position: sticky;
+    top: 100px;
+    direction: rtl;
+    text-align: right;
+}
+.school-detail__card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(15, 35, 95, 0.05);
+    margin-bottom: 1.25rem;
+    text-align: right;
+}
+.school-detail__card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #0f2137;
+    text-align: right;
+}
+.school-detail__card_desc {
+    font-size: 0.9rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    text-align: right;
+}
+.school-detail__btn-consult {
+    display: block;
+    text-align: center;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+.school-detail__share {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+.school-detail__share a {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f4f9;
+    color: #495057;
+    transition: all 0.2s;
+}
+.school-detail__share a:hover { transform: translateY(-1px); }
+.school-detail__share a svg { width: 14px; height: 14px; }
+.school-detail__share a[href*="wa.me"]:hover { background: #25D366; color: #fff; }
+.school-detail__share a[href*="t.me"]:hover { background: #0088cc; color: #fff; }
+.school-detail__share a[href*="twitter"]:hover,
+.school-detail__share a[href*="x.com"]:hover { background: #000; color: #fff; }
+.school-detail__share a[href^="mailto"]:hover { background: #ea4335; color: #fff; }
+.school-detail__share a.school-detail__share-print:hover { background: #6c757d; color: #fff; }
+.school-detail__share a.school-detail__share-print { cursor: pointer; }
+.school-detail .btn_1,
+.school-detail .btn_2 { padding: 8px 18px; font-size: 0.9rem; border-radius: 8px; }
+.school-detail__related-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(15, 35, 95, 0.06);
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+.school-detail__related-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(15, 35, 95, 0.1);
+}
+.school-detail__related-card img { width: 100%; height: 100%; object-fit: cover; }
+.school-detail__related-card .card-img-wrap { height: 100px; overflow: hidden; }
+.school-detail__related-card .card-body {
+    padding: 1rem;
+    text-align: right;
+}
+.school-detail__related-card h5 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #0f2137;
+}
+.school-detail__related-card p {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin: 0;
+}
+.school-detail__contact-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+    font-size: 0.9rem;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+.school-detail__contact-row:last-child { margin-bottom: 0; }
+.school-detail__contact-row a {
+    color: #0c2e60;
+    text-decoration: none;
+}
+.school-detail__contact-row a:hover { text-decoration: underline; }
+.school-detail__contact-row .school-detail__icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: #0c2e60;
+    opacity: 0.8;
+}
+.school-detail__website_link {
+    display: block;
+    word-break: break-all;
+    font-size: 0.9rem;
+    color: #0c2e60;
+    text-decoration: none;
+    text-align: right;
+}
+.school-detail__website_link:hover { text-decoration: underline; }
+
+@media (max-width: 767px) {
+    .school-detail__hero-img { height: 220px; }
+    .school-detail__hero-body { padding: 1.25rem; }
+    .school-detail__gallery-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media print {
+    .main_menu, .footer-area, .breadcrumb, .school-detail__sidebar,
+    .school-detail__share, .btn_2, .btn_1 { display: none !important; }
+    .school-detail, .course-detail, .major-detail { background: #fff; padding: 0; }
+    .school-detail__hero, .school-detail__block, .school-detail__card,
+    .course-detail__syllabus-item, .course-detail__video-wrap { box-shadow: none; border: 1px solid #eee; }
+}
+
+

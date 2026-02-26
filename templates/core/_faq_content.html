@@ -1,0 +1,33 @@
+{% if faqs %}
+    <div class="faq_accordion">
+        {% for faq in faqs %}
+            <div class="faq_item{% if forloop.first %} active{% endif %}">
+                <button type="button" class="faq_trigger" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" data-faq-toggle>
+                    <span>{{ faq.question }}</span>
+                    <span class="faq_icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq_body">
+                    <div class="faq_content">
+                        {{ faq.answer|linebreaks }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="faq_cta">
+        پاسخ سوال خود را پیدا نکردید؟
+        <a href="{% url 'evaluation' %}">فرم ارزیابی</a>،
+        <a href="{% url 'contact' %}">تماس با ما</a> یا
+        <a href="{% url 'appointment' %}">رزرو مشاوره</a>
+    </div>
+{% else %}
+    <div class="faq_accordion">
+        <div class="faq_empty">
+            {% if search_q %}
+                نتیجه‌ای برای «{{ search_q }}» یافت نشد. عبارت دیگری جستجو کنید یا با ما تماس بگیرید.
+            {% else %}
+                در حال حاضر سوالی ثبت نشده است. با ما تماس بگیرید.
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

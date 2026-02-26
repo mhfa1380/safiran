@@ -1,0 +1,87 @@
+/**
+ * variables.css - سیستم تم‌پذیری سایت
+ *
+ * نحوه استفاده:
+ * ۱. تغییر تم: به تگ <html> مقدار data-theme="نام-تم" بدهید.
+ *    مثال: <html data-theme="dark">
+ *
+ * ۲. افزودن تم جدید: در static/css/app/themes/ فایل theme-نام.css بسازید
+ *    و متغیرهای مورد نظر را override کنید. فایل را در base.html بعد از
+ *    variables.css و قبل از base.css لود کنید.
+ *
+ * ۳. در CSS از var(--color-primary) و سایر متغیرها استفاده کنید.
+ *
+ * عملکرد: بدون تاثیر منفی روی سرعت (متغیرهای CSS سبک و کش‌شونده هستند).
+ */
+:root {
+  /* === رنگ‌های اصلی (Primary) === */
+  --color-primary: #0c2e60;
+  --color-primary-dark: #002147;
+  --color-primary-darker: #02244b;
+  --color-primary-light: #2e65a5;
+  --color-primary-lighter: #285b98;
+
+  /* === رنگ تاکید (Accent) === */
+  --color-accent: #ff663b;
+  --color-accent-hover: #ee390f;
+  --color-accent-rgb: 255, 102, 59;
+
+  /* === متن === */
+  --color-text: #555555;
+  --color-text-muted: #444444;
+  --color-text-dark: #333333;
+  --color-heading: #0c2e60;
+  --color-on-primary: #ffffff;  /* متن روی پس‌زمینه تیره (دکمه، بنر) */
+
+  /* === پس‌زمینه === */
+  --color-bg: #ffffff;
+  --color-bg-gray: #f7f7f7;
+  --color-bg-light: #fafafa;
+  --color-bg-card: #f9f9ff;
+
+  /* === حاشیه و جداکننده === */
+  --color-border: #eeeeee;
+  --color-border-light: #edeff2;
+  --color-border-dark: #dedede;
+  --color-border-muted: #dfdfdf;
+
+  /* === گرادیان‌ها === */
+  --gradient-primary: linear-gradient(to left, var(--color-primary-dark) 0%, var(--color-primary-light) 51%, var(--color-primary-dark) 100%);
+  --gradient-primary-webkit: -webkit-linear-gradient(0deg, var(--color-primary-darker) 0%, var(--color-primary-lighter) 100%);
+
+  /* === سایه‌ها === */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --shadow-accent: 0 10px 30px 0 rgba(var(--color-accent-rgb), 0.2);
+
+  /* === فاصله‌ها (Spacing) === */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* === شعاع گوشه (Border Radius) === */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 50px;
+
+  /* === تایپوگرافی (دو فونت لوکال) === */
+  /* فونت ساده: نوبار، متن، دکمه‌ها */
+  --font-sans: IRANSans, Tahoma, Arial, sans-serif;
+  /* فونت نمایشی: عناوین (h1-h6)، بنر */
+  --font-display: Lalezar, IRANSans, sans-serif;
+  --font-size-base: 14px;
+  --font-size-sm: 13px;
+  --font-size-lg: 15px;
+  --line-height-base: 1.929;
+  --line-height-tight: 1.5;
+
+  /* === Transition === */
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.4s ease-in-out;
+  --transition-slow: 0.5s;
+}

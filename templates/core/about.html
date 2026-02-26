@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}درباره موسسه مهاجرت تحصیلی {{ institute.name }} | اعزام دانشجو از بابل مازندران{% endblock %}
+{% block meta_description %}آشنایی با موسسه مهاجرت تحصیلی {{ institute.name }} در بابل، مازندران؛ موسسه اعزام دانشجو به خارج، متخصص در مشاوره مهاجرت تحصیلی به کانادا، آلمان، اروپا و چین با مجوز رسمی وزارت علوم.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/content.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/about.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>درباره موسسه {{ institute.name }}</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>درباره ما</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="learning_part index_learning">
+    <div class="container">
+        <div class="row align-items-sm-center align-items-lg-stretch">
+            <div class="col-md-7 col-lg-7">
+                <div class="learning_img">
+                    <img src="{% static 'img/learning_img.png' %}" alt="درباره موسسه {{ institute.name }} - اعزام دانشجو" loading="lazy">
+                </div>
+            </div>
+            <div class="col-md-5 col-lg-5">
+                <div class="learning_member_text">
+                    <h5>موسسه مهاجرت تحصیلی در بابل</h5>
+                    <h2>آینده تحصیلی‌تان را<br>با راهنمایی ما بسازید</h2>
+                    <p>
+                        {{ institute.name }} یک موسسه تخصصی <strong>مهاجرت تحصیلی و اعزام دانشجو به خارج از کشور</strong> در شهر بابل، استان مازندران است
+                        که با تکیه بر تجربه، دقت و همراهی قدم‌به‌قدم، مسیر پذیرش دانشگاه و دریافت ویزای تحصیلی را برای شما شفاف، امن و قابل‌اعتماد می‌کند.
+                    </p>
+                    <ul>
+                        <li><span class="ti-id-badge"></span> موسسه {{ institute.name }} با مجوز رسمی وزارت علوم (تاریخ صدور: {{ institute.license_issue_date }}) در حوزه اعزام دانشجو</li>
+                        <li><span class="ti-world"></span> تیم متخصص در پرونده‌های مهاجرت تحصیلی به کانادا، آلمان، اروپا، چین و سایر کشورها</li>
+                    </ul>
+                    <a href="{% url 'appointment' %}?about=about" class="btn_1">رزرو مشاوره مهاجرت تحصیلی</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="member_counter">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-lg-3">
+                <div class="single_member_counter">
+                    <span class="counter counter-persian" data-value="{{ university_count|default:0 }}">۰</span>
+                    <h4>دانشگاه</h4>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="single_member_counter">
+                    <span class="counter counter-persian" data-value="{{ consultation_hours|default:0 }}">۰</span>
+                    <h4>ساعت مشاوره</h4>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="single_member_counter">
+                    <span class="counter counter-persian" data-value="{{ countries_count|default:0 }}">۰</span>
+                    <h4>کشور مقصد</h4>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="single_member_counter">
+                    <span class="counter counter-persian" data-value="{{ students_sent|default:0 }}">۰</span>
+                    <h4>دانشجو اعزام‌شده</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if team_members %}
+<section class="about_team_section section_padding">
+    <div class="container">
+        <div class="section_tittle text-center">
+            <h2>اعضای تیم ما</h2>
+            <p>تیم ما با تجربه و تخصص، آماده همراهی شما هست</p>
+        </div>
+        <div class="row justify-content-center">
+            {% for member in team_members %}
+            <div class="col-sm-6 col-xl-4 col-lg-4 mb-4">
+                <div class="team_card">
+                    <a href="{% url 'team_member_detail' member.pk %}" class="team_card_link">
+                        <div class="team_card_img">
+                            {% if member.image %}
+                                <img src="{{ member.image.url }}" alt="{{ member.name }}">
+                            {% else %}
+                                <img src="{% static 'img/blog/blog_1.png' %}" alt="{{ member.name }}">
+                            {% endif %}
+                        </div>
+                        <div class="team_card_body">
+                            <h4 class="team_card_name">{{ member.name }}</h4>
+                            <p class="team_card_position">{{ member.position }}</p>
+                            {% if member.title %}
+                                <p class="team_card_title">{{ member.title }}</p>
+                            {% endif %}
+                            {% if member.description %}
+                                <p class="team_card_desc">{{ member.description|truncatewords:20 }}</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

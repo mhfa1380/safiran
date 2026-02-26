@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}وبلاگ | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}آخرین مطالب و اخبار موسسه {{ institute.name }} درباره مهاجرت تحصیلی، پذیرش دانشگاه‌ها و ویزای تحصیلی.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/blog.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>وبلاگ</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>وبلاگ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blog_list_area section_padding" dir="rtl">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <form method="get" class="filter-card p-3 p-md-4 blog_filter_form">
+                    <div class="form-row align-items-end">
+                        <div class="form-group col-12 col-md-5">
+                            <label for="q">جستجو</label>
+                            <input type="text" id="q" name="q" value="{{ filter_q }}" class="form-control blog-filter-input" placeholder="عنوان یا متن مطلب...">
+                        </div>
+                        <div class="form-group col-12 col-md-4">
+                            <label for="tag">برچسب</label>
+                            <select id="tag" name="tag" class="form-control blog-filter-input">
+                                <option value="">همه برچسب‌ها</option>
+                                {% for t in tags %}
+                                    <option value="{{ t }}" {% if t == filter_tag %}selected{% endif %}>{{ t }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-12 col-md-3">
+                            <button type="submit" class="btn_1 blog_btn_minwidth">جستجو</button>
+                            {% if filter_q or filter_tag %}
+                                <a href="{% url 'blog' %}" class="btn_2 mr-2 blog_btn_clear">پاک کردن</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if tags %}
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="blog_tags">
+                    <a href="{% url 'blog' %}" class="{% if not filter_tag %}active{% endif %}">همه</a>
+                    {% for t in tags %}
+                        <a href="{% url 'blog' %}?tag={{ t|urlencode }}" class="{% if t == filter_tag %}active{% endif %}">{{ t }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <article class="blog-card h-100">
+                            <a href="{% url 'blog_detail' post.slug %}" class="blog-card__image d-block">
+                                {% if post.image %}
+                                    <img src="{{ post.image }}" alt="{{ post.title }}">
+                                {% else %}
+                                    <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ post.title }}">
+                                {% endif %}
+                                <span class="blog-card__date">
+                                    <strong>{{ post.created_at|date:"d" }}</strong>
+                                    {{ post.created_at|date:"M Y" }}
+                                </span>
+                            </a>
+                            <div class="blog-card__body">
+                                {% if post.country_tag %}
+                                    <span class="blog-card__tag">{{ post.country_tag }}</span>
+                                {% endif %}
+                                <a href="{% url 'blog_detail' post.slug %}">
+                                    <h5 class="blog-card__title">{{ post.title }}</h5>
+                                </a>
+                                <p class="blog-card__excerpt">
+                                    {% if post.excerpt %}
+                                        {{ post.excerpt|truncatechars:120 }}
+                                    {% else %}
+                                        {{ post.content|striptags|truncatechars:120 }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="blog-card__footer">
+                                <a href="{% url 'blog_detail' post.slug %}" class="btn_2">ادامه مطلب</a>
+                            </div>
+                        </article>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="blog_empty">
+                        <h4 class="mb-3">مطلبی یافت نشد</h4>
+                        <p>
+                            {% if filter_q or filter_tag %}
+                                با فیلترهای انتخاب‌شده مطلبی یافت نشد. لطفاً جستجو یا برچسب را تغییر دهید.
+                            {% else %}
+                                هنوز پستی در وبلاگ منتشر نشده است.
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'blog' %}" class="btn_1">بازگشت به وبلاگ</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if page_obj.has_other_pages and posts %}
+        <nav class="blog-pagination">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_tag %}&tag={{ filter_tag|urlencode }}{% endif %}" aria-label="قبلی">
+                        <i class="ti-angle-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_tag %}&tag={{ filter_tag|urlencode }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_tag %}&tag={{ filter_tag|urlencode }}{% endif %}" aria-label="بعدی">
+                        <i class="ti-angle-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

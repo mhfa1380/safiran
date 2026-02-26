@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}موسسه {{ institute.name }} | اعزام دانشجو به کانادا، اسپانیا، چین{% endblock %}
+{% block meta_description %}موسسه {{ institute.name }} - مشاوره رایگان و اعزام دانشجو به کانادا، اسپانیا، چین. اخذ پذیرش دانشگاه، ویزای تحصیلی، بورسیه. مشاوران مجرب در کنار شما.{% endblock %}
+{% block og_title %}موسسه {{ institute.name }} | اعزام دانشجو به کانادا، اسپانیا، چین{% endblock %}
+{% block og_description %}موسسه {{ institute.name }} - مشاوره رایگان و اعزام دانشجو به کانادا، اسپانیا، چین. اخذ پذیرش دانشگاه، ویزای تحصیلی، بورسیه.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="banner_part index_banner">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-xl-6">
+                <div class="banner_text">
+                    <div class="banner_text_iner">
+                        <h5>موسسه اعزام دانشجوی</h5>
+                        <h1>{{ institute.name }}</h1>
+                        <p>با همراهی مشاوران مجرب ما، مسیر تحصیل در برترین دانشگاه‌های جهان را هموار کنید. از دریافت پذیرش تا اخذ ویزا، در کنار شما هستیم تا با کمترین هزینه و زمان، به رویاهای تحصیلی خود برسید.</p>
+                        <a href="{% url 'contact' %}" class="btn_1">نیاز به مشاوره دارید؟</a>
+                        <a href="{% url 'faq' %}" class="btn_2">سوالات متداول</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="feature_part index_feature">
+    <div class="container">
+        <div class="row index_feature_row">
+            <div class="col-sm-6 col-xl-3">
+                <div class="single_feature">
+                    <div class="single_feature_part">
+                        <span class="single_feature_icon"><img src="{% static 'img/flags/ca.svg' %}" alt="کانادا" class="flag-icon"></span>
+                        <h3>کانادا</h3>
+                        <p class="tex_dir">تحصیل در قلب طبیعت و تکنولوژی؛ با ما به آینده‌ای روشن قدم بگذارید.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="single_feature">
+                    <div class="single_feature_part">
+                        <span class="single_feature_icon"><img src="{% static 'img/flags/es.svg' %}" alt="اسپانیا" class="flag-icon"></span>
+                        <h3>اسپانیا</h3>
+                        <p class="tex_dir">تجربه‌ای ناب از تحصیل و زندگی در سرزمین فرهنگ و خورشید.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="single_feature">
+                    <div class="single_feature_part single_feature_part_2">
+                        <span class="single_feature_icon"><img src="{% static 'img/flags/cn.svg' %}" alt="چین" class="flag-icon"></span>
+                        <h3>چین</h3>
+                        <p class="tex_dir">در مرکز نوآوری آسیا بدرخشید؛ آینده‌تان را همین‌جا بسازید.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3 align-self-center">
+                <div class="single_feature_text">
+                    <h2 class="index_feature_title">کشور های <br> موسسه</h2>
+                    <p class="tex_dir">چه به‌دنبال تحصیل در اروپا باشید، چه در آسیا یا هر نقطه‌ای از جهان، مشاوران ما کنار شما هستند تا بهترین مسیر، دانشگاه و کشور را متناسب با هدف‌تان انتخاب کنید.</p>
+                    <a href="{% url 'schools_list' %}" class="btn_1 index_feature_btn">مشاهده دانشگاه‌ها</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="learning_part index_learning">
+    <div class="container">
+        <div class="row align-items-sm-center align-items-lg-stretch">
+            <div class="col-md-7 col-lg-7">
+                <div class="learning_img">
+                    <img src="{% static 'img/learning_img.png' %}" alt="مشاوره مهاجرت تحصیلی - {{ institute.name }}" loading="lazy" width="600" height="420">
+                </div>
+            </div>
+            <div class="col-md-5 col-lg-5">
+                <div class="learning_member_text">
+                    <h2>درباره موسسه {{ institute.name }}</h2>
+                    <h3>آینده روشن شما<br>با راهنمایی و کمک ما</h3>
+                    <p>با بهره‌گیری از تجربه و تخصص تیم ما، مسیر تحصیل و مهاجرت را با اطمینان و کمترین هزینه طی کنید.</p>
+                    <ul>
+                        <li><span class="ti-id-badge"></span> موسسه {{ institute.name }} با مجوز رسمی وزارت علوم (تاریخ صدور: {{ institute.license_issue_date }})</li>
+                        <li><span class="ti-world"></span> تیم متخصص و آشنا به فرایندهای بین‌المللی برای ارائه خدمات مطمئن</li>
+                    </ul>
+                    <a href="{% url 'about' %}" class="btn_1">از ما بیشتر بدانید</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="member_counter">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-lg-3">
+                <div class="single_member_counter">
+                    <span class="counter counter-persian" data-value="{{ university_count|default:0 }}">۰</span>
+                    <h3>دانشگاه</h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="single_member_counter">
+                    <span class="counter counter-persian" data-value="{{ consultation_hours|default:0 }}">۰</span>
+                    <h3>ساعت مشاوره</h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="single_member_counter">
+                    <span class="counter counter-persian" data-value="{{ countries_count|default:0 }}">۰</span>
+                    <h3>کشور مقصد</h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="single_member_counter">
+                    <span class="counter counter-persian" data-value="{{ students_sent|default:0 }}">۰</span>
+                    <h3>دانشجو اعزام‌شده</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="index_blog index_blog_margin" dir="rtl">
+    <div class="container">
+        <div class="index_blog_intro">
+            <h2 class="index_blog_title">اخبار موسسه</h2>
+            <a href="{% url 'blog' %}" class="btn_2 index_blog_btn">همه مطالب</a>
+        </div>
+        <div class="row">
+            {% if latest_posts %}
+                {% for item in latest_posts %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <article class="index_blog_card">
+                        <a href="{% url 'blog_detail' item.post.slug %}" class="index_blog_card__image-link">
+                            {% if item.post.image %}
+                                <img src="{{ item.post.image }}" alt="{{ item.post.title }}" class="index_blog_card__image" loading="lazy">
+                            {% else %}
+                                <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ item.post.title }}" class="index_blog_card__image" loading="lazy">
+                            {% endif %}
+                            {% if item.post.country_tag %}
+                                <span class="index_blog_card__badge">{{ item.post.country_tag }}</span>
+                            {% endif %}
+                        </a>
+                        <div class="index_blog_card__header">
+                            <h3 class="index_blog_card__title">
+                                <a href="{% url 'blog_detail' item.post.slug %}">{{ item.post.title }}</a>
+                            </h5>
+                            <span class="index_blog_card__date">{{ item.created_at_jalali }}</span>
+                        </div>
+                        <div class="index_blog_card__body">
+                            <p class="index_blog_card__desc">
+                                {% if item.post.excerpt %}
+                                    {{ item.post.excerpt|truncatechars:120 }}
+                                {% else %}
+                                    {{ item.post.content|striptags|truncatechars:120 }}
+                                {% endif %}
+                            </p>
+                        </div>
+                      
+                    </article>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <article class="index_blog_card">
+                        <a href="{% url 'blog' %}" class="index_blog_card__image-link">
+                            <img src="{% static 'img/blog/blog_1.png' %}" alt="blog" class="index_blog_card__image" loading="lazy">
+                            <span class="index_blog_card__badge">مهاجرت و مسائل مربوطه</span>
+                        </a>
+                        <div class="index_blog_card__header">
+                            <h5 class="index_blog_card__title"><a href="{% url 'blog' %}">مهاجرت در مقطع دکترای تخصصی و حرفه ای</a></h5>
+                            <span class="index_blog_card__date">۱۴۰۳</span>
+                        </div>
+                        <div class="index_blog_card__body">
+                            <p class="index_blog_card__desc">دکتری تخصصی (PhD) و دکتری حرفه‌ای (Professional Doctorate) به‌عنوان بالاترین مدارج تحصیلی در بسیاری از حوزه‌ها شناخته می‌شوند...</p>
+                        </div>
+                        <div class="index_blog_card__footer">
+                            <a href="{% url 'blog' %}" class="btn_2">ادامه مطلب</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <article class="index_blog_card">
+                        <a href="{% url 'blog' %}" class="index_blog_card__image-link">
+                            <img src="{% static 'img/blog/blog_2.png' %}" alt="blog" class="index_blog_card__image" loading="lazy">
+                            <span class="index_blog_card__badge">خدمات موسسه</span>
+                        </a>
+                        <div class="index_blog_card__header">
+                            <h5 class="index_blog_card__title"><a href="{% url 'blog' %}">خدمات مشاوره رایگان در موسسه {{ institute.name }}</a></h5>
+                            <span class="index_blog_card__date">۱۴۰۳</span>
+                        </div>
+                        <div class="index_blog_card__body">
+                            <p class="index_blog_card__desc">آیا رویای تحصیل در خارج از کشور را در سر دارید؟ موسسه {{ institute.name }} با افتخار خدمات مشاوره رایگان را ارائه می‌دهد.</p>
+                        </div>
+                        <div class="index_blog_card__footer">
+                            <a href="{% url 'blog' %}" class="btn_2">ادامه مطلب</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <article class="index_blog_card">
+                        <a href="{% url 'blog' %}" class="index_blog_card__image-link">
+                            <img src="{% static 'img/blog/blog_3.png' %}" alt="blog" class="index_blog_card__image" loading="lazy">
+                            <span class="index_blog_card__badge">خدمات موسسه</span>
+                        </a>
+                        <div class="index_blog_card__header">
+                            <h5 class="index_blog_card__title"><a href="{% url 'blog' %}">اخذ بورسیه</a></h5>
+                            <span class="index_blog_card__date">۱۴۰۳</span>
+                        </div>
+                        <div class="index_blog_card__body">
+                            <p class="index_blog_card__desc">آیا رویای تحصیل رایگان در خارج از کشور را دارید؟ موسسه {{ institute.name }} با ارائه خدمات تخصصی، شما را در مسیر اخذ بورسیه تحصیلی همراهی می‌کند.</p>
+                        </div>
+                        <div class="index_blog_card__footer">
+                            <a href="{% url 'blog' %}" class="btn_2">ادامه مطلب</a>
+                        </div>
+                    </article>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="advance_feature learning_part index_services index_services_margin">
+    <div class="container">
+        <div class="section_tittle text-center">
+            <h2>بهترین خدمات ما</h2>
+        </div>
+        <div class="row text-center">
+            {% if services %}
+                {% for service in services %}
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="feature_box">
+                        {% if service.icon %}<span class="{{ service.icon }} feature_icon"></span>{% endif %}
+                        <h4>{{ service.title }}</h4>
+                        <p>{% if service.short_description %}{{ service.short_description }}{% else %}{{ service.description }}{% endif %}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="feature_box">
+                        <span class="ti-comments-smiley feature_icon"></span>
+                        <h4>مشاوره رایگان</h4>
+                        <p>تیم ما با ارائه مشاوره‌های کامل و برگزاری جلسات متعدد، تمام تلاش خود را جهت رضایت و تسهیل روند مهاجرتتان می‌کند.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="feature_box">
+                        <span class="ti-email feature_icon"></span>
+                        <h4>مکاتبه با دانشگاه‌ها و اساتید</h4>
+                        <p>با برقراری ارتباط و مکاتبه با بهترین دانشگاه‌ها و اساتید مجرب، بهترین محل تحصیل را برای شما فراهم خواهیم کرد.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="feature_box">
+                        <span class="ti-clipboard feature_icon"></span>
+                        <h4>تایید و تکمیل مدارک</h4>
+                        <p>با شناخت دقیق مسیر مهاجرت، در روند اخذ مدارک و تکمیل پرونده در کنار شما خواهیم بود.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="feature_box">
+                        <span class="ti-id-badge feature_icon"></span>
+                        <h4>اخذ ویزای دانشجویی و همراهی</h4>
+                        <p>بدون دغدغه تعیین وقت سفارت و دریافت ویزا، همراهتان هستیم تا مراحل مهاجرت را با خیال آسوده طی کنید.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="feature_box">
+                        <span class="ti-crown feature_icon"></span>
+                        <h4>اخذ بورسیه</h4>
+                        <p>اخذ بورسیه تحصیلی از حساس‌ترین مراحل مهاجرت است و ما در این مسیر با تمام توان همراه شما خواهیم بود.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="feature_box">
+                        <span class="ti-world feature_icon"></span>
+                        <h4>استقرار در مقصد</h4>
+                        <p>با حضور نمایندگان ما در کشورهای مقصد، از اسکان و تأمین نیازهای اولیه شما اطمینان حاصل خواهید کرد.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/index.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ course.title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ course.short_description|default:course.description|striptags|truncatechars:160 }}{% endblock %}
+{% block og_title %}{{ course.title }} | {{ institute.name }}{% endblock %}
+{% block og_description %}{{ course.short_description|default:course.description|striptags|truncatechars:160 }}{% endblock %}
+{% block og_image %}{% if course.image %}{% if "http" in course.image %}{{ course.image }}{% else %}{{ site_url }}{{ course.image }}{% endif %}{% else %}{{ site_url }}{% static 'img/single_cource.webp' %}{% endif %}{% endblock %}
+{% block twitter_image %}{% if course.image %}{% if "http" in course.image %}{{ course.image }}{% else %}{{ site_url }}{{ course.image }}{% endif %}{% else %}{{ site_url }}{% static 'img/single_cource.webp' %}{% endif %}{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه اصلی","item":"{{ site_url }}/"},{"@type":"ListItem","position":2,"name":"دوره‌ها","item":"{{ site_url }}{% url 'courses_list' %}"},{"@type":"ListItem","position":3,"name":"{{ course.title|escapejs }}","item":"{{ canonical_url }}"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Course","name":"{{ course.title|escapejs }}","description":"{{ course.short_description|default:course.description|striptags|truncatechars:300|escapejs }}","url":"{{ canonical_url }}","provider":{"@type":"Organization","name":"{{ institute.name|escapejs }}"}}
+</script>
+{% if course_faqs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for faq in course_faqs %}
+    {
+      "@type": "Question",
+      "name": "{{ faq.question|escapejs }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ faq.answer|striptags|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/content.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/schools.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg" dir="rtl">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>{{ course.title }}</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span><a href="{% url 'courses_list' %}">دوره‌ها</a><span>/</span>{{ course.title }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="course-detail section_padding" dir="rtl">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="course-detail__hero school-detail__hero">
+                    <div class="school-detail__hero-img">
+                        {% if course.image %}
+                            <img src="{{ course.image }}" alt="{{ course.title }}">
+                        {% else %}
+                            <img src="{% static 'img/single_cource.webp' %}" alt="{{ course.title }}">
+                        {% endif %}
+                        {% if course.country %}
+                        <span class="school-detail__hero-badge">
+                            {% if course.country == "china" %}چین{% elif course.country == "canada" %}کانادا{% elif course.country == "spain" %}اسپانیا{% else %}سایر{% endif %}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="school-detail__hero-body">
+                        <h1 class="school-detail__title">{{ course.title }}</h1>
+                        {% if course.short_description %}
+                        <p class="school-detail__subtitle">{{ course.short_description }}</p>
+                        {% endif %}
+                        <div class="school-detail__meta course-detail__meta">
+                            {% if course.duration_hours %}
+                            <span class="school-detail__meta-item">
+                                <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {{ course.duration_hours }} ساعت
+                            </span>
+                            {% endif %}
+                            {% if course.delivery_mode %}
+                            <span class="school-detail__meta-item">
+                                <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                {% if course.delivery_mode == "in_person" %}حضوری{% elif course.delivery_mode == "online" %}آنلاین{% else %}حضوری و آنلاین{% endif %}
+                            </span>
+                            {% endif %}
+                            {% if course.price %}
+                            <span class="school-detail__meta-item">
+                                <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                {{ course.price }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if course.description %}
+                <div class="school-detail__block">
+                    <h3 class="school-detail__section-title">توضیحات دوره</h3>
+                    <div class="school-detail__block-content ck-content">{{ course.description|safe }}</div>
+                </div>
+                {% endif %}
+
+                {% if course.objectives %}
+                <div class="school-detail__block">
+                    <h3 class="school-detail__section-title">اهداف دوره</h3>
+                    <div class="school-detail__block-content ck-content">{{ course.objectives|safe }}</div>
+                </div>
+                {% endif %}
+
+                {% if course.conditions %}
+                <div class="school-detail__block">
+                    <h3 class="school-detail__section-title">شرایط و پیش‌نیازها</h3>
+                    <div class="school-detail__block-content ck-content">{{ course.conditions|safe }}</div>
+                </div>
+                {% endif %}
+
+                {% if course.features %}
+                <div class="school-detail__block">
+                    <h3 class="school-detail__section-title">ویژگی‌های دوره</h3>
+                    <ul class="course-detail__features">
+                        {% for f in course.get_features_list %}
+                        <li>{{ f }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if course.syllabus_items.exists %}
+                <div class="school-detail__block">
+                    <h3 class="school-detail__section-title">سرفصل‌های دوره</h3>
+                    <div class="course-detail__syllabus">
+                        {% for item in course.syllabus_items.all %}
+                        <div class="course-detail__syllabus-item">
+                            <h4 class="course-detail__syllabus-title">{{ item.title }}</h4>
+                            {% if item.description %}
+                            <div class="course-detail__syllabus-desc content-pre-line">{{ item.description|linebreaks }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if course.sample_video %}
+                <div class="school-detail__block">
+                    <h3 class="school-detail__section-title">نمونه تدریس</h3>
+                    <div class="course-detail__video-wrap">
+                        {% with embed_url=course.get_sample_video_embed_url %}
+                        {% if embed_url %}
+                        <div class="course-detail__video-responsive">
+                            <iframe src="{{ embed_url }}" allowfullscreen frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" title="نمونه تدریس"></iframe>
+                        </div>
+                        {% else %}
+                        <a href="{{ course.sample_video }}" target="_blank" rel="noopener" class="btn_2">مشاهده ویدیو</a>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if not course.description and not course.objectives and not course.conditions and not course.features and not course.syllabus_items.exists and not course.sample_video %}
+                <div class="school-detail__block">
+                    <div class="school-detail__block-content">
+                        موسسه {{ institute.name }} با مجوز رسمی وزارت علوم، آماده ارائه خدمات مشاوره و اعزام دانشجو است.
+                        برای دریافت اطلاعات کامل درباره این دوره و شرایط تحصیل، با مشاوران ما تماس بگیرید.
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if course_faqs %}
+                <div class="school-detail__block">
+                    <h3 class="school-detail__section-title">سوالات متداول درباره دوره {{ course.title }}</h3>
+                    <div class="school-detail__block-content">
+                        {% for faq in course_faqs %}
+                        <h4 class="school-detail__faq-question">{{ forloop.counter }}. {{ faq.question }}</h4>
+                        <p>{{ faq.answer|linebreaks }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <a href="{% url 'courses_list' %}" class="btn_2 mt-3">بازگشت به لیست دوره‌ها</a>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="school-detail__sidebar">
+                    <div class="school-detail__card">
+                        <h4 class="school-detail__card-title">درخواست مشاوره</h4>
+                        <p class="school-detail__card_desc">
+                            برای دریافت مشاوره درباره این دوره و شرایط ثبت‌نام، جلسه رزرو کنید.
+                        </p>
+                        <a href="{% url 'appointment' %}?about=course&title={{ course.title|urlencode }}" class="btn_1 school-detail__btn-consult">رزرو مشاوره</a>
+                    </div>
+
+                    <div class="school-detail__card">
+                        <h4 class="school-detail__card-title">تماس با موسسه</h4>
+                        <div class="school-detail__contact-row">
+                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a>
+                        </div>
+                        <div class="school-detail__contact-row">
+                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            <a href="mailto:{{ institute.email }}">{{ institute.email }}</a>
+                        </div>
+                        <div class="school-detail__contact-row">
+                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>{{ institute.address }}</span>
+                        </div>
+                    </div>
+
+                    <div class="school-detail__card">
+                        <h4 class="school-detail__card-title">اشتراک‌گذاری</h4>
+                        <div class="school-detail__share">
+                            <a href="https://wa.me/?text={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" title="واتساپ">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.462 4.436-9.908 9.898-9.908 2.65 0 5.122 1.03 6.982 2.769a9.825 9.825 0 012.76 6.965c-.003 5.463-4.437 9.908-9.885 9.908m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            </a>
+                            <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" title="تلگرام">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ course.title|urlencode }}" target="_blank" rel="noopener" title="توییتر">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            </a>
+                            <a href="mailto:?subject={{ course.title|urlencode }}&body={{ request.build_absolute_uri|urlencode }}" title="ایمیل">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            </a>
+                            <a href="#" onclick="window.print(); return false;" class="school-detail__share-print" title="چاپ">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

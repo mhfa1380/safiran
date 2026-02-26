@@ -1,0 +1,50 @@
+/**
+ * استایل خروجی محتوای غنی CKEditor
+ * برای نمایش متن و تصویر تو در تو در وبلاگ و صفحات دانشگاه
+ */
+.ck-content {
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.ck-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+  display: block;
+}
+
+.ck-content p {
+  margin-bottom: 1rem;
+}
+
+.ck-content h2, .ck-content h3, .ck-content h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.ck-content ul, .ck-content ol {
+  margin: 0.75rem 0;
+  padding-right: 1.5rem;
+}
+
+.ck-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.ck-content table td,
+.ck-content table th {
+  border: 1px solid #dee2e6;
+  padding: 0.5rem 0.75rem;
+}
+
+.ck-content blockquote {
+  border-right: 4px solid #0c2340;
+  padding-right: 1rem;
+  margin: 1rem 0;
+  color: #495057;
+}

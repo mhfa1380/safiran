@@ -1,0 +1,357 @@
+/**
+ * base.css - استایل‌های مشترک در تمام صفحات
+ * شامل: فونت‌ها، بدنه، نوبار، فوتر، دکمه‌ها و کلاس‌های کمکی
+ */
+
+/* ========== Fonts (لوکال - دو فونت) ==========
+ * IRANSans: نوبار، متن، فوتر، دکمه‌ها (ساده و خوانا)
+ * Lalezar: عناوین h1-h6، بنر (نمایشی و متمایز)
+ */
+@font-face {
+  font-family: IRANSans;
+  src: url("../../fonts/IRANSansWeb.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Lalezar;
+  src: url("../../fonts/Lalezar-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* ========== Body & Base ========== */
+body {
+  font-family: var(--font-sans);
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  direction: rtl;
+}
+
+a {
+  text-decoration: underline;
+  transition: 0.5s;
+}
+
+a:hover,
+a:focus {
+  outline: none;
+  text-decoration: underline;
+}
+
+/* لینک‌های breadcrumb: حفظ رنگ متن فعلی */
+.breadcrumb_iner_item p a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+input:hover,
+input:focus {
+  outline: none !important;
+}
+
+/* ========== Common Utilities ========== */
+.gray_bg { background-color: var(--color-bg-gray); }
+.mrddiv { direction: rtl; text-align: justify; }
+.tex_dir { text-align: justify; }
+
+/* تلفن و اعداد: چپ به راست برای نمایش صحیح */
+.tel-ltr {
+  direction: ltr;
+  unicode-bidi: embed;
+  display: inline;
+}
+
+.section_padding { padding: 0 0 63px 0; }
+.padding_top { padding-top: 140px; }
+.single_padding_top { padding-top: 140px !important; }
+
+@media (max-width: 991px) {
+  .section_padding { padding: 70px 0; }
+  .padding_top { padding-top: 70px; }
+  .single_padding_top { padding-top: 70px !important; }
+}
+
+@media (max-width: 576px) {
+  .section_padding { padding: 70px 0; }
+  .padding_top { padding-top: 70px; }
+  .single_padding_top { padding-top: 70px !important; }
+}
+
+/* ========== Typography (عناوین: فونت نمایشی) ========== */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-heading);
+  font-family: var(--font-display);
+  direction: rtl;
+}
+
+p {
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.929;
+  font-size: 14px;
+  margin-bottom: 0;
+  direction: rtl;
+}
+
+/* ========== Buttons ========== */
+.btn_1,
+.btn_2:hover,
+.feature_part .single_feature:hover span {
+  background-image: var(--gradient-primary);
+}
+
+.btn_1 {
+  display: inline-block;
+  padding: 13.5px 45px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-base);
+  color: var(--color-on-primary);
+  transition: all 0.4s ease-in-out;
+  text-transform: capitalize;
+  background-size: 200% auto;
+  border: 1px solid transparent;
+}
+
+.btn_1:hover {
+  color: var(--color-on-primary) !important;
+  background-position: right center;
+  box-shadow: var(--shadow-accent);
+}
+
+.btn_2 {
+  display: inline-block;
+  padding: 13px 39px;
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  font-size: 14px;
+  transition: all 0.4s ease-in-out;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.btn_2:hover {
+  color: var(--color-on-primary) !important;
+  background-position: right center;
+  border: 1px solid transparent;
+}
+
+.btn_4 {
+  background-color: var(--color-primary);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  display: inline-block;
+  border: 2px solid transparent;
+  transition: 0.5s;
+  color: var(--color-on-primary);
+}
+
+.btn_4:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-on-primary);
+}
+
+/* ========== Navbar (فونت ساده) ========== */
+.main_menu {
+  font-family: var(--font-sans);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.main_menu .navbar-brand { padding: 0 !important; }
+.main_menu .navbar { padding: 12px 0; }
+
+.logohead {
+  width: 130px;
+  height: auto;
+  max-height: 48px;
+  object-fit: contain;
+}
+
+.main_menu .main-menu-item {
+  text-align: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.main_menu .main-menu-item ul li .nav-link {
+  color: var(--color-primary);
+  font-size: 13px;
+  padding: 0 18px;
+  font-weight: bold;
+}
+
+.main_menu .main-menu-item ul li .nav-link:hover { color: var(--color-accent-hover); }
+
+.main_menu .main-menu-item ul .btn_1 {
+  color: var(--color-on-primary);
+  font-size: 12px;
+  padding: 8px 20px;
+  margin-right: 28px;
+  margin-left: 8px;
+}
+
+.dropdown-menu {
+  border: 0 !important;
+  background-color: var(--color-bg-light);
+}
+
+.dropdown .dropdown-menu {
+  transition: all 0.5s;
+  overflow: hidden;
+  transform-origin: top center;
+  transform: scale(1, 0);
+  display: block;
+  margin-top: 32px;
+}
+
+.dropdown .dropdown-menu .dropdown-item {
+  font-size: 13px;
+  padding: 8px 14px !important;
+  color: #000 !important;
+}
+
+.dropdown .dropdown-menu .dropdown-item:hover { color: var(--color-accent) !important; }
+.dropdown:hover .dropdown-menu { transform: scale(1); }
+
+.menu_fixed {
+  position: fixed;
+  z-index: 9999 !important;
+  width: 100%;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-md);
+  top: 0;
+}
+
+.menu_fixed .main-menu-item ul li .nav-link { color: #000; }
+
+@media (max-width: 991px) {
+  .main_menu .navbar { padding: 10px 0; }
+  .logohead { width: 100px; max-height: 40px; }
+  .main_menu .main-menu-item .nav-item { padding: 10px 20px !important; }
+  .main_menu .main-menu-item .nav-item a { padding: 10px 20px !important; }
+  .main_menu .dropdown-menu .dropdown-item { padding: 10px 24px !important; }
+}
+
+@media (max-width: 576px) {
+  .logohead { width: 90px; max-height: 36px; }
+}
+
+[dir="rtl"] .main_menu .main-menu-item { text-align: right !important; }
+
+/* ========== Footer (فونت ساده) ========== */
+.footer-area {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-gray);
+  padding: 100px 0 20px;
+}
+
+.footer-area .row > [class*="col-"] {
+  margin-bottom: 2rem;
+}
+
+.footer-area .single-footer-widget {
+  height: 100%;
+}
+
+.footer-area .single-footer-widget p {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.footer-area .single-footer-widget h4 {
+  margin-bottom: 23px;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.footer-area .single-footer-widget ul li { margin-bottom: 10px; }
+
+.footer-area .single-footer-widget ul li a {
+  color: var(--color-text-dark);
+  transition: 0.5s;
+  font-size: 15px;
+}
+
+.footer-area .single-footer-widget ul li a:hover { color: var(--color-accent); }
+
+.footer-area .contact_info p span {
+  color: var(--color-primary);
+  font-size: 16px;
+}
+
+.footer-area .copyright_part_text {
+  padding-top: 26px;
+  margin-top: 2rem;
+  border-top: 1px solid var(--color-border-dark);
+  direction: rtl;
+  text-align: center;
+}
+
+.footer-area .copyright_part_text p,
+.footer-area .copyright_part_text .copyright { font-size: var(--font-size-lg); }
+.footer-area .copyright_part_text a { color: var(--color-accent); }
+
+.footer-area .copyright_part_text .company-link {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: 0.3s;
+}
+.footer-area .copyright_part_text .company-link:hover { text-decoration: underline; }
+
+.footer-logo,
+.footer_1 img {
+  max-width: 10rem;
+  width: auto;
+  height: auto;
+}
+
+.footer-area .footer_1 { text-align: justify; }
+.footer-area .footer_2 h4,
+.footer-area .footer_links h4 { text-align: right; }
+.footer-area .footer_links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    direction: rtl;
+    text-align: right;
+}
+.footer-area .footer_links ul li { margin-bottom: 10px; }
+.footer-area .footer_links ul li a {
+    color: var(--color-text-dark);
+    text-decoration: none;
+    transition: 0.5s;
+}
+.footer-area .footer_links ul li a:hover { color: var(--color-accent); }
+.footer-area .contact_info { direction: rtl; text-align: justify; }
+.footer-area .footer-text a.fediya-link { color: rgb(16, 16, 121); }
+
+@media (max-width: 991px) {
+  .footer-area { padding: 70px 0 30px; }
+  .footer-area .row > [class*="col-"] { margin-bottom: 1.75rem; }
+  .footer-area .single-footer-widget h4 { font-size: 18px; margin-bottom: 15px; }
+  .footer-area .copyright_part_text { margin-top: 1.5rem; }
+}
+
+@media (max-width: 576px) {
+  .footer-area { padding: 50px 0 25px; }
+  .footer-area .row > [class*="col-"] { margin-bottom: 1.5rem; }
+  .footer-area .copyright_part_text { margin-top: 1.25rem; padding-top: 1.25rem; text-align: center; }
+  .footer-area .copyright_part_text p,
+  .footer-area .copyright_part_text .copyright { font-size: 13px; line-height: 1.7; }
+  .footer-logo, .footer_1 img { max-width: 8rem; }
+}

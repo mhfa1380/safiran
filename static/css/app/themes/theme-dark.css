@@ -1,0 +1,45 @@
+/**
+ * تم تیره (Dark Theme) - نمونه
+ *
+ * استفاده: در base.html بعد از variables.css اضافه کنید:
+ *   {% if request.session.theme == 'dark' %}
+ *   <link rel="stylesheet" href="{% static 'css/app/themes/theme-dark.css' %}">
+ *   {% endif %}
+ *
+ * یا با JavaScript: document.documentElement.setAttribute('data-theme', 'dark');
+ */
+[data-theme="dark"] {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-darker: #1e3a8a;
+  --color-primary-light: #60a5fa;
+  --color-primary-lighter: #93c5fd;
+
+  --color-accent: #f97316;
+  --color-accent-hover: #ea580c;
+  --color-accent-rgb: 249, 115, 22;
+
+  --color-text: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-text-dark: #cbd5e1;
+  --color-heading: #f1f5f9;
+  --color-on-primary: #f1f5f9;
+
+  --color-bg: #0f172a;
+  --color-bg-gray: #1e293b;
+  --color-bg-light: #334155;
+  --color-bg-card: #1e293b;
+
+  --color-border: #334155;
+  --color-border-light: #475569;
+  --color-border-dark: #475569;
+  --color-border-muted: #334155;
+
+  --gradient-primary: linear-gradient(to left, var(--color-primary-dark) 0%, var(--color-primary-light) 51%, var(--color-primary-dark) 100%);
+  --gradient-primary-webkit: -webkit-linear-gradient(0deg, var(--color-primary-darker) 0%, var(--color-primary-lighter) 100%);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-accent: 0 10px 30px 0 rgba(var(--color-accent-rgb), 0.25);
+}

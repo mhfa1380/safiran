@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}خدمات مهاجرت تحصیلی و اعزام دانشجو | {{ institute.name }}{% endblock %}
+{% block meta_description %}لیست خدمات مهاجرت تحصیلی و اعزام دانشجو در موسسه {{ institute.name }}؛ از مشاوره اولیه و انتخاب کشور تا پذیرش دانشگاه، ویزای تحصیلی و همراهی در بابل و مازندران.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/content.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>خدمات مهاجرت تحصیلی موسسه {{ institute.name }}</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span><a href="{% url 'services' %}">خدمات موسسه</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="advance_feature learning_part services_margin services_page">
+    <div class="container">
+        <div class="section_tittle text-center">
+            <h2>خدمات تخصصی مهاجرت تحصیلی و اعزام دانشجو</h2>
+            <p>از اولین سوال تا گرفتن ویزای تحصیلی، در کنار شما هستیم.</p>
+        </div>
+        <div class="row">
+            {% if services %}
+                {% for service in services %}
+                <div class="col-12">
+                    <div class="service_row">
+                        <div class="service_row_content">
+                            <div class="service_row_head">
+                                {% if service.icon %}<span class="{{ service.icon }} service_row_icon"></span>{% endif %}
+                                <h4 class="service_row_title">{{ service.title }}</h4>
+                            </div>
+                            <div class="service_row_desc content-pre-line">{% if service.description %}{{ service.description }}{% else %}{{ service.short_description }}{% endif %}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <p class="text-center">خدماتی در حال حاضر ثبت نشده است. لطفاً از طریق <a href="{% url 'contact' %}">تماس با ما</a> با مشاوران ما در ارتباط باشید.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

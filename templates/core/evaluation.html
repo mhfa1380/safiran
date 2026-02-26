@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}فرم ارزیابی شرایط مهاجرت تحصیلی | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}فرم ارزیابی آنلاین شرایط مهاجرت تحصیلی شما برای اعزام دانشجو به کانادا، آلمان، اروپا، چین و سایر کشورها. کارشناسان {{ institute.name }} پس از بررسی با شما تماس می‌گیرند و بهترین گزینه‌ها را پیشنهاد می‌دهند.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/eval.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>فرم ارزیابی</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>فرم ارزیابی</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="eval_area section_padding" dir="rtl">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="eval_intro">
+                    <h3>ارزیابی اولیه شرایط مهاجرت تحصیلی شما</h3>
+                    <p>
+                        با تکمیل این فرم، تصویر دقیقی از <strong>شرایط مهاجرت تحصیلی</strong> شما (مدرک، سن، زبان، بودجه و اهداف) به دست می‌آوریم
+                        و کارشناسان {{ institute.name }} بهترین مسیرهای ممکن برای اعزام دانشجو به خارج را پیشنهاد خواهند داد.
+                    </p>
+                </div>
+
+                <div class="eval_form-card">
+                    {% if success %}
+                        <div class="eval_success">
+                            فرم شما با موفقیت ثبت شد. کارشناسان {{ institute.name }} پس از بررسی با شما تماس خواهند گرفت.
+                        </div>
+                    {% endif %}
+
+                    <form method="post" novalidate class="eval_form">
+                        {% csrf_token %}
+
+                        <div class="eval_section">
+                            <div class="eval_section-title">اطلاعات شخصی</div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی</label>
+                                        {{ form.full_name }}
+                                        {% if form.full_name.errors %}<small class="text-danger">{{ form.full_name.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.phone.id_for_label }}">شماره تماس</label>
+                                        {{ form.phone }}
+                                        {% if form.phone.errors %}<small class="text-danger">{{ form.phone.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.email.id_for_label }}">ایمیل (اختیاری)</label>
+                                        {{ form.email }}
+                                        {% if form.email.errors %}<small class="text-danger">{{ form.email.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-group">
+                                        <label for="{{ form.birth_year.id_for_label }}">سال تولد</label>
+                                        {{ form.birth_year }}
+                                        {% if form.birth_year.errors %}<small class="text-danger">{{ form.birth_year.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-group">
+                                        <label for="{{ form.marital_status.id_for_label }}">وضعیت تاهل</label>
+                                        {{ form.marital_status }}
+                                        {% if form.marital_status.errors %}<small class="text-danger">{{ form.marital_status.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.apply_timeline.id_for_label }}">کی قصد اپلای دارید؟</label>
+                                        {{ form.apply_timeline }}
+                                        {% if form.apply_timeline.errors %}<small class="text-danger">{{ form.apply_timeline.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group form-check eval_form_check_pt">
+                                        {{ form.has_financial_capacity }}
+                                        <label class="form-check-label" for="{{ form.has_financial_capacity.id_for_label }}">تمکن مالی بالای یک میلیارد تومان دارم</label>
+                                        {% if form.has_financial_capacity.errors %}<small class="text-danger">{{ form.has_financial_capacity.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="eval_section">
+                            <div class="eval_section-title">سوابق تحصیلی</div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.current_degree.id_for_label }}">آخرین مدرک</label>
+                                        {{ form.current_degree }}
+                                        {% if form.current_degree.errors %}<small class="text-danger">{{ form.current_degree.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.field_of_study.id_for_label }}">رشته تحصیلی</label>
+                                        {{ form.field_of_study }}
+                                        {% if form.field_of_study.errors %}<small class="text-danger">{{ form.field_of_study.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <div class="form-group">
+                                        <label for="{{ form.average_grade.id_for_label }}">معدل</label>
+                                        {{ form.average_grade }}
+                                        {% if form.average_grade.errors %}<small class="text-danger">{{ form.average_grade.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-group">
+                                        <label for="{{ form.graduation_year.id_for_label }}">سال فارغ‌التحصیلی</label>
+                                        {{ form.graduation_year }}
+                                        {% if form.graduation_year.errors %}<small class="text-danger">{{ form.graduation_year.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="eval_section">
+                            <div class="eval_section-title">آزمون زبان</div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.language_test_type.id_for_label }}">نوع آزمون</label>
+                                        {{ form.language_test_type }}
+                                        {% if form.language_test_type.errors %}<small class="text-danger">{{ form.language_test_type.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.language_score.id_for_label }}">نمره (در صورت وجود)</label>
+                                        {{ form.language_score }}
+                                        {% if form.language_score.errors %}<small class="text-danger">{{ form.language_score.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-check">
+                                {{ form.has_ielts }}
+                                <label class="form-check-label" for="{{ form.has_ielts.id_for_label }}">مدرک زبان معتبر دارم</label>
+                                {% if form.has_ielts.errors %}<small class="text-danger">{{ form.has_ielts.errors|striptags }}</small>{% endif %}
+                            </div>
+                        </div>
+
+                        <div class="eval_section">
+                            <div class="eval_section-title">دستاوردها</div>
+                            <div class="eval_check-grid">
+                                <div class="form-check">{{ form.has_journal_article }}<label class="form-check-label" for="{{ form.has_journal_article.id_for_label }}">مقاله ژورنالی</label></div>
+                                <div class="form-check">{{ form.has_conference_article }}<label class="form-check-label" for="{{ form.has_conference_article.id_for_label }}">مقاله کنفرانسی</label></div>
+                                <div class="form-check">{{ form.has_book }}<label class="form-check-label" for="{{ form.has_book.id_for_label }}">چاپ/ترجمه کتاب</label></div>
+                                <div class="form-check">{{ form.has_international_tests }}<label class="form-check-label" for="{{ form.has_international_tests.id_for_label }}">SAT, GRE, GMAT</label></div>
+                            </div>
+                        </div>
+
+                        <div class="eval_section">
+                            <div class="eval_section-title">اولویت‌ها</div>
+                            <div class="form-group">
+                                <label>کشورهای مورد نظر</label>
+                                <div class="eval_countries-grid">
+                                    {{ form.desired_countries }}
+                                </div>
+                                {% if form.desired_countries.errors %}<small class="text-danger">{{ form.desired_countries.errors|striptags }}</small>{% endif %}
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.target_country.id_for_label }}">کشور مقصد اصلی</label>
+                                        {{ form.target_country }}
+                                        {% if form.target_country.errors %}<small class="text-danger">{{ form.target_country.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.desired_major.id_for_label }}">رشته مورد نظر</label>
+                                        {{ form.desired_major }}
+                                        {% if form.desired_major.errors %}<small class="text-danger">{{ form.desired_major.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.service_scope.id_for_label }}">بخش کار با موسسه</label>
+                                        {{ form.service_scope }}
+                                        {% if form.service_scope.errors %}<small class="text-danger">{{ form.service_scope.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.preferred_intake.id_for_label }}">ترم/سال شروع</label>
+                                        {{ form.preferred_intake }}
+                                        {% if form.preferred_intake.errors %}<small class="text-danger">{{ form.preferred_intake.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.notes.id_for_label }}">توضیحات تکمیلی</label>
+                                {{ form.notes }}
+                                {% if form.notes.errors %}<small class="text-danger">{{ form.notes.errors|striptags }}</small>{% endif %}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn_1 eval_btn-submit">ثبت ارزیابی</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="eval_sidebar eval_sidebar_sticky">
+                    <div class="eval_sidebar-title">{{ institute.name }}</div>
+                    <p>{{ institute.type_title }}</p>
+                    <p>مجوز: {{ institute.license_issue_date }}</p>
+                    <p><a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
+                    <p><a href="mailto:{{ institute.email }}">{{ institute.email }}</a></p>
+                    <a href="{% url 'contact' %}" class="btn_2 d-block text-center mt-3 eval_sidebar_btn">تماس با ما</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

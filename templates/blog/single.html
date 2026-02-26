@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ post.title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ post.excerpt|default:post.content|striptags|truncatechars:160 }}{% endblock %}
+{% block og_title %}{{ post.title }} | {{ institute.name }}{% endblock %}
+{% block og_description %}{{ post.excerpt|default:post.content|striptags|truncatechars:160 }}{% endblock %}
+{% block og_image %}{% if post.image %}{% if "http" in post.image %}{{ post.image }}{% else %}{{ site_url }}{{ post.image }}{% endif %}{% else %}{{ site_url }}{% static 'img/blog/single_blog_1.png' %}{% endif %}{% endblock %}
+{% block twitter_image %}{% if post.image %}{% if "http" in post.image %}{{ post.image }}{% else %}{{ site_url }}{{ post.image }}{% endif %}{% else %}{{ site_url }}{% static 'img/blog/single_blog_1.png' %}{% endif %}{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه اصلی","item":"{{ site_url }}/"},{"@type":"ListItem","position":2,"name":"وبلاگ","item":"{{ site_url }}{% url 'blog' %}"},{"@type":"ListItem","position":3,"name":"{{ post.title|escapejs }}","item":"{{ canonical_url }}"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"{{ post.title|escapejs }}","description":"{{ post.excerpt|default:post.content|striptags|truncatechars:200|escapejs }}","url":"{{ canonical_url }}","datePublished":"{{ post.created_at|date:'c' }}","dateModified":"{{ post.updated_at|date:'c' }}","author":{"@type":"Organization","name":"{{ institute.name|escapejs }}"},"publisher":{"@type":"Organization","name":"{{ institute.name|escapejs }}"}}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/blog.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>وبلاگ</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span><a href="{% url 'blog' %}">وبلاگ</a><span>/</span>{{ post.title }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blog_area single-post-area section_padding blog_single_margin">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 posts-list">
+                <div class="single-post">
+                    <div class="feature-img blog_single_feature_center">
+                        {% if post.image %}
+                            <img class="img-fluid" src="{{ post.image }}" alt="{{ post.title }}">
+                        {% else %}
+                            <img class="img-fluid" src="{% static 'img/blog/single_blog_1.png' %}" alt="{{ post.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="blog_details blog_single_details_justify">
+                        <h1 class="blog_single_title">{{ post.title }}</h1>
+                        {% if post.country_tag %}
+                        <span class="btn_4 titlkhabr">{{ post.country_tag }}</span>
+                        {% endif %}
+                        <p class="excert">{{ post.excerpt|default:"" }}</p>
+                        <div class="ck-content">{{ post.content|safe }}</div>
+                    </div>
+                </div>
+                <div class="blog-author">
+                    <div class="media align-items-center">
+                        <img src="{% static 'img/blog/author.png' %}" alt="{{ institute.name }}" loading="lazy">
+                        <div class="media-body blog_author_body">
+                            <a href="{% url 'about' %}"><h4>{{ institute.name }}</h4></a>
+                            <p>موسسه اعزام دانشجو به خارج - {{ institute.city }}، {{ institute.province }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,149 @@
+/**
+ * صفحات محتوایی - about, services, universities, course_details, elements, 404
+ */
+.elements_services_margin { margin-top: 2rem; }
+.about_services_margin { margin-top: -7rem; }
+.services_margin { margin-top: 0rem; }
+.universities_margin { margin-top: 4rem; }
+
+/* Services page - هر خدمت در یک ردیف، آیکون بالا، عنوان، توضیحات کامل */
+.services_page .service_row {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #edeff2;
+}
+.services_page .service_row:last-child {
+  border-bottom: none;
+}
+.services_page .service_row_content {
+  direction: rtl;
+  text-align: right;
+  max-width: 100%;
+}
+.services_page .service_row_head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.services_page .service_row_icon {
+  font-size: 1.5rem;
+  color: #0c2e60;
+  flex-shrink: 0;
+}
+.services_page .service_row_title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #2c2c2c;
+}
+.services_page .service_row_desc {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #555;
+}
+
+@media (max-width: 576px) {
+  .services_page .service_row {
+    padding: 1rem 0;
+  }
+  .services_page .service_row_icon {
+    font-size: 1.25rem;
+  }
+  .services_page .service_row_title {
+    font-size: 1.1rem;
+  }
+  .services_page .service_row_desc {
+    font-size: 0.9rem;
+  }
+}
+
+/* Course details - محتوای چندخطی */
+.content-pre-line { white-space: pre-line; }
+
+/* Major detail page - مشابه course-detail */
+.major-detail {
+  direction: rtl;
+  text-align: right;
+  padding-top: 2rem;
+}
+.major-detail .school-detail__hero-body,
+.major-detail .school-detail__block,
+.major-detail .school-detail__block-content,
+.major-detail .school-detail__card,
+.major-detail .school-detail__card-title,
+.major-detail .school-detail__card_desc,
+.major-detail .school-detail__contact-row,
+.major-detail .btn_2 { text-align: right; }
+
+/* Course detail page - مشابه school-detail، راست‌چین */
+.course-detail {
+  direction: rtl;
+  text-align: right;
+  padding-top: 2rem;
+}
+.course-detail .school-detail__hero-body,
+.course-detail .school-detail__block,
+.course-detail .school-detail__block-content,
+.course-detail .school-detail__block-content.ck-content,
+.course-detail .school-detail__card,
+.course-detail .school-detail__card-title,
+.course-detail .school-detail__card_desc,
+.course-detail .school-detail__contact-row,
+.course-detail .btn_2 { text-align: right; }
+.course-detail__meta { flex-wrap: wrap; gap: 0.5rem; }
+.course-detail__features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  direction: rtl;
+  text-align: right;
+}
+.course-detail__features li {
+  position: relative;
+  padding-right: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.course-detail__features li::before {
+  content: "✓";
+  position: absolute;
+  right: 0;
+  color: #0c2e60;
+  font-weight: bold;
+}
+.course-detail__syllabus { direction: rtl; text-align: right; }
+.course-detail__syllabus-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid #edeff2;
+}
+.course-detail__syllabus-item:last-child { border-bottom: none; }
+.course-detail__syllabus-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #0f2137;
+}
+.course-detail__syllabus-desc {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #4a4a4a;
+}
+.course-detail__video-wrap { margin-top: 0.5rem; }
+.course-detail__video-responsive {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+}
+.course-detail__video-responsive iframe {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 404 */
+.error404_margin { margin-top: 4rem; }
+.error404_links { direction: rtl; }

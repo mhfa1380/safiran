@@ -1,0 +1,133 @@
+/**
+ * صفحه فرم ارزیابی - evaluation
+ */
+.eval_area {
+    padding-top: 50px;
+    padding-bottom: 60px;
+    background: #f8fafc;
+}
+.eval_intro { text-align: right; margin-bottom: 2rem; }
+.eval_intro h3 { font-size: 1.25rem; font-weight: 600; color: #0f2137; margin-bottom: 0.5rem; }
+.eval_intro p { font-size: 0.95rem; color: #495057; line-height: 1.7; }
+.eval_form-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
+    padding: 2rem;
+    border: 1px solid #e8eef5;
+}
+.eval_section { margin-bottom: 2rem; }
+.eval_section:last-of-type { margin-bottom: 0; }
+.eval_section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0c2340;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e8eef5;
+    direction: rtl;
+    text-align: right;
+}
+.eval_form .form-group { margin-bottom: 1rem; text-align: right; }
+.eval_form .form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+}
+.eval_form .form-control {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    width: 100%;
+    text-align: right;
+    text-align-last: right;
+    direction: rtl;
+}
+.eval_form select.form-control {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2rem;
+    padding-left: 0.75rem;
+    cursor: pointer;
+    min-height: 2.5rem;
+}
+.eval_form textarea.form-control { text-align: right; direction: rtl; }
+.eval_form .form-control:focus {
+    border-color: #0c2340;
+    box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.1);
+}
+.eval_form .form-check {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding-right: 0;
+    margin-bottom: 0.5rem;
+    text-align: right;
+}
+.eval_form .form-check-input { width: 1.1em; height: 1.1em; cursor: pointer; }
+.eval_form .form-check-label { cursor: pointer; font-size: 0.9rem; color: #495057; }
+.eval_check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
+    direction: rtl;
+}
+.eval_countries-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    direction: rtl;
+}
+.eval_countries-grid ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.eval_countries-grid li { margin: 0; }
+.eval_countries-grid li label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: normal;
+    flex-direction: row-reverse;
+}
+.eval_countries-grid input { width: 1.1em; height: 1.1em; cursor: pointer; }
+.eval_btn-submit { padding: 10px 24px; font-size: 0.95rem; border-radius: 8px; margin-top: 0.5rem; }
+.eval_success {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    text-align: right;
+}
+.eval_sidebar {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
+    border: 1px solid #e8eef5;
+    height: fit-content;
+    direction: rtl;
+    text-align: right;
+}
+.eval_sidebar-title { font-size: 0.95rem; font-weight: 600; color: #0f2137; margin-bottom: 1rem; }
+.eval_sidebar p { font-size: 0.85rem; color: #6b7280; margin-bottom: 0.5rem; text-align: right; }
+.eval_sidebar a { color: #0c2340; font-weight: 500; }
+.eval_form_check_pt { padding-top: 2rem; }
+.eval_sidebar_sticky { position: sticky; top: 100px; }
+.eval_sidebar_btn { padding: 10px; }
+@media (max-width: 767.98px) {
+    .eval_area { padding-top: 35px; padding-bottom: 40px; }
+    .eval_form-card { padding: 1.25rem; }
+    .eval_check-grid { grid-template-columns: 1fr; }
+    .eval_countries-grid ul { flex-direction: column; }
+    .eval_sidebar { position: static !important; }
+}

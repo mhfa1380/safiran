@@ -1,0 +1,111 @@
+/**
+ * صفحه رزرو مشاوره - appointment
+ */
+.appt_area {
+    padding-top: 50px;
+    padding-bottom: 60px;
+    background: #f8fafc;
+}
+.appt_intro { text-align: right; margin-bottom: 2rem; }
+.appt_intro h3 { font-size: 1.25rem; font-weight: 600; color: #0f2137; margin-bottom: 0.5rem; }
+.appt_intro p { font-size: 0.95rem; color: #495057; line-height: 1.7; }
+.appt_form-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
+    border: 1px solid #e8eef5;
+}
+.appt_form .form-group { margin-bottom: 1.25rem; text-align: right; }
+.appt_form label { font-size: 0.9rem; font-weight: 500; color: #374151; margin-bottom: 0.35rem; }
+.appt_form .form-control {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    text-align: right;
+    text-align-last: right;
+    direction: rtl;
+}
+.appt_form .form-control:focus {
+    border-color: #0c2340;
+    box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.1);
+}
+.appt_form textarea.form-control { text-align: right; direction: rtl; }
+.appt_country-option { display: inline-flex; align-items: center; gap: 0.5rem; }
+.appt_country-flag { font-size: 1.25rem; }
+.appt_slots-section { margin-top: 1rem; text-align: right; direction: rtl; }
+.appt_slots-section label { display: block; margin-bottom: 0.5rem; }
+.appt_slots-section .text-muted { text-align: right; }
+.appt_slots-date {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0c2340;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e8eef5;
+}
+.appt_slots-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    direction: rtl;
+}
+.appt_slot-btn {
+    display: inline-flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.appt_slot-btn:hover {
+    border-color: #0c2340;
+    background: rgba(12, 35, 64, 0.04);
+}
+.appt_slot-btn input { margin-right: 0; margin-left: 0.5rem; cursor: pointer; }
+.appt_slot-booked {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    background: #f3f4f6;
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+.appt_sidebar {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
+    border: 1px solid #e8eef5;
+    height: fit-content;
+    direction: rtl;
+    text-align: right;
+}
+.appt_sidebar-title { font-size: 0.95rem; font-weight: 600; color: #0f2137; margin-bottom: 1rem; }
+.appt_sidebar p { font-size: 0.85rem; color: #6b7280; margin-bottom: 0.5rem; text-align: right; }
+.appt_sidebar a { color: #0c2340; font-weight: 500; }
+.appt_success {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    text-align: right;
+}
+.appt_btn-submit { padding: 10px 24px; font-size: 0.95rem; border-radius: 8px; }
+.appt_day_select_wrap { max-width: 260px; }
+.appt_sidebar_sticky { position: sticky; top: 100px; }
+.appt_sidebar_btn { padding: 10px; }
+@media (max-width: 767.98px) {
+    .appt_area { padding-top: 35px; padding-bottom: 40px; }
+    .appt_form-card { padding: 1.25rem; }
+    .appt_slots-grid { flex-direction: column; }
+}

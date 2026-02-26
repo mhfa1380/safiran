@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}دانشگاه‌ها و موسسات مناسب پذیرش تحصیلی | {{ institute.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/schools.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>دانشگاه‌ها و موسسات مناسب پذیرش تحصیلی</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>دانشگاه‌ها</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="schools_list_area section_padding" dir="rtl">
+    <div class="container">
+        <div class="schools_intro">
+            <p class="schools_intro_text">
+                در این صفحه لیست دانشگاه‌ها و موسسات مناسب برای پذیرش تحصیلی در کشور‌های
+                <strong>چین، کانادا و اسپانیا</strong> را مشاهده می‌کنید. لیست بر اساس
+                اطلاعات وارد شده در سیستم {{ institute.name }} نمایش داده می‌شود و می‌توانید
+                با فیلتر کردن، سریع‌تر گزینه‌ی مناسب را پیدا کنید.
+                در مورد انتخاب دانشگاه یا موسسه سوال دارید؟ با کمال میل راهنمایی‌تان می‌کنیم.
+            </p>
+            <div class="schools_intro_actions">
+                <a href="{% url 'appointment' %}?about=universities" class="btn_1 schools_consult_btn">نیاز به مشاوره دارم</a>
+                <button type="button" class="btn_2 schools_filter_toggle_btn" id="schoolsFilterToggle" aria-expanded="{% if filter_q or filter_country or filter_type %}true{% else %}false{% endif %}">
+                    <span class="ti-filter"></span> <span class="schools_filter_toggle_label">{% if filter_q or filter_country or filter_type %}بستن فیلتر{% else %}فیلتر کردن{% endif %}</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="schools_filter_wrap {% if filter_q or filter_country or filter_type %}is_open{% endif %}" id="schoolsFilterWrap">
+                <form method="get" class="filter-card p-3 p-md-4 schools_filter_form">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="q">نام دانشگاه / شهر</label>
+                            <input type="text" id="q" name="q" value="{{ filter_q }}" class="form-control schools-filter-input" placeholder="مثلاً پکن، تورنتو، شانگهای">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="country">کشور</label>
+                            <select id="country" name="country" class="form-control schools-filter-select">
+                                <option value="">همه کشورها</option>
+                                {% for code, label in countries %}
+                                    <option value="{{ code }}" {% if code == filter_country %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="type">نوع موسسه</label>
+                            <select id="type" name="type" class="form-control schools-filter-select">
+                                <option value="">همه انواع</option>
+                                {% for code, label in types %}
+                                    <option value="{{ code }}" {% if code == filter_type %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn_1 mt-2 mt-md-3 schools_btn_minwidth">جستجو</button>
+                </form>
+        </div>
+
+        <div class="schools_list">
+            {% if universities %}
+                {% for uni in universities %}
+                <article class="uni-card">
+                    <a href="{% url 'school_detail' uni.slug %}" class="uni-card__image">
+                        {% if uni.image %}
+                            <img src="{{ uni.image.url }}" alt="{{ uni.name_fa }} - دانشگاه خارج" loading="lazy">
+                        {% else %}
+                            <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ uni.name_fa }} - دانشگاه خارج" loading="lazy">
+                        {% endif %}
+                        <span class="uni-card__country">
+                            {% if uni.country == "china" %}چین{% elif uni.country == "canada" %}کانادا{% elif uni.country == "spain" %}اسپانیا{% else %}سایر{% endif %}
+                        </span>
+                    </a>
+                    <div class="uni-card__body">
+                        <div class="uni-card__meta">
+                            <span class="uni-card__location"><i class="ti-location-pin"></i> {{ uni.city }}</span>
+                            {% if uni.world_rank %}
+                                <span class="uni-card__rank"><i class="ti-medall-alt"></i> رتبه {{ uni.world_rank }}</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="uni-card__title">
+                            <a href="{% url 'school_detail' uni.slug %}">{{ uni.name_fa }}</a>
+                        </h3>
+                        {% if uni.name_en %}
+                            <p class="uni-card__subtitle">{{ uni.name_en }}</p>
+                        {% endif %}
+                        {% if uni.short_description %}
+                            <p class="uni-card__desc">{{ uni.short_description|truncatechars:180 }}</p>
+                        {% endif %}
+                        <div class="uni-card__badges">
+                            {% if uni.is_approved_by_mo_science %}
+                                <span class="uni-card__badge uni-card__badge--science">مورد تایید وزارت علوم</span>
+                            {% endif %}
+                            {% if uni.is_approved_by_mo_health %}
+                                <span class="uni-card__badge uni-card__badge--health">مورد تایید وزارت بهداشت</span>
+                            {% endif %}
+                        </div>
+                        <div class="uni-card__actions">
+                            <a href="{% url 'school_detail' uni.slug %}" class="btn_2 uni-card__btn">مشاهده جزئیات</a>
+                            <a href="{% url 'appointment' %}?about=university&title={{ uni.name_fa|urlencode }}" class="btn_4 uni-card__btn">درخواست مشاوره</a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            {% else %}
+                <p class="schools_empty_center">در حال حاضر دانشگاهی در سیستم ثبت نشده است. لطفاً بعداً دوباره بررسی کنید.</p>
+            {% endif %}
+        </div>
+        {% if page_obj and page_obj.has_other_pages %}
+        <nav class="schools-pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_country %}&country={{ filter_country|urlencode }}{% endif %}{% if filter_type %}&type={{ filter_type|urlencode }}{% endif %}" aria-label="قبلی">
+                        <i class="ti-angle-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_country %}&country={{ filter_country|urlencode }}{% endif %}{% if filter_type %}&type={{ filter_type|urlencode }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_country %}&country={{ filter_country|urlencode }}{% endif %}{% if filter_type %}&type={{ filter_type|urlencode }}{% endif %}" aria-label="بعدی">
+                        <i class="ti-angle-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+<div id="consultModal" class="consult-modal" dir="rtl">
+    <div class="consult-modal__box">
+        <button type="button" class="consult-modal__close" aria-label="بستن">&times;</button>
+        <div class="consult-modal__success" id="consultSuccess"></div>
+        <div class="consult-modal__form" id="consultForm">
+            <h4 class="consult-modal__title">درخواست مشاوره</h4>
+            <p class="consult-modal__uni" id="consultUniName"></p>
+            <p class="consult-modal__phone">
+                <i class="ti-mobile"></i>
+                <a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a>
+            </p>
+            <p class="consult-modal__hint">اطلاعات خود را وارد کنید تا با شما تماس بگیریم.</p>
+            <form id="quickConsultForm">
+                {% csrf_token %}
+                <input type="hidden" name="university_id" id="consultUniId">
+                <div class="form-group">
+                    <input type="text" name="full_name" class="form-control" placeholder="نام و نام خانوادگی" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="phone" class="form-control" placeholder="شماره تماس" required>
+                </div>
+                <button type="submit" class="btn_1">ثبت درخواست</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<script>window.PAGE_CONFIG = window.PAGE_CONFIG || {}; window.PAGE_CONFIG.quickConsultUrl = "{% url 'quick_consultation' %}";</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/schools.js' %}"></script>
+{% endblock %}
+

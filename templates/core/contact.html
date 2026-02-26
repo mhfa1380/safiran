@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}تماس با موسسه مهاجرت تحصیلی {{ institute.name }} | بابل مازندران{% endblock %}
+
+{% block meta_description %}اطلاعات تماس موسسه مهاجرت تحصیلی {{ institute.name }} در بابل، مازندران؛ آدرس، شماره تلفن، ایمیل و فرم ارسال پیام برای مشاوره مهاجرت تحصیلی و اعزام دانشجو به خارج.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>تماس با ما</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>تماس با ما</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact_area section_padding" dir="rtl">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="contact_intro">
+                    <h3>با مشاوران مهاجرت تحصیلی در ارتباط باشید</h3>
+                    <p>اگر درباره مهاجرت تحصیلی، انتخاب کشور، دانشگاه یا ویزای تحصیلی سوال دارید، از طریق فرم زیر یا اطلاعات تماس، با کارشناسان {{ institute.name }} صحبت کنید.</p>
+                </div>
+                <div class="contact_info-card">
+                    <div class="contact_info-item">
+                        <div class="contact_info-icon"><i class="ti-home"></i></div>
+                        <div class="contact_info-body">
+                            <h4>آدرس</h4>
+                            <p>{{ institute.city }}، {{ institute.province }}<br>{{ institute.address }}</p>
+                        </div>
+                    </div>
+                    <div class="contact_info-item">
+                        <div class="contact_info-icon"><i class="ti-tablet"></i></div>
+                        <div class="contact_info-body">
+                            <h4>تلفن</h4>
+                            <p><a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
+                            <p class="contact_hours_hint">شنبه تا جمعه، ۹ تا ۱۸</p>
+                        </div>
+                    </div>
+                    <div class="contact_info-item">
+                        <div class="contact_info-icon"><i class="ti-email"></i></div>
+                        <div class="contact_info-body">
+                            <h4>ایمیل</h4>
+                            <p><a href="mailto:{{ institute.email }}">{{ institute.email }}</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="contact_form-card">
+                    {% if success %}
+                        <div class="contact_success">
+                            پیام شما با موفقیت ارسال شد. کارشناسان {{ institute.name }} در اسرع وقت با شما تماس خواهند گرفت.
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="contact_form" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی</label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.errors %}<small class="text-danger d-block">{{ form.full_name.errors|striptags }}</small>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}">ایمیل</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}<small class="text-danger d-block">{{ form.email.errors|striptags }}</small>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.subject.id_for_label }}">موضوع</label>
+                            {{ form.subject }}
+                            {% if form.subject.errors %}<small class="text-danger d-block">{{ form.subject.errors|striptags }}</small>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.message.id_for_label }}">متن پیام</label>
+                            {{ form.message }}
+                            {% if form.message.errors %}<small class="text-danger d-block">{{ form.message.errors|striptags }}</small>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label>کد امنیتی</label>
+                            <div class="contact_captcha-wrap">
+                                <span class="contact_captcha-question">{{ captcha_question }}</span>
+                                <div class="contact_captcha-input">
+                                    {{ form.captcha_answer }}
+                                    {% if form.captcha_answer.errors %}<small class="text-danger d-block mt-1">{{ form.captcha_answer.errors|striptags }}</small>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn_1 contact_btn-submit">ارسال پیام</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

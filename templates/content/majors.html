@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}رشته‌های تحصیلی | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}لیست رشته‌های تحصیلی ارائه‌شده توسط {{ institute.name }} برای اعزام دانشجو به کانادا، چین، اسپانیا و سایر کشورها.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/majors.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>رشته‌های تحصیلی</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>رشته‌ها</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="majors_area section_padding" dir="rtl">
+    <div class="container">
+        <div class="majors_intro">
+            <p class="majors_intro_text">
+                موسسه {{ institute.name }} با مجوز رسمی وزارت علوم، آماده ارائه خدمات مشاوره و اعزام دانشجو در رشته‌های مختلف تحصیلی به کشورهای
+                <strong>چین، کانادا و اسپانیا</strong> است. در این صفحه می‌توانید رشته‌های ارائه‌شده را بر اساس کشور مقصد فیلتر کنید.
+                در مورد انتخاب رشته سوال دارید؟ با کمال میل راهنمایی‌تان می‌کنیم.
+            </p>
+            <div class="majors_intro_actions">
+                <a href="{% url 'appointment' %}?about=majors" class="btn_1 majors_consult_btn">نیاز به مشاوره دارم</a>
+                <button type="button" class="btn_2 majors_filter_toggle_btn" id="majorsFilterToggle" aria-expanded="{% if filter_country %}true{% else %}false{% endif %}">
+                    <span class="ti-filter"></span> <span class="majors_filter_toggle_label">{% if filter_country %}بستن فیلتر{% else %}فیلتر کردن{% endif %}</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="majors_filter_wrap {% if filter_country %}is_open{% endif %}" id="majorsFilterWrap">
+                <form method="get" class="filter-card p-3 p-md-4 majors_filter_form">
+                    <div class="form-row align-items-end">
+                        <div class="form-group col-12 col-md-4">
+                            <label for="country">کشور مقصد</label>
+                            <select id="country" name="country" class="form-control majors-filter-select">
+                                <option value="">همه کشورها</option>
+                                {% for code, label in countries %}
+                                    <option value="{{ code }}" {% if code == filter_country %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-12 col-md-4">
+                            <button type="submit" class="btn_1 majors_btn_minwidth">جستجو</button>
+                            {% if filter_country %}
+                                <a href="{% url 'majors' %}" class="btn_2 mr-2 majors_btn_clear">پاک کردن فیلتر</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+        </div>
+
+        <div class="row">
+            {% if majors %}
+                {% for major in majors %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="major-card">
+                            <a href="{% url 'major_details' major.slug %}" class="major-card__image-link">
+                                {% if major.image %}
+                                    <img src="{{ major.image }}" alt="{{ major.title }}" class="major-card__image">
+                                {% else %}
+                                    <img src="{% static 'img/single_cource.webp' %}" alt="{{ major.title }}" class="major-card__image">
+                                {% endif %}
+                            </a>
+                            <div class="major-card__header">
+                                <h5 class="major-card__title">{{ major.title }}</h5>
+                                {% if major.country %}
+                                    <span class="major-card__badge">
+                                        {% if major.country == "china" %}چین{% elif major.country == "canada" %}کانادا{% elif major.country == "spain" %}اسپانیا{% else %}سایر کشورها{% endif %}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="major-card__body">
+                                <p class="major-card__desc">{% if major.short_description %}{{ major.short_description|truncatechars:150 }}{% elif major.description %}{{ major.description|truncatechars:150 }}{% else %}برای دریافت اطلاعات کامل درباره این رشته و شرایط تحصیل، با مشاوران ما تماس بگیرید.{% endif %}</p>
+                            </div>
+                            <div class="major-card__footer">
+                                <a href="{% url 'major_details' major.slug %}" class="btn_2">جزئیات رشته</a>
+                                <a href="{% url 'appointment' %}?about=major&title={{ major.title|urlencode }}" class="btn_1">درخواست مشاوره</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="majors_empty">
+                        <h4 class="mb-3">رشته‌ای یافت نشد</h4>
+                        <p>
+                            {% if filter_country %}
+                                در حال حاضر رشته‌ای برای کشور انتخاب‌شده ثبت نشده است. لطفاً فیلتر را پاک کنید یا با مشاوران ما تماس بگیرید.
+                            {% else %}
+                                در حال حاضر رشته‌ای در سیستم ثبت نشده است. برای دریافت اطلاعات درباره رشته‌های ارائه‌شده، با مشاوران {{ institute.name }} تماس بگیرید.
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'appointment' %}?about=majors" class="btn_1">رزرو مشاوره</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/majors.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}رزرو وقت مشاوره | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}رزرو جلسه مشاوره مهاجرت تحصیلی با {{ institute.name }}. انتخاب زمان از میان زمان‌های موجود.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/appointment.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script>window.PAGE_CONFIG = window.PAGE_CONFIG || {}; window.PAGE_CONFIG.appointmentSlotsUrl = "{% url 'appointment_slots' %}";</script>
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>رزرو وقت مشاوره</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>رزرو مشاوره</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="appt_area section_padding" dir="rtl">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="appt_intro">
+                    <h3>رزرو جلسه مشاوره مهاجرت تحصیلی</h3>
+                    <p>
+                        زمان مناسب را از میان زمان‌های موجود انتخاب کنید. مشاوره حضوری و آنلاین هر دو نیم‌ساعت هستند.
+                    </p>
+                </div>
+
+                <div class="appt_form-card">
+                    {% if success %}
+                        <div class="appt_success">
+                            درخواست شما با موفقیت ثبت شد. کارشناسان {{ institute.name }} در اولین فرصت با شما تماس خواهند گرفت.
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="appt_form" novalidate>
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی</label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.errors %}<small class="text-danger d-block">{{ form.full_name.errors|striptags }}</small>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.phone.id_for_label }}">شماره تماس</label>
+                                    {{ form.phone }}
+                                    {% if form.phone.errors %}<small class="text-danger d-block">{{ form.phone.errors|striptags }}</small>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">ایمیل (اختیاری)</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}<small class="text-danger d-block">{{ form.email.errors|striptags }}</small>{% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.consultation_type.id_for_label }}">نوع مشاوره</label>
+                                    {{ form.consultation_type }}
+                                    {% if form.consultation_type.errors %}<small class="text-danger d-block">{{ form.consultation_type.errors|striptags }}</small>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.country.id_for_label }}">کشور مقصد</label>
+                                    <select name="country" id="{{ form.country.id_for_label }}" class="form-control" required>
+                                        {% for value, label, flag in country_options %}
+                                            <option value="{{ value }}" {% if form.country.value == value %}selected{% endif %}>{{ flag }} {{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% if form.country.errors %}<small class="text-danger d-block">{{ form.country.errors|striptags }}</small>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group appt_slots-section">
+                            <label>تاریخ مشاوره</label>
+                            <div class="mb-3 appt_day_select_wrap">
+                                <select name="day" id="appt-day-select" class="form-control">
+                                    {% for day in available_days %}
+                                        <option value="{{ day.value }}" {% if selected_date and day.date == selected_date %}selected{% endif %}>
+                                            {{ day.label_g }} / {{ day.label_j }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <label>زمان مشاوره</label>
+                            <div id="appt-slots-wrapper">
+                                {% include "core/_appointment_slots.html" %}
+                            </div>
+
+                            {% if form.slot.errors %}<small class="text-danger d-block">{{ form.slot.errors|striptags }}</small>{% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}">توضیحات تکمیلی</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}<small class="text-danger d-block">{{ form.description.errors|striptags }}</small>{% endif %}
+                        </div>
+
+                        <button type="submit" class="btn_1 appt_btn-submit">ثبت درخواست مشاوره</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="appt_sidebar appt_sidebar_sticky">
+                    <div class="appt_sidebar-title">{{ institute.name }}</div>
+                    <p><a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
+                    <p><a href="mailto:{{ institute.email }}">{{ institute.email }}</a></p>
+                    <p>{{ institute.city }} — {{ institute.address }}</p>
+                    <a href="{% url 'contact' %}" class="btn_2 d-block text-center mt-3 appt_sidebar_btn">تماس با ما</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/appointment.js' %}"></script>
+{% endblock %}

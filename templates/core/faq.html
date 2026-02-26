@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}سوالات متداول مهاجرت تحصیلی و اعزام دانشجو | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}پاسخ سوالات متداول درباره مهاجرت تحصیلی، اعزام دانشجو به خارج، ویزای تحصیلی، بورسیه و انتخاب کشور مقصد (کانادا، آلمان، اروپا، چین) توسط موسسه {{ institute.name }}.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script>window.PAGE_CONFIG = window.PAGE_CONFIG || {}; window.PAGE_CONFIG.faqSearchUrl = "{% url 'faq_search' %}";</script>
+{% if faqs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for faq in faqs %}
+    {
+      "@type": "Question",
+      "name": "{{ faq.question|escapejs }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ faq.answer|striptags|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h1 class="breadcrumb_iner_title">سوالات متداول</h1>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>سوالات متداول</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="faq_area section_padding" dir="rtl">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="faq_intro">
+                    <h3>سوالات متداول درباره مهاجرت تحصیلی و اعزام دانشجو</h3>
+                    <p>
+                        در این صفحه پاسخ رایج‌ترین سوالات شما درباره <strong>مهاجرت تحصیلی، اعزام دانشجو، ویزای تحصیلی و بورسیه</strong> را می‌خوانید.
+                        اگر پاسخ سوال خود را پیدا نکردید، می‌توانید از طریق صفحه
+                        <a href="{% url 'contact' %}">ارتباط با ما</a>
+                        یا رزرو <a href="{% url 'appointment' %}">وقت مشاوره مهاجرت تحصیلی</a>
+                        با مشاوران {{ institute.name }} در تماس باشید.
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <input type="text" id="faq-search-input" class="faq_search-input" placeholder="جستجو در سوالات و پاسخ‌ها ..." autocomplete="off">
+                </div>
+
+                <div id="faq-content-wrapper">
+                    {% include "core/_faq_content.html" with faqs=faqs search_q="" %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/faq.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% load static %}
+<footer class="footer-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-lg-3">
+                <div class="single-footer-widget footer_1">
+                    <a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt="{{ institute.name }} - موسسه اعزام دانشجو" class="footer-logo" loading="lazy" width="160" height="48"></a>
+                    <p>{{ institute.name }} با تیمی متخصص و مجرب، در کنار شماست تا مسیر مهاجرت را ساده‌تر، مطمئن‌تر و حرفه‌ای‌تر طی کنید. ما با مجوز رسمی از وزارت علوم، همراه شما برای ساخت آینده‌ای روشن و پایدار هستیم.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="single-footer-widget footer_links">
+                    <h4>محتوا</h4>
+                    <ul>
+                        <li><a href="{% url 'schools_list' %}">دانشگاه‌ها</a></li>
+                        <li><a href="{% url 'majors' %}">رشته‌ها</a></li>
+                        <li><a href="{% url 'courses_list' %}">دوره‌ها</a></li>
+                        <li><a href="{% url 'services' %}">خدمات موسسه</a></li>
+                        <li><a href="{% url 'blog' %}">وبلاگ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="single-footer-widget footer_links">
+                    <h4>راهنما</h4>
+                    <ul>
+                        <li><a href="{% url 'about' %}">درباره ما</a></li>
+                        <li><a href="{% url 'appointment' %}">رزرو مشاوره</a></li>
+                        <li><a href="{% url 'evaluation' %}">فرم ارزیابی</a></li>
+                        <li><a href="{% url 'faq' %}">سوالات متداول</a></li>
+                        <li><a href="{% url 'contact' %}">تماس با ما</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="single-footer-widget footer_2">
+                    <h4>ارتباط با ما</h4>
+                    <div class="contact_info">
+                        <p><span>آدرس:</span> {{ institute.city }} – {{ institute.address }}</p>
+                        <p><span>تلفن:</span> <a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
+                        <p><span>ایمیل:</span> {{ institute.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright_part_text text-center">
+                    <p class="copyright m-0">© 2026 تمام حقوق محفوظ است | طراحی و توسعه توسط <a href="#" class="company-link">شرکت جستجوگران نوین هزارستان (هولدینگ مهفا)</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

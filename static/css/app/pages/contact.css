@@ -1,0 +1,94 @@
+/**
+ * صفحه تماس با ما - contact
+ */
+.contact_area {
+    padding-top: 50px;
+    padding-bottom: 60px;
+    background: #f8fafc;
+}
+.contact_intro { text-align: right; margin-bottom: 2rem; }
+.contact_intro h3 { font-size: 1.25rem; font-weight: 600; color: #0f2137; margin-bottom: 0.5rem; }
+.contact_intro p { font-size: 0.95rem; color: #495057; line-height: 1.7; }
+.contact_info-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
+    border: 1px solid #e8eef5;
+    height: 100%;
+}
+.contact_info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    text-align: right;
+}
+.contact_info-item:last-child { margin-bottom: 0; }
+.contact_info-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(12, 35, 64, 0.08);
+    border-radius: 12px;
+    color: #0c2340;
+}
+.contact_info-icon i { font-size: 1.2rem; }
+.contact_info-body h4 { font-size: 0.95rem; font-weight: 600; color: #0f2137; margin-bottom: 0.25rem; }
+.contact_info-body p { font-size: 0.9rem; color: #6b7280; margin: 0; }
+.contact_info-body a { color: #0c2340; font-weight: 500; }
+.contact_hours_hint { font-size: 0.8rem; color: #9ca3af; }
+.contact_form-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
+    border: 1px solid #e8eef5;
+}
+.contact_form .form-group { margin-bottom: 1rem; }
+.contact_form label { font-size: 0.9rem; font-weight: 500; color: #374151; margin-bottom: 0.35rem; }
+.contact_form .form-control {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+}
+.contact_form .form-control:focus {
+    border-color: #0c2340;
+    box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.1);
+}
+.contact_form textarea.form-control { min-height: 140px; resize: vertical; }
+.contact_captcha-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.contact_captcha-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0c2340;
+    padding: 0.6rem 1rem;
+    background: rgba(12, 35, 64, 0.06);
+    border-radius: 10px;
+    min-width: 120px;
+}
+.contact_captcha-input { flex: 1; min-width: 120px; }
+.contact_btn-submit { padding: 10px 24px; font-size: 0.95rem; border-radius: 8px; }
+.contact_success {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    text-align: right;
+}
+@media (max-width: 767.98px) {
+    .contact_area { padding-top: 35px; padding-bottom: 40px; }
+    .contact_form-card { padding: 1.25rem; }
+    .contact_captcha-wrap { flex-direction: column; align-items: stretch; }
+}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ member.name }} | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}{{ member.position }} در {{ institute.name }} — {{ member.description|truncatewords:30|striptags }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/about.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb_iner text-center">
+                    <div class="breadcrumb_iner_item">
+                        <h2>{{ member.name }}</h2>
+                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span><a href="{% url 'about' %}">درباره ما</a><span>/</span>{{ member.name }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="team_detail_section section_padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-5 mb-4 mb-md-0">
+                <div class="team_detail_card">
+                    <div class="team_detail_img">
+                        {% if member.image %}
+                            <img src="{{ member.image.url }}" alt="{{ member.name }}">
+                        {% else %}
+                            <img src="{% static 'img/blog/blog_1.png' %}" alt="{{ member.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="team_detail_info">
+                        <h3 class="team_detail_name">{{ member.name }}</h3>
+                        <p class="team_detail_position">{{ member.position }}</p>
+                        {% if member.title %}
+                            <p class="team_detail_title">{{ member.title }}</p>
+                        {% endif %}
+
+                        {% if member.phone or member.email %}
+                        <div class="team_detail_contact">
+                            {% if member.phone %}
+                                <a href="tel:{{ member.phone }}" class="team_detail_contact_item">
+                                    <span class="ti-mobile"></span>
+                                    <span class="tel-ltr">{{ member.phone }}</span>
+                                </a>
+                            {% endif %}
+                            {% if member.email %}
+                                <a href="mailto:{{ member.email }}" class="team_detail_contact_item">
+                                    <span class="ti-email"></span>
+                                    {{ member.email }}
+                                </a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        {% if member.telegram or member.whatsapp or member.instagram or member.linkedin or member.website %}
+                        <div class="team_detail_social">
+                            {% if member.telegram %}
+                                <a href="{{ member.telegram }}" target="_blank" rel="noopener" class="team_social_btn" title="تلگرام" aria-label="تلگرام">
+                                    <span class="ti-comments"></span>
+                                </a>
+                            {% endif %}
+                            {% if member.whatsapp %}
+                                <a href="https://wa.me/{{ member.whatsapp }}" target="_blank" rel="noopener" class="team_social_btn" title="واتساپ" aria-label="واتساپ">
+                                    <span class="ti-mobile"></span>
+                                </a>
+                            {% endif %}
+                            {% if member.instagram %}
+                                <a href="{{ member.instagram }}" target="_blank" rel="noopener" class="team_social_btn" title="اینستاگرام" aria-label="اینستاگرام">
+                                    <span class="ti-instagram"></span>
+                                </a>
+                            {% endif %}
+                            {% if member.linkedin %}
+                                <a href="{{ member.linkedin }}" target="_blank" rel="noopener" class="team_social_btn" title="لینکدین" aria-label="لینکدین">
+                                    <span class="ti-linkedin"></span>
+                                </a>
+                            {% endif %}
+                            {% if member.website %}
+                                <a href="{{ member.website }}" target="_blank" rel="noopener" class="team_social_btn" title="وب‌سایت" aria-label="وب‌سایت">
+                                    <span class="ti-world"></span>
+                                </a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-7">
+                <div class="team_detail_content">
+                    {% if member.description %}
+                        <div class="team_detail_desc ck-content">
+                            {{ member.description|linebreaks }}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">معرفی این عضو به زودی اضافه می‌شود.</p>
+                    {% endif %}
+                    <a href="{% url 'about' %}" class="btn_2 mt-4">بازگشت به درباره ما</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
