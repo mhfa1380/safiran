@@ -1,0 +1,102 @@
+{% load static %}
+{% load compress %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{% block meta_description %}موسسه {{ institute.name }} - مشاوره و مهاجرت تحصیلی و اعزام دانشجو به کانادا، آلمان، اسپانیا، چین و سایر کشورها. مشاوره رایگان، اخذ پذیرش دانشگاه و ویزای تحصیلی.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}مهاجرت تحصیلی, اعزام دانشجو, ویزای تحصیلی, پذیرش دانشگاه{% endblock %}">
+    <title>{% block title %}مهاجرت تحصیلی و اعزام دانشجو | {{ institute.name }}{% endblock %}</title>
+    <link rel="canonical" href="{% block canonical_url %}{{ canonical_url }}{% endblock %}">
+    <link rel="alternate" type="text/plain" href="{{ llms_txt_url }}" title="LLM Content Guide">
+    <link rel="alternate" type="application/json" href="{{ ai_index_url }}" title="AI Site Index">
+    <link rel="alternate" type="application/rss+xml" href="{{ blog_rss_url }}" title="وبلاگ {{ institute.name }}">
+    <link rel="sitemap" type="application/xml" href="{{ site_url }}/sitemap.xml">
+    {% for social_url in org_same_as_urls %}
+    <link rel="me" href="{{ social_url }}">
+    {% endfor %}
+    <meta name="author" content="{{ institute.name }}">
+    <meta name="publisher" content="{{ institute.name }}">
+    <meta name="citation_title" content="{% block citation_title %}{{ citation_title }}{% endblock %}">
+    <meta name="citation_publisher" content="{{ citation_publisher }}">
+    <meta name="citation_publication_date" content="{{ citation_date }}">
+    <meta name="dc.title" content="{% block dc_title %}{{ citation_title }}{% endblock %}">
+    <meta name="dc.creator" content="{{ institute.name }}">
+    <meta name="dc.publisher" content="{{ institute.name }}">
+    <meta name="dc.language" content="fa-IR">
+    <meta name="geo.region" content="{{ geo_region }}">
+    <meta name="geo.placename" content="{{ geo_placename }}">
+    <meta name="robots" content="{% block meta_robots %}{{ meta_robots|default:"index, follow" }}{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}مهاجرت تحصیلی و اعزام دانشجو | {{ institute.name }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ institute.name }} - مشاوره تخصصی مهاجرت تحصیلی، اعزام دانشجو، بورسیه و ویزای تحصیلی برای دانشجویان ایرانی.{% endblock %}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:image" content="{% block og_image %}{{ site_url }}{% static 'img/logo.png' %}{% endblock %}">
+    <meta property="og:locale" content="fa_IR">
+    <meta property="og:site_name" content="{{ institute.name }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}مهاجرت تحصیلی و اعزام دانشجو | {{ institute.name }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ institute.name }} - مشاوره و خدمات کامل مهاجرت تحصیلی، اعزام دانشجو و ویزای تحصیلی.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ site_url }}{% static 'img/logo.png' %}{% endblock %}">
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+    <script type="application/ld+json">{{ site_json_ld_graph|safe }}</script>
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'css/vendors/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/fonts.css' %}">
+    {% block theme_css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/app/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/components/page-hero.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/components/answer-summary-banner.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/components/site-header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/components/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ck-content.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/components/search-highlight.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/components/nav-degree-banner.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/components/form-captcha.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app/components/corner-promos.css' %}">
+    {% endcompress %}
+    {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% include "layout/header.html" %}
+
+    <main id="main-content" role="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "layout/footer.html" %}
+    {% include "layout/_corner_promos.html" %}
+
+    <script>window.STATIC_URL = "{% get_static_prefix %}";</script>
+    <script>
+    window.SITE_HEADER_CONFIG = {
+      suggestUrl: "{% url 'site_suggest' %}",
+      searchPageUrl: "{% url 'site_search' %}"
+    };
+    </script>
+    {% compress js %}
+    <script src="{% static 'js/vendors/jquery-1.12.1.min.js' %}" defer></script>
+    <script src="{% static 'js/app/base.js' %}" defer></script>
+    <script src="{% static 'js/app/form-captcha.js' %}" defer></script>
+    <script src="{% static 'js/app/site-header.js' %}" defer></script>
+    <script src="{% static 'js/app/search-highlight.js' %}" defer></script>
+    <script src="{% static 'js/vendors/popper.min.js' %}" defer></script>
+    <script src="{% static 'js/vendors/bootstrap.min.js' %}" defer></script>
+    <script src="{% static 'js/vendors/jquery.magnific-popup.js' %}" defer></script>
+    <script src="{% static 'js/vendors/owl.carousel.min.js' %}" defer></script>
+    <script src="{% static 'js/app/custom.js' %}" defer></script>
+    <script src="{% static 'js/app/corner-promos.js' %}" defer></script>
+    {% endcompress %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

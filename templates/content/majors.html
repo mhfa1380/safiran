@@ -2,119 +2,240 @@
 {% load static %}
 
 {% block title %}رشته‌های تحصیلی | {{ institute.name }}{% endblock %}
-
-{% block meta_description %}لیست رشته‌های تحصیلی ارائه‌شده توسط {{ institute.name }} برای اعزام دانشجو به کانادا، چین، اسپانیا و سایر کشورها.{% endblock %}
+{% block meta_description %}لیست رشته‌های تحصیلی {{ institute.name }} برای اعزام به کانادا، چین، اسپانیا و سایر کشورها — جستجو و پیشنهاد هوشمند.{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/schools.css' %}">
 <link rel="stylesheet" href="{% static 'css/app/pages/majors.css' %}">
 {% endblock %}
 
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه اصلی","item":"{{ site_url }}/"},{"@type":"ListItem","position":2,"name":"رشته‌های تحصیلی","item":"{{ site_url }}{% url 'majors' %}"}]}
+</script>
+<script>
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+window.PAGE_CONFIG.majorsSearchUrl = "{% url 'majors_search' %}";
+window.PAGE_CONFIG.majorsSuggestUrl = "{% url 'majors_suggest' %}";
+window.PAGE_CONFIG.majorsActiveCountry = "{{ filter_country|default:'' }}";
+window.PAGE_CONFIG.majorsActiveUniversity = "{{ filter_university_slug|default:'' }}";
+window.PAGE_CONFIG.majorsPageSize = {{ majors_page_size|default:20 }};
+window.PAGE_CONFIG.majorsHasMore = {% if majors_has_more %}true{% else %}false{% endif %};
+window.PAGE_CONFIG.majorsTotal = {{ majors_total|default:0 }};
+window.PAGE_CONFIG.majorsNextOffset = {{ majors_list|length }};
+window.PAGE_CONFIG.majorsWorldCountries = [
+    {% for item in world_country_nav %}
+    {
+        "code": "{{ item.code }}",
+        "label": "{{ item.label|escapejs }}",
+        "flag": "{% if item.flag %}{% static item.flag %}{% endif %}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+</script>
+{% endblock %}
+
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
+{% include "layout/page_hero.html" with hero_title="رشته‌های تحصیلی" hero_lead="رشته مناسب خود را پیدا کنید — جستجوی هوشمند، فیلتر کشور مقصد و مشاوره تخصصی برای انتخاب مسیر تحصیلی." crumb2_label="رشته‌های تحصیلی" %}
+
+<section class="faq-page majors-page section_padding" dir="rtl" lang="fa">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>رشته‌های تحصیلی</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>رشته‌ها</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="majors_area section_padding" dir="rtl">
-    <div class="container">
-        <div class="majors_intro">
-            <p class="majors_intro_text">
-                موسسه {{ institute.name }} با مجوز رسمی وزارت علوم، آماده ارائه خدمات مشاوره و اعزام دانشجو در رشته‌های مختلف تحصیلی به کشورهای
-                <strong>چین، کانادا و اسپانیا</strong> است. در این صفحه می‌توانید رشته‌های ارائه‌شده را بر اساس کشور مقصد فیلتر کنید.
-                در مورد انتخاب رشته سوال دارید؟ با کمال میل راهنمایی‌تان می‌کنیم.
-            </p>
-            <div class="majors_intro_actions">
-                <a href="{% url 'appointment' %}?about=majors" class="btn_1 majors_consult_btn">نیاز به مشاوره دارم</a>
-                <button type="button" class="btn_2 majors_filter_toggle_btn" id="majorsFilterToggle" aria-expanded="{% if filter_country %}true{% else %}false{% endif %}">
-                    <span class="ti-filter"></span> <span class="majors_filter_toggle_label">{% if filter_country %}بستن فیلتر{% else %}فیلتر کردن{% endif %}</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="majors_filter_wrap {% if filter_country %}is_open{% endif %}" id="majorsFilterWrap">
-                <form method="get" class="filter-card p-3 p-md-4 majors_filter_form">
-                    <div class="form-row align-items-end">
-                        <div class="form-group col-12 col-md-4">
-                            <label for="country">کشور مقصد</label>
-                            <select id="country" name="country" class="form-control majors-filter-select">
-                                <option value="">همه کشورها</option>
-                                {% for code, label in countries %}
-                                    <option value="{{ code }}" {% if code == filter_country %}selected{% endif %}>
-                                        {{ label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group col-12 col-md-4">
-                            <button type="submit" class="btn_1 majors_btn_minwidth">جستجو</button>
-                            {% if filter_country %}
-                                <a href="{% url 'majors' %}" class="btn_2 mr-2 majors_btn_clear">پاک کردن فیلتر</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </form>
-        </div>
-
-        <div class="row">
-            {% if majors %}
-                {% for major in majors %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="major-card">
-                            <a href="{% url 'major_details' major.slug %}" class="major-card__image-link">
-                                {% if major.image %}
-                                    <img src="{{ major.image }}" alt="{{ major.title }}" class="major-card__image">
-                                {% else %}
-                                    <img src="{% static 'img/single_cource.webp' %}" alt="{{ major.title }}" class="major-card__image">
-                                {% endif %}
+        {% include "layout/_nav_degree_banner.html" %}
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 faq-page__aside majors-page__aside" aria-label="فیلتر کشور مقصد">
+                <div class="faq-page__panel faq-page__panel--sticky">
+                    <div class="schools-aside__block">
+                        <h2 class="schools-aside__label">
+                            <span class="ti-world" aria-hidden="true"></span>
+                            کشور مقصد
+                        </h2>
+                        <nav class="faq-page__nav faq-page__nav--compact-grid" aria-label="فیلتر کشور">
+                            <a href="{% url 'majors' %}"
+                               class="faq-page__nav-link{% if not filter_country %} is-active{% endif %}"
+                               data-major-country=""
+                               {% if not filter_country %}aria-current="page"{% endif %}>
+                                <span class="ti-layout-grid2" aria-hidden="true"></span>
+                                <span>همه</span>
                             </a>
-                            <div class="major-card__header">
-                                <h5 class="major-card__title">{{ major.title }}</h5>
-                                {% if major.country %}
-                                    <span class="major-card__badge">
-                                        {% if major.country == "china" %}چین{% elif major.country == "canada" %}کانادا{% elif major.country == "spain" %}اسپانیا{% else %}سایر کشورها{% endif %}
-                                    </span>
+                            {% for item in primary_country_nav %}
+                            <a href="{% url 'majors' %}?country={{ item.code }}"
+                               class="faq-page__nav-link{% if filter_country == item.code %} is-active{% endif %}"
+                               data-major-country="{{ item.code }}"
+                               {% if filter_country == item.code %}aria-current="page"{% endif %}>
+                                {% if item.flag %}
+                                <img src="{% static item.flag %}" alt="" class="faq-page__nav-flag" width="20" height="14" loading="lazy">
+                                {% else %}
+                                <span class="ti-location-pin" aria-hidden="true"></span>
                                 {% endif %}
-                            </div>
-                            <div class="major-card__body">
-                                <p class="major-card__desc">{% if major.short_description %}{{ major.short_description|truncatechars:150 }}{% elif major.description %}{{ major.description|truncatechars:150 }}{% else %}برای دریافت اطلاعات کامل درباره این رشته و شرایط تحصیل، با مشاوران ما تماس بگیرید.{% endif %}</p>
-                            </div>
-                            <div class="major-card__footer">
-                                <a href="{% url 'major_details' major.slug %}" class="btn_2">جزئیات رشته</a>
-                                <a href="{% url 'appointment' %}?about=major&title={{ major.title|urlencode }}" class="btn_1">درخواست مشاوره</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-12">
-                    <div class="majors_empty">
-                        <h4 class="mb-3">رشته‌ای یافت نشد</h4>
-                        <p>
-                            {% if filter_country %}
-                                در حال حاضر رشته‌ای برای کشور انتخاب‌شده ثبت نشده است. لطفاً فیلتر را پاک کنید یا با مشاوران ما تماس بگیرید.
-                            {% else %}
-                                در حال حاضر رشته‌ای در سیستم ثبت نشده است. برای دریافت اطلاعات درباره رشته‌های ارائه‌شده، با مشاوران {{ institute.name }} تماس بگیرید.
+                                <span>{{ item.label }}</span>
+                            </a>
+                            {% endfor %}
+                            {% if world_country_nav %}
+                            <button type="button"
+                                    class="faq-page__nav-link schools-world-country-trigger{% if active_world_country %} is-active{% endif %}"
+                                    data-major-country-picker
+                                    aria-haspopup="dialog"
+                                    aria-controls="majorsCountryModal"
+                                    {% if active_world_country %}aria-current="page"{% endif %}>
+                                {% if active_world_country and active_world_country.flag %}
+                                <img src="{% static active_world_country.flag %}" alt="" class="faq-page__nav-flag" width="20" height="14" loading="lazy">
+                                {% else %}
+                                <span class="ti-world" aria-hidden="true"></span>
+                                {% endif %}
+                                <span class="schools-world-country-trigger__label">{% if active_world_country %}{{ active_world_country.label }}{% else %}سایر کشورها{% endif %}</span>
+                            </button>
                             {% endif %}
-                        </p>
-                        <a href="{% url 'appointment' %}?about=majors" class="btn_1">رزرو مشاوره</a>
+                        </nav>
                     </div>
                 </div>
-            {% endif %}
+
+                {% if featured_majors %}
+                <div class="faq-page__panel faq-page__panel--featured">
+                    <p class="faq-page__panel-kicker">
+                        <span class="ti-star" aria-hidden="true"></span>
+                        پرطرفدار
+                    </p>
+                    <ul class="faq-page__popular">
+                        {% for major in featured_majors %}
+                        <li>
+                            <button type="button"
+                                    class="faq-page__popular-btn"
+                                    data-major-jump="{{ major.slug }}"
+                                    data-major-id="{{ major.id }}">
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+                                {{ major.title }}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 faq-page__main">
+                {% include "layout/_evaluation_promo.html" with promo_country=filter_country promo_ref="majors-list" promo_title="ارزیابی هوشمند — کدام رشته و کشور برای شماست؟" promo_text="گزارش رایگان شخصی‌سازی‌شده: کشور، رشته، بورسیه و شانس پذیرش." %}
+
+                {% if filter_university %}
+                <div class="majors-university-banner faq-page__panel" role="status">
+                    <div class="majors-university-banner__body">
+                        <span class="ti-home majors-university-banner__icon" aria-hidden="true"></span>
+                        <div>
+                            <p class="majors-university-banner__title">
+                                رشته‌های مرتبط با <strong>{{ filter_university.name_fa }}</strong>
+                            </p>
+                            <p class="majors-university-banner__meta">
+                                {{ majors_total }} رشته — {{ filter_university.get_country_display }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="majors-university-banner__actions">
+                        <a href="{% url 'school_detail' filter_university.slug %}" class="faq-page__btn faq-page__btn--ghost">صفحه دانشگاه</a>
+                        <a href="{% url 'majors' %}{% if filter_country %}?country={{ filter_country }}{% endif %}" class="majors-university-banner__clear">حذف فیلتر دانشگاه</a>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if featured_majors %}
+                <div class="faq-page__chips" aria-label="رشته‌های پرطرفدار">
+                    <span class="faq-page__chips-label">پرطرفدار:</span>
+                    <div class="faq-page__chips-scroll">
+                        {% for major in featured_majors %}
+                        <button type="button"
+                                class="faq-page__chip"
+                                data-major-jump="{{ major.slug }}"
+                                data-major-id="{{ major.id }}">
+                            {{ major.title }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="majors-finder" aria-label="جستجوی هوشمند رشته">
+                    <div class="majors-finder__head">
+                        <h2 class="majors-finder__title">
+                            <span class="ti-target" aria-hidden="true"></span>
+                            دنبال چه رشته‌ای هستید؟
+                        </h2>
+                        <p class="majors-finder__lead">عبارت را بنویسید یا یکی از پیشنهادها را انتخاب کنید.</p>
+                    </div>
+                    <div class="majors-smart-tags" role="group" aria-label="پیشنهاد جستجو">
+                        <button type="button" class="majors-smart-tag" data-major-smart="مهندسی">مهندسی</button>
+                        <button type="button" class="majors-smart-tag" data-major-smart="پزشکی">پزشکی</button>
+                        <button type="button" class="majors-smart-tag" data-major-smart="کامپیوتر">کامپیوتر</button>
+                        <button type="button" class="majors-smart-tag" data-major-smart="مدیریت">مدیریت</button>
+                        <button type="button" class="majors-smart-tag" data-major-smart="حقوق">حقوق</button>
+                        <button type="button" class="majors-smart-tag" data-major-smart="معماری">معماری</button>
+                    </div>
+                </div>
+
+                <div class="faq-page__search">
+                    <label class="faq-page__sr-only" for="majors-search-input">جستجو در رشته‌ها</label>
+                    <div class="faq-page__search-field">
+                        <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+                        <input type="search"
+                               id="majors-search-input"
+                               class="faq-page__search-input"
+                               placeholder="جستجو در عنوان، توضیحات و سوالات هر رشته…"
+                               autocomplete="off"
+                               enterkeyhint="search"
+                               aria-controls="majors-content-wrapper">
+                        <div id="majors-suggest-panel" class="faq-page__suggest" hidden role="listbox" aria-label="پیشنهاد رشته"></div>
+                    </div>
+                </div>
+
+                <div class="faq-page__filters majors-country-filters" role="toolbar" aria-label="فیلتر کشور">
+                    <button type="button"
+                            class="faq-page__filter{% if not filter_country %} is-active{% endif %}"
+                            data-major-country="">همه</button>
+                    {% for item in primary_country_nav %}
+                    <button type="button"
+                            class="faq-page__filter{% if filter_country == item.code %} is-active{% endif %}"
+                            data-major-country="{{ item.code }}">{{ item.label }}</button>
+                    {% endfor %}
+                    {% if world_country_nav %}
+                    <button type="button"
+                            class="faq-page__filter schools-world-country-trigger{% if active_world_country %} is-active{% endif %}"
+                            data-major-country-picker
+                            aria-haspopup="dialog"
+                            aria-controls="majorsCountryModal">
+                        {% if active_world_country %}{{ active_world_country.label }}{% else %}سایر کشورها{% endif %}
+                    </button>
+                    {% endif %}
+                </div>
+
+                <div id="majors-content-wrapper" class="faq-page__content majors-page__content" role="region" aria-label="لیست رشته‌ها">
+                    {% include "content/_majors_content.html" with majors_list=majors_list search_q="" suggestions=None filter_country=filter_country %}
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
+<div id="majorsCountryModal" class="schools-country-modal" dir="rtl" hidden aria-hidden="true">
+    <div class="schools-country-modal__backdrop" data-major-country-close tabindex="-1"></div>
+    <div class="schools-country-modal__box" role="dialog" aria-modal="true" aria-labelledby="majorsCountryModalTitle">
+        <button type="button" class="schools-country-modal__close" data-major-country-close aria-label="بستن">&times;</button>
+        <h4 class="schools-country-modal__title" id="majorsCountryModalTitle">انتخاب کشور</h4>
+        <p class="schools-country-modal__lead">نام کشور را جستجو کنید یا از لیست انتخاب کنید.</p>
+        <label class="faq-page__sr-only" for="majorsCountrySearch">جستجوی کشور</label>
+        <div class="faq-page__search-field schools-country-modal__search">
+            <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+            <input type="search"
+                   id="majorsCountrySearch"
+                   class="faq-page__search-input"
+                   placeholder="جستجو… نام کشور"
+                   autocomplete="off"
+                   enterkeyhint="search">
+        </div>
+        <div class="schools-country-modal__list" id="majorsCountryList" role="listbox" aria-label="لیست کشورها"></div>
+        <p class="schools-country-modal__empty" id="majorsCountryEmpty" hidden>کشوری با این نام پیدا نشد.</p>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/app/pages/majors.js' %}"></script>
+<script src="{% static 'js/app/pages/majors.js' %}" defer></script>
 {% endblock %}

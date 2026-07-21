@@ -1,0 +1,36 @@
+{% load static jalali_filters %}
+{% for post in posts %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <article class="blog-card h-100" data-blog-slug="{{ post.slug }}">
+            <a href="{% url 'blog_detail' post.slug %}" class="blog-card__image d-block">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" loading="lazy">
+                {% else %}
+                    <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ post.title }}" loading="lazy">
+                {% endif %}
+                <span class="blog-card__date">
+                    <strong>{{ post.created_at|jalali_day|persian_numbers }}</strong>
+                    {{ post.created_at|jalali_month_year|persian_numbers }}
+                </span>
+            </a>
+            <div class="blog-card__body">
+                {% if post.country_tag %}
+                    <button type="button" class="blog-card__tag" data-blog-filter-tag="{{ post.country_tag }}">{{ post.country_tag }}</button>
+                {% endif %}
+                <a href="{% url 'blog_detail' post.slug %}">
+                    <h5 class="blog-card__title">{{ post.title }}</h5>
+                </a>
+                <p class="blog-card__excerpt">
+                    {% if post.excerpt %}
+                        {{ post.excerpt|truncatechars:120 }}
+                    {% else %}
+                        {{ post.content|striptags|truncatechars:120 }}
+                    {% endif %}
+                </p>
+            </div>
+            <div class="blog-card__footer">
+                <a href="{% url 'blog_detail' post.slug %}" class="btn_2">ادامه مطلب</a>
+            </div>
+        </article>
+    </div>
+{% endfor %}

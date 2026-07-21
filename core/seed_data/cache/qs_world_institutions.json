@@ -1,0 +1,272 @@
+[
+  {
+    "name_en": "Massachusetts Institute of Technology",
+    "country_code": "usa",
+    "qs_rank": 1
+  },
+  {
+    "name_en": "University of Hong Kong",
+    "country_code": "hong_kong",
+    "qs_rank": 1
+  },
+  {
+    "name_en": "Imperial College London",
+    "country_code": "uk",
+    "qs_rank": 2
+  },
+  {
+    "name_en": "Nanyang Technological University",
+    "country_code": "singapore",
+    "qs_rank": 3
+  },
+  {
+    "name_en": "National University of Singapore",
+    "country_code": "singapore",
+    "qs_rank": 3
+  },
+  {
+    "name_en": "Stanford University",
+    "country_code": "usa",
+    "qs_rank": 3
+  },
+  {
+    "name_en": "University of Oxford",
+    "country_code": "uk",
+    "qs_rank": 4
+  },
+  {
+    "name_en": "Harvard University",
+    "country_code": "usa",
+    "qs_rank": 5
+  },
+  {
+    "name_en": "Hong Kong University of Science and Technology",
+    "country_code": "hong_kong",
+    "qs_rank": 6
+  },
+  {
+    "name_en": "University of Cambridge",
+    "country_code": "uk",
+    "qs_rank": 6
+  },
+  {
+    "name_en": "Chinese University of Hong Kong",
+    "country_code": "hong_kong",
+    "qs_rank": 7
+  },
+  {
+    "name_en": "City University of Hong Kong",
+    "country_code": "hong_kong",
+    "qs_rank": 7
+  },
+  {
+    "name_en": "University College London",
+    "country_code": "uk",
+    "qs_rank": 9
+  },
+  {
+    "name_en": "California Institute of Technology",
+    "country_code": "usa",
+    "qs_rank": 10
+  },
+  {
+    "name_en": "Hong Kong Polytechnic University",
+    "country_code": "hong_kong",
+    "qs_rank": 10
+  },
+  {
+    "name_en": "University of Chicago",
+    "country_code": "usa",
+    "qs_rank": 13
+  },
+  {
+    "name_en": "University of Pennsylvania",
+    "country_code": "usa",
+    "qs_rank": 15
+  },
+  {
+    "name_en": "Cornell University",
+    "country_code": "usa",
+    "qs_rank": 16
+  },
+  {
+    "name_en": "University of California, Berkeley",
+    "country_code": "usa",
+    "qs_rank": 17
+  },
+  {
+    "name_en": "University of Melbourne",
+    "country_code": "australia",
+    "qs_rank": 19
+  },
+  {
+    "name_en": "University of New South Wales",
+    "country_code": "australia",
+    "qs_rank": 20
+  },
+  {
+    "name_en": "Yale University",
+    "country_code": "usa",
+    "qs_rank": 21
+  },
+  {
+    "name_en": "Technical University of Munich",
+    "country_code": "germany",
+    "qs_rank": 22
+  },
+  {
+    "name_en": "École Polytechnique Fédérale de Lausanne",
+    "country_code": "switzerland",
+    "qs_rank": 22
+  },
+  {
+    "name_en": "Johns Hopkins University",
+    "country_code": "usa",
+    "qs_rank": 24
+  },
+  {
+    "name_en": "Princeton University",
+    "country_code": "usa",
+    "qs_rank": 25
+  },
+  {
+    "name_en": "University of Sydney",
+    "country_code": "australia",
+    "qs_rank": 25
+  },
+  {
+    "name_en": "American University of Sharjah",
+    "country_code": "uae",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Columbia University",
+    "country_code": "usa",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Duke University",
+    "country_code": "usa",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Karolinska Institute",
+    "country_code": "sweden",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Khalifa University",
+    "country_code": "uae",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "King Abdulaziz University",
+    "country_code": "saudi_arabia",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "King Fahd University of Petroleum and Minerals",
+    "country_code": "saudi_arabia",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "King Saud University",
+    "country_code": "saudi_arabia",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "King's College London",
+    "country_code": "uk",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Lund University",
+    "country_code": "sweden",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Pontificia Universidad Católica de Chile",
+    "country_code": "chile",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Qatar University",
+    "country_code": "qatar",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "United Arab Emirates University",
+    "country_code": "uae",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Universidad Nacional Autónoma de México",
+    "country_code": "mexico",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Universidad de Buenos Aires",
+    "country_code": "argentina",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Universidad de Chile",
+    "country_code": "chile",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Universidade Estadual Paulista",
+    "country_code": "brazil",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Universidade Estadual de Campinas",
+    "country_code": "brazil",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Universidade Federal do Rio de Janeiro",
+    "country_code": "brazil",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "Universidade de São Paulo",
+    "country_code": "brazil",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "University of California, Los Angeles",
+    "country_code": "usa",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "University of California, San Diego",
+    "country_code": "usa",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "University of California, San Francisco",
+    "country_code": "usa",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "University of Edinburgh",
+    "country_code": "uk",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "University of Manchester",
+    "country_code": "uk",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "University of Michigan-Ann Arbor",
+    "country_code": "usa",
+    "qs_rank": 9999
+  },
+  {
+    "name_en": "University of Washington",
+    "country_code": "usa",
+    "qs_rank": 9999
+  }
+]

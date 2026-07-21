@@ -1,0 +1,608 @@
+{% load static %}
+
+<article class="evalr-results" id="evalResults" aria-live="polite">
+
+    <div class="evalr-panel evalr-panel--success">
+
+        <div class="evalr-panel__body">
+
+            <h2 class="evalr-panel__title">اطلاعات شما ثبت شد</h2>
+
+            <p class="evalr-panel__text">
+                {{ report.applicant_name|default:"دوست" }} عزیز، پرونده‌تان با موفقیت ثبت شد.
+                کارشناسان <strong>{{ institute.name }}</strong> پس از بررسی، برای هماهنگی تماس با شما اقدام می‌کنند.
+                در همین صفحه می‌توانید <strong>پیشنهادهای اولیه</strong> را بخوانید — بر اساس مقطع، معدل، زبان، کشورهای انتخابی و اطلاعاتی که در فرم ثبت کردید.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    {% if report and report.has_data %}
+
+    <div class="evalr-hero" id="evalTopPick">
+
+        <div class="evalr-hero__head">
+
+            <span class="evalr-badge evalr-badge--accent">پیشنهاد برتر</span>
+
+            {% if report.engine_version %}
+
+            <span class="evalr-badge evalr-badge--muted">الگوریتم نسخه {{ report.engine_version }}</span>
+
+            {% endif %}
+
+            {% if report.adaptive_learning.active %}
+
+            <span class="evalr-badge evalr-badge--learn" title="یادگیری از {{ report.adaptive_learning.sample_label|default:'هزاران' }} پرونده">یادگیری تطبیقی فعال</span>
+
+            {% endif %}
+
+        </div>
+
+        <div class="evalr-hero__layout">
+
+            <div class="evalr-hero__aside">
+
+                <div class="evalr-match">
+
+                    <div class="evalr-match__ring" style="--pct: {{ report.top_pick.match_percent }}">
+
+                        <span class="evalr-match__value">{{ report.top_pick.match_percent }}٪</span>
+
+                    </div>
+
+                    <p class="evalr-match__label">تطابق با پروفایل شما</p>
+                    {% if report.top_pick.confidence_label %}
+                    <span class="evalr-match__confidence evalr-match__confidence--{{ report.top_pick.confidence }}">{{ report.top_pick.confidence_label }}</span>
+                    {% endif %}
+
+                </div>
+
+                <div class="evalr-pick-grid evalr-pick-grid--stack">
+
+                    <div class="evalr-pick-card">
+
+                        <span class="evalr-pick-card__label">کشور</span>
+
+                        <strong class="evalr-pick-card__value">{{ report.top_pick.country.name }}</strong>
+
+                        <a href="{{ report.top_pick.country.url }}" class="evalr-link" target="_blank" rel="noopener noreferrer">راهنمای {{ report.top_pick.country.name }}</a>
+
+                    </div>
+
+                    {% if report.top_pick.university %}
+
+                    <div class="evalr-pick-card">
+
+                        <span class="evalr-pick-card__label">دانشگاه</span>
+
+                        <strong class="evalr-pick-card__value">{{ report.top_pick.university.name_fa }}</strong>
+
+                        <span class="evalr-pick-card__meta">{{ report.top_pick.university.city }}</span>
+
+                    </div>
+
+                    {% endif %}
+
+                    <div class="evalr-pick-card">
+
+                        <span class="evalr-pick-card__label">رشته</span>
+
+                        <strong class="evalr-pick-card__value">{{ report.top_pick.major.title }}</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="evalr-hero__main">
+
+                {% if report.course_note %}
+                <p class="evalr-hero__course-note">{{ report.course_note }}</p>
+                {% endif %}
+
+                <p class="evalr-hero__summary">{{ report.top_pick.summary }}</p>
+
+                {% if report.top_pick.analysis or report.top_pick.blog_reading %}
+                <ul class="evalr-analysis" aria-label="تحلیل پرونده">
+                    {% for line in report.top_pick.analysis %}
+                    <li>{{ line }}</li>
+                    {% endfor %}
+                    {% if report.top_pick.blog_reading %}
+                    <li class="evalr-analysis__blog">
+                        {% with br=report.top_pick.blog_reading %}
+                        {% if br.variant == "weblog" %}
+                        مطالعه پیشنهادی در وبلاگ: <a href="{{ br.url }}" class="evalr-analysis__blog-link" target="_blank" rel="noopener noreferrer">«{{ br.title }}»</a> ({{ br.reason }}).
+                        {% else %}
+                        برای جزئیات بیشتر، مقاله <a href="{{ br.url }}" class="evalr-analysis__blog-link" target="_blank" rel="noopener noreferrer">«{{ br.title }}»</a> را ببینید — {{ br.reason }}.
+                        {% endif %}
+                        {% endwith %}
+                    </li>
+                    {% endif %}
+                </ul>
+                {% elif report.top_pick.detail %}
+                <p class="evalr-hero__detail">{{ report.top_pick.detail }}</p>
+                {% endif %}
+
+                {% if report.top_pick.reasons %}
+
+                <ul class="evalr-reasons" aria-label="دلایل پیشنهاد">
+
+                    {% for r in report.top_pick.reasons %}
+
+                    <li>{{ r }}</li>
+
+                    {% endfor %}
+
+                </ul>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="evalr-block__hintrow">
+            {% include "core/_evaluation_section_hint.html" with hint_section="top_pick" %}
+        </div>
+
+    </div>
+
+
+
+    {% include "core/_evaluation_lang_pathway.html" with lang_promo_slot='high' %}
+
+
+
+    {% if report.top_pick.university %}
+
+    <div class="evalr-block">
+
+        <h3 class="evalr-block__title"><span class="ti-home" aria-hidden="true"></span> دانشگاه پیشنهادی</h3>
+
+        <a href="{{ report.top_pick.university.url }}" class="evalr-uni-card" target="_blank" rel="noopener noreferrer">
+
+            {% if report.top_pick.university.image_url %}
+
+            <div class="evalr-uni-card__img" style="background-image: url('{{ report.top_pick.university.image_url }}');" role="img" aria-label="{{ report.top_pick.university.name_fa }}"></div>
+
+            {% else %}
+
+            <div class="evalr-uni-card__img evalr-uni-card__img--empty"><span class="ti-book" aria-hidden="true"></span></div>
+
+            {% endif %}
+
+            <div class="evalr-uni-card__body">
+
+                <div class="evalr-uni-card__head">
+
+                    <div class="evalr-uni-card__names">
+
+                        <h4>{{ report.top_pick.university.name_fa }}</h4>
+
+                        <p class="evalr-uni-card__en">{{ report.top_pick.university.name_en }}</p>
+
+                    </div>
+
+                    {% if report.top_pick.university.world_rank %}
+
+                    <span class="evalr-chip">رتبه {{ report.top_pick.university.world_rank }}</span>
+
+                    {% endif %}
+
+                </div>
+
+                <p class="evalr-uni-card__desc">{{ report.top_pick.university.short_description }}</p>
+
+                <span class="evalr-uni-card__cta">مشاهده جزئیات</span>
+
+            </div>
+
+        </a>
+
+        <div class="evalr-block__hintrow">
+            {% include "core/_evaluation_section_hint.html" with hint_section="university" %}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    {% if report.scholarships %}
+    <div class="evalr-block evalr-block--scholarships" id="evalScholarships">
+        <h3 class="evalr-block__title"><span class="ti-wallet" aria-hidden="true"></span> پیشنهاد بورسیه و فاند</h3>
+        <p class="evalr-block__lead">
+            بر اساس کشور{% if report.top_pick.university %} و دانشگاه{% endif %} پیشنهادی، مقطع هدف{% if report.scholarship_target %} و تمرکز بورسیه پرونده{% endif %} شما — بورسیه‌های مرتبط از داده سایت:
+        </p>
+        <ul class="evalr-scholarship-list">
+            {% for s in report.scholarships %}
+            <li class="evalr-scholarship-list__item">
+                <a href="{{ s.url }}" class="evalr-scholarship-row{% if s.is_university_match %} is-uni-match{% endif %}{% if s.is_featured %} is-featured{% endif %}" target="_blank" rel="noopener noreferrer" title="{{ s.name }} — {{ s.provider }}">
+                    <span class="evalr-scholarship-row__badges">
+                        <span class="evalr-scholarship-row__country">{{ s.country_name }}</span>
+                        {% if s.is_university_match %}
+                        <span class="evalr-scholarship-row__chip is-uni">دانشگاه پیشنهادی</span>
+                        {% endif %}
+                        {% for tag in s.tags|slice:":2" %}
+                        <span class="evalr-scholarship-row__chip">{{ tag }}</span>
+                        {% endfor %}
+                    </span>
+                    <span class="evalr-scholarship-row__main">
+                        <span class="evalr-scholarship-row__title">{{ s.name|truncatechars:64 }}</span>
+                        {% if s.provider %}
+                        <span class="evalr-scholarship-row__dot" aria-hidden="true">·</span>
+                        <span class="evalr-scholarship-row__provider">{{ s.provider|truncatechars:28 }}</span>
+                        {% endif %}
+                        <span class="evalr-scholarship-row__dot" aria-hidden="true">·</span>
+                        <span class="evalr-scholarship-row__coverage">{{ s.coverage|truncatechars:42 }}</span>
+                    </span>
+                    {% for r in s.reasons|slice:":1" %}
+                    <span class="evalr-scholarship-row__reason">{{ r|truncatechars:32 }}</span>
+                    {% endfor %}
+                    <span class="evalr-scholarship-row__arrow ti-angle-left" aria-hidden="true"></span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="evalr-block__hintrow">
+            {% include "core/_evaluation_section_hint.html" with hint_section="scholarships" %}
+        </div>
+    </div>
+    {% endif %}
+
+
+
+    <div class="evalr-layout">
+
+        {% if report.insights or report.blog_insight_items %}
+
+        <div class="evalr-block evalr-block--wide">
+
+            <h3 class="evalr-block__title"><span class="ti-light-bulb" aria-hidden="true"></span> نکات کلیدی پرونده شما</h3>
+
+            <ul class="evalr-insight-list">
+
+                {% for tip in report.insights %}
+
+                <li class="evalr-insight-list__item">
+                    <span class="evalr-insight-list__bullet ti-check" aria-hidden="true"></span>
+                    <span class="evalr-insight-list__text">{{ tip }}</span>
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% if report.blog_insight_items %}
+            <ul class="evalr-insight-blog-grid" aria-label="مطالب پیشنهادی وبلاگ">
+                {% for post in report.blog_insight_items %}
+                <li class="evalr-insight-blog-grid__item">
+                    <a href="{{ post.url }}" class="evalr-insight-blog" target="_blank" rel="noopener noreferrer">
+                        <span class="evalr-insight-blog__icon ti-pencil-alt" aria-hidden="true"></span>
+                        <span class="evalr-insight-blog__body">
+                            <span class="evalr-insight-blog__head">
+                                <span class="evalr-insight-blog__label">{% if post.is_scholarship %}از مطلب{% else %}مطلب{% endif %}</span>
+                                <span class="evalr-insight-blog__title">«{{ post.title|truncatechars:58 }}»</span>
+                            </span>
+                            {% if post.excerpt %}
+                            <span class="evalr-insight-blog__excerpt">{{ post.excerpt }}</span>
+                            {% endif %}
+                            {% if post.is_scholarship %}
+                            <span class="evalr-insight-blog__tag">برای برنامه بورسیه</span>
+                            {% elif post.reason %}
+                            <span class="evalr-insight-blog__tag">{{ post.reason|truncatechars:36 }}</span>
+                            {% endif %}
+                        </span>
+                        <span class="evalr-insight-blog__arrow ti-angle-left" aria-hidden="true"></span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div class="evalr-block__hintrow">
+                {% include "core/_evaluation_section_hint.html" with hint_section="insights" %}
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+
+        {% if report.countries %}
+
+        <div class="evalr-block evalr-block--wide">
+
+            <h3 class="evalr-block__title"><span class="ti-world" aria-hidden="true"></span> کشورهای پیشنهادی</h3>
+
+            <p class="evalr-block__lead">بر اساس اولویت‌های شما در فرم و تطابق تحصیلی — از بالاترین امتیاز:</p>
+
+            <div class="evalr-country-grid">
+
+                {% for c in report.countries %}
+
+                <div class="evalr-country-card-wrap">
+                <a href="{{ c.url }}" class="evalr-country-card{% if forloop.first %} is-featured{% endif %}" target="_blank" rel="noopener noreferrer">
+
+                    <div class="evalr-country-card__top">
+
+                        <span class="evalr-country-card__rank">{{ forloop.counter }}</span>
+
+                        {% if c.flag_url %}
+                        <img class="evalr-country-card__flag" src="{{ c.flag_url }}" alt="" width="36" height="24" loading="lazy" onerror="this.style.display='none'">
+                        {% endif %}
+
+                        <div class="evalr-country-card__titles">
+
+                            <span class="evalr-country-card__name">{{ c.name }}</span>
+
+                            <span class="evalr-country-card__score">{{ c.score }} امتیاز تطابق</span>
+
+                        </div>
+
+                    </div>
+
+                    {% if c.hint %}
+
+                    <p class="evalr-country-card__hint">{{ c.hint }}</p>
+
+                    {% endif %}
+
+                    {% if c.reasons %}
+
+                    <ul class="evalr-country-card__tags">
+
+                        {% for r in c.reasons|slice:":3" %}
+
+                        <li>{{ r }}</li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                    {% endif %}
+
+                </a>
+
+                <div class="evalr-country-card__hintrow">
+                    {% include "core/_evaluation_section_hint.html" with hint_section="countries" hint_item_key="country:"|add:c.code hint_compact=1 %}
+                </div>
+                </div>
+
+            {% endfor %}
+
+            </div>
+
+            <div class="evalr-block__hintrow">
+                {% include "core/_evaluation_section_hint.html" with hint_section="countries" %}
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+
+    {% if report.coherence_note %}
+    <p class="evalr-coherence">{{ report.coherence_note }}</p>
+    {% endif %}
+
+    {% if report.pricing %}
+    <div class="evalr-block evalr-block--pricing">
+        <h3 class="evalr-block__title"><span class="ti-money" aria-hidden="true"></span> برآورد هزینه خدمات (تعرفه)</h3>
+        <p class="evalr-block__lead">
+            بر اساس کشور پیشنهادی <strong>{{ report.pricing.country_name }}</strong> و وضعیت پرونده شما:
+        </p>
+        {% if report.pricing.total_display %}
+        <p class="evalr-pricing-total">{{ report.pricing.total_display }}</p>
+        {% endif %}
+        {% if report.pricing.services %}
+        <ul class="evalr-pricing-services">
+            {% for svc in report.pricing.services %}
+            <li><strong>{{ svc.title }}</strong>{% if svc.price_display %} — {{ svc.price_display }}{% endif %}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if report.pricing.reasons %}
+        <ul class="evalr-pricing-reasons">
+            {% for r in report.pricing.reasons %}<li>{{ r }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+        <a href="{{ report.pricing.url }}" class="evalr-pricing-link btn_2" target="_blank" rel="noopener noreferrer">مشاهده تعرفه کامل <span class="ti-angle-left" aria-hidden="true"></span></a>
+
+        <div class="evalr-block__hintrow">
+            {% include "core/_evaluation_section_hint.html" with hint_section="pricing" %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if report.majors %}
+
+    <div class="evalr-block">
+
+        <h3 class="evalr-block__title"><span class="ti-bookmark" aria-hidden="true"></span> رشته‌های مرتبط</h3>
+
+        <p class="evalr-block__lead">گزینه‌های نزدیک به رشته و علاقه تحصیلی شما در مقصد پیشنهادی:</p>
+
+        <div class="evalr-card-grid">
+
+            {% for m in report.majors %}
+
+            <a href="{{ m.url }}" class="evalr-card" target="_blank" rel="noopener noreferrer">
+
+                {% if m.image %}
+
+                <div class="evalr-card__img" style="background-image: url('{{ m.image }}');"></div>
+
+                {% else %}
+
+                <div class="evalr-card__img evalr-card__img--placeholder"><span class="ti-bookmark" aria-hidden="true"></span></div>
+
+                {% endif %}
+
+                <div class="evalr-card__body">
+
+                    <h4>{{ m.title }}</h4>
+
+                    <span class="evalr-card__meta">{{ m.country_name }}</span>
+
+                    {% if m.short_description %}
+
+                    <p>{{ m.short_description|truncatechars:120 }}</p>
+
+                    {% elif m.reasons.0 %}
+
+                    <p class="evalr-card__reason">{{ m.reasons.0 }}</p>
+
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="evalr-block__hintrow">
+            {% include "core/_evaluation_section_hint.html" with hint_section="majors" %}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+
+    {% if report.universities %}
+
+    <div class="evalr-block">
+
+        <h3 class="evalr-block__title"><span class="ti-layout-grid2" aria-hidden="true"></span> دانشگاه‌های جایگزین — {{ report.top_pick.country.name }}</h3>
+
+        <div class="evalr-mini-grid">
+
+            {% for u in report.universities %}
+
+            <a href="{{ u.url }}" class="evalr-mini-card" target="_blank" rel="noopener noreferrer">
+
+                {% if u.image_url %}
+
+                <div class="evalr-mini-card__img" style="background-image: url('{{ u.image_url }}');"></div>
+
+                {% else %}
+
+                <div class="evalr-mini-card__img evalr-mini-card__img--empty"><span class="ti-home" aria-hidden="true"></span></div>
+
+                {% endif %}
+
+                <div>
+
+                    <strong>{{ u.name_fa }}</strong>
+
+                    <span>{{ u.city }}{% if u.world_rank %} — رتبه {{ u.world_rank }}{% endif %}</span>
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="evalr-block__hintrow">
+            {% include "core/_evaluation_section_hint.html" with hint_section="universities_alt" %}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+
+    {% include "core/_evaluation_lang_pathway.html" with lang_promo_slot='low' %}
+
+
+
+    {% if report.blogs %}
+
+    <div class="evalr-block">
+
+        <h3 class="evalr-block__title"><span class="ti-pencil-alt" aria-hidden="true"></span> مطالب وبلاگ پیشنهادی</h3>
+        <p class="evalr-block__lead">اگر دوست دارید بیشتر بدانید، این مطالب از وبلاگ {{ institute.name }} را پیشنهاد می‌کنیم — نزدیک به مسیر و کشور پیشنهادی شما:</p>
+
+        <div class="evalr-card-grid evalr-card-grid--2">
+
+            {% for post in report.blogs %}
+
+            <a href="{{ post.url }}" class="evalr-card evalr-card--blog" target="_blank" rel="noopener noreferrer">
+
+                {% if post.image_url %}
+
+                <div class="evalr-card__img evalr-card__img--sm" style="background-image: url('{{ post.image_url }}');"></div>
+
+                {% endif %}
+
+                <div class="evalr-card__body">
+
+                    {% if post.badges %}
+                    <div class="evalr-card__tags">
+                        {% for badge in post.badges %}
+                        <span class="evalr-tag evalr-tag--blog">{{ badge }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <h4>{{ post.title|truncatechars:72 }}</h4>
+
+                    {% if post.excerpt %}<p>{{ post.excerpt|truncatechars:160 }}</p>{% endif %}
+
+                    {% if post.reasons %}
+                    <ul class="evalr-card__reasons">
+                        {% for r in post.reasons|slice:":2" %}
+                        <li>{{ r }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="evalr-block__hintrow">
+            {% include "core/_evaluation_section_hint.html" with hint_section="blogs" %}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    {% elif report %}
+
+    <div class="evalr-panel evalr-panel--empty">
+
+        <p>{{ report.message }}</p>
+
+    </div>
+
+    {% endif %}
+
+
+
+</article>
+

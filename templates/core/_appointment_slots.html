@@ -1,26 +1,27 @@
-{% if day_slots %}
-    <div class="appt_slots-date">
-        {{ selected_date|date:"Y-m-d" }} / {{ selected_date_jalali }}
-    </div>
-    <div class="appt_slots-grid">
-        {% for slot in day_slots %}
-            {% if slot.is_booked %}
-                <span class="appt_slot-booked">{{ slot.time_label }} — رزرو شده</span>
-            {% else %}
-                <label class="appt_slot-btn">
-                    <input
-                        type="radio"
-                        name="slot"
-                        value="{{ slot.id }}"
-                        {% if selected_slot_id and selected_slot_id|stringformat:"s" == slot.id|stringformat:"s" %}checked{% endif %}
-                        required
-                    >
-                    {{ slot.time_label }}
-                </label>
-            {% endif %}
-        {% endfor %}
-    </div>
+{% if has_available_slots %}
+<div class="appt-modal__slots-meta">
+    <span class="ti-calendar" aria-hidden="true"></span>
+    <span>{{ selected_date_jalali }}</span>
+</div>
+<div class="appt-modal__slots-grid" role="radiogroup" aria-label="ساعت مشاوره">
+    {% for slot in day_slots %}
+        {% if not slot.is_booked %}
+        <label class="appt-modal__slot{% if selected_slot_id and selected_slot_id|stringformat:'s' == slot.id|stringformat:'s' %} is-selected{% endif %}">
+            <input type="radio"
+                   name="slot"
+                   value="{{ slot.id }}"
+                   {% if selected_slot_id and selected_slot_id|stringformat:"s" == slot.id|stringformat:"s" %}checked{% endif %}
+                   {% if first_available_slot_id and first_available_slot_id == slot.id %}required{% endif %}
+                   class="appt-page__sr-only"
+                   data-slot-label="{{ slot.time_label_display }}">
+            <span class="appt-modal__slot-time">{{ slot.time_label_display }}</span>
+            <span class="appt-modal__slot-check ti-check" aria-hidden="true"></span>
+        </label>
+        {% endif %}
+    {% endfor %}
+</div>
+{% elif day_slots %}
+<p class="appt-modal__slots-empty">همه زمان‌های این روز رزرو شده‌اند. لطفاً تاریخ دیگری انتخاب کنید.</p>
 {% else %}
-    <p class="text-muted">در حال حاضر زمانی برای این تاریخ موجود نیست. لطفاً تاریخ دیگری را انتخاب کنید یا با ما تماس بگیرید.</p>
+<p class="appt-modal__slots-empty">برای این تاریخ زمانی آزاد وجود ندارد. تاریخ دیگری انتخاب کنید.</p>
 {% endif %}
-

@@ -1,94 +1,359 @@
 /**
- * صفحه تماس با ما - contact
+ * صفحه تماس با ما — هم‌راستا با طراحی سوالات متداول
  */
-.contact_area {
-    padding-top: 50px;
-    padding-bottom: 60px;
-    background: #f8fafc;
-}
-.contact_intro { text-align: right; margin-bottom: 2rem; }
-.contact_intro h3 { font-size: 1.25rem; font-weight: 600; color: #0f2137; margin-bottom: 0.5rem; }
-.contact_intro p { font-size: 0.95rem; color: #495057; line-height: 1.7; }
-.contact_info-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
-    border: 1px solid #e8eef5;
-    height: 100%;
-}
-.contact_info-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
+
+.contact-page {
+    direction: rtl;
     text-align: right;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+    background: linear-gradient(180deg, #eef3fa 0%, var(--color-bg-gray) 220px, var(--color-bg-gray) 100%);
+    overflow-x: hidden;
 }
-.contact_info-item:last-child { margin-bottom: 0; }
-.contact_info-icon {
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
+
+.contact-page *,
+.contact-page *::before,
+.contact-page *::after {
+    box-sizing: border-box;
+}
+
+.contact-page ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.contact-page__row {
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+}
+
+.contact-page__row > [class*="col-"] {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+}
+
+/* ─── سایدبار ─── */
+.contact-page__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.contact-page__panel {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem 1.25rem;
+    box-shadow: var(--shadow-md);
+}
+
+.contact-page__panel--info {
+    background: linear-gradient(165deg, rgba(255, 248, 235, 0.95) 0%, var(--color-bg) 55%);
+    border-color: rgba(255, 102, 59, 0.18);
+    box-shadow: 0 10px 28px rgba(12, 46, 96, 0.06);
+}
+
+.contact-page__panel--info .contact-page__panel-title span[class^="ti-"] {
+    color: var(--color-accent);
+}
+
+.contact-page__panel-title {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-heading);
+}
+
+.contact-page__panel-title span[class^="ti-"] {
+    font-size: 1.05rem;
+    color: var(--color-primary);
+}
+
+.contact-page__intro-text {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.75;
+    color: var(--color-text-muted);
+}
+
+/* اطلاعات تماس */
+.contact-page__info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.contact-page__info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.55rem 0.6rem;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(12, 46, 96, 0.06);
+}
+
+.contact-page__info-icon {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    background: rgba(12, 35, 64, 0.08);
-    border-radius: 12px;
-    color: #0c2340;
+    border-radius: 8px;
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
+    font-size: 0.95rem;
+    line-height: 1;
 }
-.contact_info-icon i { font-size: 1.2rem; }
-.contact_info-body h4 { font-size: 0.95rem; font-weight: 600; color: #0f2137; margin-bottom: 0.25rem; }
-.contact_info-body p { font-size: 0.9rem; color: #6b7280; margin: 0; }
-.contact_info-body a { color: #0c2340; font-weight: 500; }
-.contact_hours_hint { font-size: 0.8rem; color: #9ca3af; }
-.contact_form-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 4px 24px rgba(15, 35, 95, 0.08);
-    border: 1px solid #e8eef5;
+
+.contact-page__info-body {
+    min-width: 0;
+    flex: 1;
 }
-.contact_form .form-group { margin-bottom: 1rem; }
-.contact_form label { font-size: 0.9rem; font-weight: 500; color: #374151; margin-bottom: 0.35rem; }
-.contact_form .form-control {
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    padding: 0.5rem 0.75rem;
+
+.contact-page__info-label {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-heading);
+}
+
+.contact-page__info-body p {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.6;
+    color: var(--color-text-dark);
+}
+
+.contact-page__info-body a {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.contact-page__info-body a:hover {
+    text-decoration: underline;
+}
+
+.contact-page__info-hint {
+    margin-top: 0.2rem !important;
+    font-size: 0.75rem !important;
+    color: var(--color-text-muted) !important;
+}
+
+.contact-page__info-cta {
+    display: block;
+    width: 100%;
+    margin-top: 0.85rem;
+    padding: 0.52rem 0.85rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(12, 46, 96, 0.15);
+    background: var(--color-bg);
+    color: var(--color-primary);
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.contact-page__info-cta:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+/* ─── فرم ─── */
+.contact-page__main {
+    min-width: 0;
+}
+
+.contact-page__card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.15rem, 3vw, 1.75rem);
+    box-shadow: var(--shadow-md);
+}
+
+.contact-page__card-head {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.contact-page__card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.35rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-heading);
+}
+
+.contact-page__card-title span[class^="ti-"] {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
     font-size: 0.95rem;
 }
-.contact_form .form-control:focus {
-    border-color: #0c2340;
-    box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.1);
+
+.contact-page__card-lead {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: var(--color-text-muted);
 }
-.contact_form textarea.form-control { min-height: 140px; resize: vertical; }
-.contact_captcha-wrap {
+
+.contact-page__success {
     display: flex;
-    align-items: flex-end;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-.contact_captcha-question {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #0c2340;
-    padding: 0.6rem 1rem;
-    background: rgba(12, 35, 64, 0.06);
-    border-radius: 10px;
-    min-width: 120px;
-}
-.contact_captcha-input { flex: 1; min-width: 120px; }
-.contact_btn-submit { padding: 10px 24px; font-size: 0.95rem; border-radius: 8px; }
-.contact_success {
+    align-items: flex-start;
+    gap: 0.85rem;
+    margin-bottom: 1.15rem;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
     background: #ecfdf5;
     border: 1px solid #a7f3d0;
     color: #065f46;
-    padding: 1rem 1.25rem;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    text-align: right;
 }
+
+.contact-page__success-icon {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #10b981;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.contact-page__success strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
+}
+
+.contact-page__success p {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.6;
+}
+
+.contact-page__form-row {
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
+}
+
+.contact-page__form-col {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+
+.contact-page__field {
+    margin-bottom: 0.85rem;
+}
+
+.contact-page__field:last-child {
+    margin-bottom: 0;
+}
+
+.contact-page__label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--color-heading);
+}
+
+.contact-page__error {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    color: #dc2626;
+}
+
+.contact-page__form .form-control {
+    width: 100%;
+    padding: 0.62rem 0.85rem;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-light);
+    font-family: inherit;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-text-dark);
+    direction: rtl;
+    text-align: right;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.contact-page__form .form-control:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(12, 46, 96, 0.12);
+    background: var(--color-bg);
+}
+
+.contact-page__form textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.contact-page__captcha-block {
+    margin-top: 0.1rem;
+}
+
+.contact-page__actions {
+    margin-top: 1.15rem;
+    padding-top: 0.25rem;
+}
+
+.contact-page__submit {
+    padding: 0.6rem 1.5rem !important;
+    font-size: 0.88rem !important;
+    border-radius: var(--radius-pill) !important;
+}
+
+/* ─── ریسپانسیو ─── */
+@media (max-width: 991.98px) {
+    .contact-page__aside {
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-page__info-list {
+        gap: 0.5rem;
+    }
+}
+
 @media (max-width: 767.98px) {
-    .contact_area { padding-top: 35px; padding-bottom: 40px; }
-    .contact_form-card { padding: 1.25rem; }
-    .contact_captcha-wrap { flex-direction: column; align-items: stretch; }
+    .contact-page {
+        padding-top: 1.75rem;
+        padding-bottom: 2.5rem;
+    }
+
+    .contact-page__card {
+        padding: 1.1rem 1rem;
+    }
+
+    .contact-page__submit {
+        width: 100%;
+    }
 }

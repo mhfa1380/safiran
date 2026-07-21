@@ -1,38 +1,57 @@
 {% load static %}
-<header class="main_menu home_menu">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-12">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="{% url 'index' %}">
-                        <img src="{% static 'img/logo.png' %}" alt="{{ institute.name }} - موسسه اعزام دانشجو" class="logohead" width="130" height="48">
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
-                        <ul class="navbar-nav align-items-center">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="{% url 'about' %}" id="navAbout" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">درباره ما</a>
-                                <div class="dropdown-menu" aria-labelledby="navAbout">
-                                    <a class="dropdown-item" href="{% url 'about' %}">درباره ما</a>
-                                    <a class="dropdown-item" href="{% url 'services' %}">خدمات موسسه</a>
-                                    <a class="dropdown-item" href="{% url 'faq' %}">سوالات متداول</a>
-                                    <a class="dropdown-item" href="{% url 'contact' %}">تماس با ما</a>
-                                </div>
-                            </li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'schools_list' %}">دانشگاه‌ها</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'majors' %}">رشته‌ها</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'courses_list' %}">دوره‌ها</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'evaluation' %}">فرم ارزیابی</a></li>
-                            <li class="d-none d-lg-block"><a class="btn_1" href="{% url 'appointment' %}">رزرو مشاوره</a></li>
-                        </ul>
-                    </div>
-                </nav>
+<header class="main_menu site-header home_menu" id="site-header">
+    <div class="container site-header__inner">
+        <nav class="navbar navbar-expand-xl navbar-light site-header__nav" aria-label="منوی اصلی">
+            <a class="navbar-brand site-header__brand" href="{% url 'index' %}">
+                <img src="{% static 'img/logo.png' %}" alt="{{ institute.name }} - موسسه اعزام دانشجو" class="logohead" width="130" height="48">
+            </a>
+
+            <div class="site-header__mobile-actions d-xl-none">
+{% if site_nav.header_eval %}
+                <a href="{{ site_nav.header_eval.url }}" class="site-header__eval-btn site-header__eval-btn--mobile">
+                    <span class="site-header__eval-label">{{ site_nav.header_eval.label }}</span>
+                </a>
+                {% endif %}
+                <button type="button"
+                        class="site-header__icon-btn site-header__search-toggle"
+                        id="site-header-search-toggle"
+                        aria-expanded="false"
+                        aria-controls="site-header-search"
+                        aria-label="باز کردن جستجو">
+                    <span class="ti-search" aria-hidden="true"></span>
+                </button>
+                <button class="navbar-toggler site-header__toggler site-header__icon-btn collapsed"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="باز کردن منو">
+                    <span class="site-header__toggler-icon site-header__toggler-icon--open ti-menu" aria-hidden="true"></span>
+                    <span class="site-header__toggler-icon site-header__toggler-icon--close ti-close" aria-hidden="true"></span>
+                    <span class="navbar-toggler-icon" aria-hidden="true"></span>
+                </button>
             </div>
-        </div>
+
+            {% include "layout/_header_toolbar.html" %}
+
+            <div class="collapse navbar-collapse main-menu-item site-header__collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav site-header__menu">
+                    {% include "layout/_header_nav.html" %}
+                </ul>
+
+                {% if site_nav.header_cta %}
+                <div class="site-header__cta-wrap site-header__cta-wrap--mobile d-xl-none">
+                    <a class="btn_1 site-header__cta" href="{{ site_nav.header_cta.url }}">{{ site_nav.header_cta.label }}</a>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if site_nav.header_cta %}
+            <div class="site-header__actions d-none d-xl-flex align-items-center">
+                <a class="btn_1 site-header__cta" href="{{ site_nav.header_cta.url }}">{{ site_nav.header_cta.label }}</a>
+            </div>
+            {% endif %}
+        </nav>
     </div>
 </header>

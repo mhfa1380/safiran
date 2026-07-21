@@ -1,0 +1,2730 @@
+[
+  {
+    "name_en": "Peking University",
+    "city": ""
+  },
+  {
+    "name_en": "Tsinghua University",
+    "city": ""
+  },
+  {
+    "name_en": "Renmin University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Beihang University",
+    "city": "title=China : ENAC and Beihang University establish a new University of Aviation"
+  },
+  {
+    "name_en": "China Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Minzu University",
+    "city": ""
+  },
+  {
+    "name_en": "Nankai University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian University",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin University",
+    "city": ""
+  },
+  {
+    "name_en": "Fudan University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Jiao Tong University",
+    "city": ""
+  },
+  {
+    "name_en": "Tongji University",
+    "city": ""
+  },
+  {
+    "name_en": "East China Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing University",
+    "city": ""
+  },
+  {
+    "name_en": "Southeast University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong University",
+    "city": ""
+  },
+  {
+    "name_en": "Ocean University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang University",
+    "city": ""
+  },
+  {
+    "name_en": "Xiamen University",
+    "city": ""
+  },
+  {
+    "name_en": "Sun Yat-sen University",
+    "city": ""
+  },
+  {
+    "name_en": "South China University",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan University",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University",
+    "city": ""
+  },
+  {
+    "name_en": "Central South University",
+    "city": ""
+  },
+  {
+    "name_en": "National University",
+    "city": ""
+  },
+  {
+    "name_en": "Wuhan University",
+    "city": ""
+  },
+  {
+    "name_en": "Huazhong University",
+    "city": ""
+  },
+  {
+    "name_en": "Northwestern Polytechnical University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Jiaotong University",
+    "city": ""
+  },
+  {
+    "name_en": "Northwest A&F University",
+    "city": ""
+  },
+  {
+    "name_en": "Lanzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Renmin University of China",
+    "city": ""
+  },
+  {
+    "name_en": "Minzu University of China",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Ocean University of China",
+    "city": ""
+  },
+  {
+    "name_en": "South China University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "National University of Defense Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Huazhong University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Foreign Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Forestry University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Jiaotong University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing University",
+    "city": ""
+  },
+  {
+    "name_en": "Central University",
+    "city": ""
+  },
+  {
+    "name_en": "China University",
+    "city": ""
+  },
+  {
+    "name_en": "Communication University",
+    "city": ""
+  },
+  {
+    "name_en": "North China Electric Power University",
+    "city": ""
+  },
+  {
+    "name_en": "China Pharmaceutical University",
+    "city": ""
+  },
+  {
+    "name_en": "Hohai University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Aeronautics and Astronautics University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Jiangnan University",
+    "city": ""
+  },
+  {
+    "name_en": "Donghua University",
+    "city": ""
+  },
+  {
+    "name_en": "East China University",
+    "city": ""
+  },
+  {
+    "name_en": "Second Military Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai International Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University",
+    "city": ""
+  },
+  {
+    "name_en": "Chang'an University",
+    "city": ""
+  },
+  {
+    "name_en": "Fourth Military Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Xidian University",
+    "city": ""
+  },
+  {
+    "name_en": "Shaanxi Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Huazhong Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Central China Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhongnan University",
+    "city": ""
+  },
+  {
+    "name_en": "Southwest Jiaotong University",
+    "city": ""
+  },
+  {
+    "name_en": "Southwestern University",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Jinan University",
+    "city": ""
+  },
+  {
+    "name_en": "South China Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Engineering University",
+    "city": ""
+  },
+  {
+    "name_en": "Northeast Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Northeast Forestry University",
+    "city": ""
+  },
+  {
+    "name_en": "Liaoning University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian Maritime University",
+    "city": ""
+  },
+  {
+    "name_en": "Hebei University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui University",
+    "city": ""
+  },
+  {
+    "name_en": "Hefei University",
+    "city": ""
+  },
+  {
+    "name_en": "Northeast Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Yanbian University",
+    "city": ""
+  },
+  {
+    "name_en": "Southwest University",
+    "city": ""
+  },
+  {
+    "name_en": "Fuzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Shihezi University",
+    "city": ""
+  },
+  {
+    "name_en": "Xinjiang University",
+    "city": ""
+  },
+  {
+    "name_en": "Guizhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Hainan University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhengzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanchang University",
+    "city": ""
+  },
+  {
+    "name_en": "Qinghai University",
+    "city": ""
+  },
+  {
+    "name_en": "Taiyuan University",
+    "city": ""
+  },
+  {
+    "name_en": "Yunnan University",
+    "city": ""
+  },
+  {
+    "name_en": "Hangzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangxi University",
+    "city": ""
+  },
+  {
+    "name_en": "Inner Mongolia University",
+    "city": ""
+  },
+  {
+    "name_en": "Ningxia University",
+    "city": ""
+  },
+  {
+    "name_en": "Tibet University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing University of Chemical Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing University of Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing University of Posts and Telecommunications",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Central University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "China University of Geosciences (Beijing)",
+    "city": ""
+  },
+  {
+    "name_en": "China University of Petroleum (Beijing)",
+    "city": ""
+  },
+  {
+    "name_en": "China University of Political Science and Law",
+    "city": ""
+  },
+  {
+    "name_en": "Communication University of China",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "China University of Mining and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "East China University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "China University of Geosciences (Wuhan)",
+    "city": ""
+  },
+  {
+    "name_en": "Wuhan University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Zhongnan University of Economics and Law",
+    "city": ""
+  },
+  {
+    "name_en": "Southwestern University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Hebei University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Hefei University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "China University of Petroleum (Huadong)",
+    "city": ""
+  },
+  {
+    "name_en": "Taiyuan University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "University of Science and Technology Beijing",
+    "city": ""
+  },
+  {
+    "name_en": "North China University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Technology and Business University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing University of Civil Engineering and Architecture",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing University of Agriculture",
+    "city": ""
+  },
+  {
+    "name_en": "Peking Union Medical College",
+    "city": ""
+  },
+  {
+    "name_en": "Capital Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Capital Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing International Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Language and Culture University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Materials University",
+    "city": ""
+  },
+  {
+    "name_en": "Capital University of Economics and Business",
+    "city": ""
+  },
+  {
+    "name_en": "China Foreign Affairs University",
+    "city": ""
+  },
+  {
+    "name_en": "Chinese People's Public Security University",
+    "city": ""
+  },
+  {
+    "name_en": "University of International Relations",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Sport University",
+    "city": ""
+  },
+  {
+    "name_en": "China Women's University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Information Science and Technology University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Union University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing City University",
+    "city": ""
+  },
+  {
+    "name_en": "China Youth University for Political Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing People's Police College",
+    "city": ""
+  },
+  {
+    "name_en": "University of Chinese Academy of Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "University of Chinese Academy of Social Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "North China University",
+    "city": ""
+  },
+  {
+    "name_en": "Capital University",
+    "city": ""
+  },
+  {
+    "name_en": "Peking Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Yenching University",
+    "city": ""
+  },
+  {
+    "name_en": "University of Shanghai for Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Maritime University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University of Medicine & Health Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Ocean University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University of International Business and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Customs College",
+    "city": ""
+  },
+  {
+    "name_en": "East China University of Political Science and Law",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University of Sport",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University of Engineering Science",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Lixin University of Accounting and Finance",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Dianji University",
+    "city": ""
+  },
+  {
+    "name_en": "Sanda University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University of Political Science and Law",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Second Polytechnic University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Jian Qiao University",
+    "city": ""
+  },
+  {
+    "name_en": "Xing Wei College",
+    "city": ""
+  },
+  {
+    "name_en": "ShanghaiTech University",
+    "city": ""
+  },
+  {
+    "name_en": "New York University Shanghai",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai Lixin University",
+    "city": ""
+  },
+  {
+    "name_en": "People's Liberation Army Naval Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "East-Sea University",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University Law School",
+    "city": ""
+  },
+  {
+    "name_en": "Southern University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shenzhen University",
+    "city": ""
+  },
+  {
+    "name_en": "Shenzhen Technology University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shantou University",
+    "city": ""
+  },
+  {
+    "name_en": "South China Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Ocean University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangzhou Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangzhou University of Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Pharmaceutical University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong University of Foreign Studies",
+    "city": ""
+  },
+  {
+    "name_en": "Southern Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Polytechnic Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "The Chinese University of Hong Kong, Shenzhen",
+    "city": ""
+  },
+  {
+    "name_en": "Shenzhen MSU-BIT University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Normal University at Zhuhai",
+    "city": ""
+  },
+  {
+    "name_en": "Sun Yat-Sen University",
+    "city": ""
+  },
+  {
+    "name_en": "Beijing Institute of Technology, Zhuhai",
+    "city": ""
+  },
+  {
+    "name_en": "Peking University Shenzhen Graduate School",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Institute of Technology (Shenzhen)",
+    "city": ""
+  },
+  {
+    "name_en": "Guangzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Shaoguan University",
+    "city": ""
+  },
+  {
+    "name_en": "Huizhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Hanshan Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Lingnan Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhaoqing University",
+    "city": ""
+  },
+  {
+    "name_en": "Jiaying University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangzhou Sport University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Baiyun University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Police College",
+    "city": ""
+  },
+  {
+    "name_en": "Zhongkai University of Agriculture and Engineering",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong University of Finance",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong University of Petrochemical Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Dongguan University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Foshan University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Peizheng College",
+    "city": ""
+  },
+  {
+    "name_en": "Guangzhou College of Commerce",
+    "city": ""
+  },
+  {
+    "name_en": "Guangzhou College of Technology and Business",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Polytechnic College",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong Technion-Israel Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Southern University",
+    "city": ""
+  },
+  {
+    "name_en": "Guangdong University",
+    "city": ""
+  },
+  {
+    "name_en": "The Chinese University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhongkai University",
+    "city": ""
+  },
+  {
+    "name_en": "Dongguan University",
+    "city": ""
+  },
+  {
+    "name_en": "Double First Class University Plan",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing University of Aeronautics and Astronautics",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Tech University",
+    "city": ""
+  },
+  {
+    "name_en": "Changzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing University of Posts and Telecommunications",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Forestry University",
+    "city": ""
+  },
+  {
+    "name_en": "Jiangsu University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing University of Information Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Nantong University",
+    "city": ""
+  },
+  {
+    "name_en": "Yancheng Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Xuzhou Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing University of Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Jiangsu Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Huaiyin Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Yancheng Teachers University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing University of the Arts",
+    "city": ""
+  },
+  {
+    "name_en": "Suzhou University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Changshu Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Huaiyin Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Changzhou Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Yangzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Sanjiang University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Audit University",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Xiaozhuang University",
+    "city": ""
+  },
+  {
+    "name_en": "Jiangsu University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Huaihai Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Xuzhou Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Nantong Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Nanjing Forest Police College",
+    "city": ""
+  },
+  {
+    "name_en": "Taihu University of Wuxi",
+    "city": ""
+  },
+  {
+    "name_en": "Jinling Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Ginling College",
+    "city": ""
+  },
+  {
+    "name_en": "Nanguang College",
+    "city": ""
+  },
+  {
+    "name_en": "Suqian College",
+    "city": ""
+  },
+  {
+    "name_en": "Jiangsu Second Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Duke Kunshan University",
+    "city": ""
+  },
+  {
+    "name_en": "Suzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Taihu University",
+    "city": ""
+  },
+  {
+    "name_en": "Jinling College, Nanjing University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Jiaotong–Liverpool University",
+    "city": ""
+  },
+  {
+    "name_en": "Ningbo University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Ocean University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang A & F University",
+    "city": ""
+  },
+  {
+    "name_en": "Wenzhou Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Chinese Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "China Jiliang University",
+    "city": ""
+  },
+  {
+    "name_en": "Communication University of Zhejiang",
+    "city": ""
+  },
+  {
+    "name_en": "Tourism College of Zhejiang",
+    "city": ""
+  },
+  {
+    "name_en": "Hangzhou Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang University City College",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang University of Water Resources and Electric Power",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Police College",
+    "city": ""
+  },
+  {
+    "name_en": "Hangzhou Medical College",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang International Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Sci-Tech University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Financial College",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Vocational College of Commerce",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang College of Construction",
+    "city": ""
+  },
+  {
+    "name_en": "Hangzhou Vocational and Technical College",
+    "city": ""
+  },
+  {
+    "name_en": "Westlake University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Shuren University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Yuexiu University of Foreign Languages",
+    "city": ""
+  },
+  {
+    "name_en": "Ningbo University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Wenzhou Business College",
+    "city": ""
+  },
+  {
+    "name_en": "Hangzhou Dianzi University Information Engineering School",
+    "city": ""
+  },
+  {
+    "name_en": "Hangzhou Normal University Qianjiang College",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Chinese Medical University Binjiang Institute",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Gongshang University Hangzhou College of Commerce",
+    "city": ""
+  },
+  {
+    "name_en": "College of Science and Technology, Ningbo University",
+    "city": ""
+  },
+  {
+    "name_en": "University of Nottingham Ningbo China",
+    "city": ""
+  },
+  {
+    "name_en": "University of Nottingham",
+    "city": ""
+  },
+  {
+    "name_en": "Wenzhou-Kean University",
+    "city": ""
+  },
+  {
+    "name_en": "Wenzhou University",
+    "city": "title=Wenzhou-Kean University"
+  },
+  {
+    "name_en": "Kean University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Yuying College of Vocational and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Changzheng Vocational and Technical College",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Gongshang University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Open University",
+    "city": ""
+  },
+  {
+    "name_en": "Hangzhou Workers Part-time University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Provincial Level Organ Staff Part-time University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Staff University",
+    "city": ""
+  },
+  {
+    "name_en": "NingboTech University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Wanli University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Pharmaceutical University",
+    "city": ""
+  },
+  {
+    "name_en": "Ningbo Open University",
+    "city": ""
+  },
+  {
+    "name_en": "City University",
+    "city": ""
+  },
+  {
+    "name_en": "Jiaxing University",
+    "city": ""
+  },
+  {
+    "name_en": "Jiaxing Nanhu University",
+    "city": ""
+  },
+  {
+    "name_en": "Huzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Shaoxing University",
+    "city": ""
+  },
+  {
+    "name_en": "Quzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Lishui University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Yuexiu University",
+    "city": ""
+  },
+  {
+    "name_en": "Hangzhou Dianzi University",
+    "city": ""
+  },
+  {
+    "name_en": "Oriental Institute of Zhejiang University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhijiang College of Zhejiang University",
+    "city": ""
+  },
+  {
+    "name_en": "College of Technology and Art of Zhejiang Sci-Tech University",
+    "city": ""
+  },
+  {
+    "name_en": "Jiyang College of Zhejiang Agriculture and Forestry University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhongfa Aviation University",
+    "city": ""
+  },
+  {
+    "name_en": "Ningbo Campus, Zhejiang University",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Staff University of Economics and Management",
+    "city": ""
+  },
+  {
+    "name_en": "Ningbo University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Wenzhou Medical University Renii College",
+    "city": ""
+  },
+  {
+    "name_en": "Oriental Institute of Zhejiang University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Zhijiang College of Zhejiang University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shaoxing University Yuanpei College",
+    "city": ""
+  },
+  {
+    "name_en": "Zhejiang Normal University Xingzhi College",
+    "city": ""
+  },
+  {
+    "name_en": "Shanghai University of Finance and Economics Zhejiang College",
+    "city": ""
+  },
+  {
+    "name_en": "China Jiliang University College of Modern Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Wenzhou Medical University Renji College",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "China University of Petroleum",
+    "city": ""
+  },
+  {
+    "name_en": "Qingdao University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Qingdao University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Jianzhu University",
+    "city": ""
+  },
+  {
+    "name_en": "Qilu University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Qingdao Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Weifang Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Taishan Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong University of Traditional Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Jining Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Qufu Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Liaocheng University",
+    "city": ""
+  },
+  {
+    "name_en": "Dezhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Binzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Ludong University",
+    "city": ""
+  },
+  {
+    "name_en": "Linyi University",
+    "city": ""
+  },
+  {
+    "name_en": "Taishan University",
+    "city": ""
+  },
+  {
+    "name_en": "Jining University",
+    "city": ""
+  },
+  {
+    "name_en": "Heze University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Sport University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong University of Arts",
+    "city": ""
+  },
+  {
+    "name_en": "Qilu Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Qingdao Binhai University",
+    "city": ""
+  },
+  {
+    "name_en": "Zaozhuang University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong University of Art and Design",
+    "city": ""
+  },
+  {
+    "name_en": "Qingdao University",
+    "city": ""
+  },
+  {
+    "name_en": "Yantai University",
+    "city": ""
+  },
+  {
+    "name_en": "Weifang University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Police College",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Jiaotong University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Technology and Business University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Women's University",
+    "city": ""
+  },
+  {
+    "name_en": "Yantai Nanshan University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Xiehe University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Huayu University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong University of Political Science and Law",
+    "city": ""
+  },
+  {
+    "name_en": "Qilu Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Youth University of Political Science",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Management University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Agriculture and Engineering University",
+    "city": ""
+  },
+  {
+    "name_en": "Qilu University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Huayu University",
+    "city": ""
+  },
+  {
+    "name_en": "Shandong Youth University",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin University",
+    "city": ""
+  },
+  {
+    "name_en": "Huazhong Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei University",
+    "city": ""
+  },
+  {
+    "name_en": "Wuhan Textile University",
+    "city": ""
+  },
+  {
+    "name_en": "Wuhan Polytechnic University",
+    "city": ""
+  },
+  {
+    "name_en": "Jianghan University",
+    "city": ""
+  },
+  {
+    "name_en": "Wuhan Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Yangtze University",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei Engineering University",
+    "city": ""
+  },
+  {
+    "name_en": "China Three Gorges University",
+    "city": ""
+  },
+  {
+    "name_en": "Hanjiang Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Huanggang Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Jingchu University",
+    "city": ""
+  },
+  {
+    "name_en": "South-Central University for Nationalities",
+    "city": ""
+  },
+  {
+    "name_en": "Wuhan University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Wuhan University of Science and Engineering",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei University of Arts and Science",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei University for Nationalities",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei University of Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei University of Automotive Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Jingchu University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Hubei University of Science and&nbsp;Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu University",
+    "city": ""
+  },
+  {
+    "name_en": "Southwest Petroleum University",
+    "city": ""
+  },
+  {
+    "name_en": "Civil Aviation Flight University",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Xihua University",
+    "city": ""
+  },
+  {
+    "name_en": "Southwest Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "China West Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu Technological University",
+    "city": ""
+  },
+  {
+    "name_en": "Aba Teachers University",
+    "city": ""
+  },
+  {
+    "name_en": "Yibin University",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu Neusoft University",
+    "city": ""
+  },
+  {
+    "name_en": "Geely University",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan Film and Television University",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan Technology and Business University",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu College of University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianfu College of Southwestern University",
+    "city": ""
+  },
+  {
+    "name_en": "The Engineering & Technical College of Chengdu University",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu Institute Sichuan International Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "City College, Southwest University",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu University of Traditional Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Southwest University for Nationalities",
+    "city": ""
+  },
+  {
+    "name_en": "Civil Aviation Flight University of China",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu University of Information Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Geely University of China",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan University of Media and Communications",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan University of Culture and Arts",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan University Jinjiang College",
+    "city": ""
+  },
+  {
+    "name_en": "Chengdu College of University of Electronic Science and Technology of China",
+    "city": ""
+  },
+  {
+    "name_en": "Tianfu College of Southwestern University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "The Engineering & Technical College of Chengdu University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "City College, Southwest University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Southwest Jiaotong University Hope College",
+    "city": ""
+  },
+  {
+    "name_en": "Xiangtan University",
+    "city": ""
+  },
+  {
+    "name_en": "Jishou University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Changsha University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Central South University of Forestry and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Traditional Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Xiangnan University",
+    "city": ""
+  },
+  {
+    "name_en": "Hengyang Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Shaoyang University",
+    "city": ""
+  },
+  {
+    "name_en": "Huaihua University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Arts and Science",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Science and Engineering",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Humanities, Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Commerce",
+    "city": ""
+  },
+  {
+    "name_en": "University of South China",
+    "city": ""
+  },
+  {
+    "name_en": "Changsha Medical College",
+    "city": ""
+  },
+  {
+    "name_en": "Changsha University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan City University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan Women's University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan First Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan International Economics University",
+    "city": ""
+  },
+  {
+    "name_en": "Changsha Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan Applied Technology University",
+    "city": ""
+  },
+  {
+    "name_en": "Changsha Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "U.S. News & World Report Best Global University Ranking",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Hunan University of Technology and Commerce",
+    "city": ""
+  },
+  {
+    "name_en": "Huaqiao University",
+    "city": ""
+  },
+  {
+    "name_en": "Jimei University",
+    "city": ""
+  },
+  {
+    "name_en": "Longyan University",
+    "city": ""
+  },
+  {
+    "name_en": "Minnan Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Putian University",
+    "city": ""
+  },
+  {
+    "name_en": "Quanzhou Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Sanming University",
+    "city": ""
+  },
+  {
+    "name_en": "Fujian Agriculture and Forestry University",
+    "city": ""
+  },
+  {
+    "name_en": "Fujian University",
+    "city": ""
+  },
+  {
+    "name_en": "Minjiang University",
+    "city": ""
+  },
+  {
+    "name_en": "Fujian Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Fujian Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Yang-en University",
+    "city": ""
+  },
+  {
+    "name_en": "National Quemoy University",
+    "city": ""
+  },
+  {
+    "name_en": "Xiamen University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Wuyi University (Fujian)",
+    "city": ""
+  },
+  {
+    "name_en": "Fujian University of Traditional Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Fujian University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "University of Science and Technology of China",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui Jianzhu University",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui Polytechnic University",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui University of Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Anqing Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Bengbu Medical College",
+    "city": ""
+  },
+  {
+    "name_en": "Chaohu University",
+    "city": ""
+  },
+  {
+    "name_en": "Fuyang Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Hefei Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Huaibei Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Huainan United University",
+    "city": ""
+  },
+  {
+    "name_en": "Huangshan University",
+    "city": ""
+  },
+  {
+    "name_en": "Wannan Medical College",
+    "city": ""
+  },
+  {
+    "name_en": "West Anhui University",
+    "city": ""
+  },
+  {
+    "name_en": "Anhui Science and Technology University",
+    "city": ""
+  },
+  {
+    "name_en": "Bengbu University",
+    "city": ""
+  },
+  {
+    "name_en": "Chizhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Chuzhou University",
+    "city": ""
+  },
+  {
+    "name_en": "Huainan Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Tongling University",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Aerospace University",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Ligong University",
+    "city": ""
+  },
+  {
+    "name_en": "University of Science and Technology Liaoning",
+    "city": ""
+  },
+  {
+    "name_en": "Liaoning Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Liaoning University of Petroleum and Chemical Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang University of Chemical Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian Jiaotong University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian Polytechnic University",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Jianzhu University",
+    "city": ""
+  },
+  {
+    "name_en": "Liaoning University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian Ocean University",
+    "city": ""
+  },
+  {
+    "name_en": "Jinzhou Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Liaoning University of Traditional Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Pharmaceutical University",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Medical College",
+    "city": ""
+  },
+  {
+    "name_en": "Liaoning Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Bohai University",
+    "city": ""
+  },
+  {
+    "name_en": "Anshan Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian University of Foreign Languages",
+    "city": ""
+  },
+  {
+    "name_en": "Dongbei University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Criminal Investigation Police University of China",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Sport University",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang University",
+    "city": ""
+  },
+  {
+    "name_en": "Liaoning Police College",
+    "city": ""
+  },
+  {
+    "name_en": "Eastern Liaoning University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian Minzu University",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shenyang Urban Construction University",
+    "city": ""
+  },
+  {
+    "name_en": "He University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian Neusoft University of Information",
+    "city": ""
+  },
+  {
+    "name_en": "Liaoning Finance and Trade College",
+    "city": ""
+  },
+  {
+    "name_en": "Yingkou Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Dongbei University",
+    "city": ""
+  },
+  {
+    "name_en": "Criminal Investigation Police University",
+    "city": ""
+  },
+  {
+    "name_en": "Dalian Neusoft University",
+    "city": ""
+  },
+  {
+    "name_en": "Northwest University of Politics and Law",
+    "city": ""
+  },
+  {
+    "name_en": "Ankang University",
+    "city": ""
+  },
+  {
+    "name_en": "Baoji University of Arts and Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Shaanxi University of Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Shaanxi University of Science & Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shaanxi University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Shangluo University",
+    "city": ""
+  },
+  {
+    "name_en": "Weinan Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an International Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Physical Education University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Polytechnic University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Shiyou University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Technological University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an University of Architecture and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an University of Posts & Telecommunications",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Xianyang Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Yan'an University",
+    "city": ""
+  },
+  {
+    "name_en": "Yulin University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Eurasia University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Fanyi University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an International University",
+    "city": ""
+  },
+  {
+    "name_en": "Xijing University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Peihua University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an Siyuan University",
+    "city": ""
+  },
+  {
+    "name_en": "Air Force Engineering University",
+    "city": ""
+  },
+  {
+    "name_en": "The Fourth Military Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "PLA Rocket Force University",
+    "city": ""
+  },
+  {
+    "name_en": "Northwest University",
+    "city": ""
+  },
+  {
+    "name_en": "Baoji University",
+    "city": ""
+  },
+  {
+    "name_en": "Shaanxi University",
+    "city": ""
+  },
+  {
+    "name_en": "Xi'an University",
+    "city": ""
+  },
+  {
+    "name_en": "PLA Rocket Force University of Engineering",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing University of Posts and Telecommunications",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing Jiaotong University",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing University of Arts and Science",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing Three Gorges University",
+    "city": ""
+  },
+  {
+    "name_en": "Yangtze Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Sichuan International Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Southwest University of Political Science and Law",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing Technology and Business University",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing Police College",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing College of Humanities, Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Chongqing University of Education",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Polytechnic University",
+    "city": ""
+  },
+  {
+    "name_en": "Civil Aviation University of China",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin University of Traditional Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin University of Technology and Education",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Foreign Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin University of Commerce",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin University of Finance and Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin University of Sport",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Chengjian University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianshi College",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Sino-German University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Boustead College",
+    "city": ""
+  },
+  {
+    "name_en": "Civil Aviation University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Sino-German University",
+    "city": ""
+  },
+  {
+    "name_en": "Tianjin Open University",
+    "city": ""
+  },
+  {
+    "name_en": "Florida International University",
+    "city": ""
+  },
+  {
+    "name_en": "Tsin Ku University",
+    "city": ""
+  },
+  {
+    "name_en": "Heilongjiang University",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Heilongjiang University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Northeast Petroleum University",
+    "city": ""
+  },
+  {
+    "name_en": "Jiamusi University",
+    "city": ""
+  },
+  {
+    "name_en": "Heilongjiang Bayi Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Heilongjiang University of Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Mudanjiang Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Qiqihar University",
+    "city": ""
+  },
+  {
+    "name_en": "Mudanjiang Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Daqing Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Suihua University",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin University of Commerce",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Sport University",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Finance University",
+    "city": ""
+  },
+  {
+    "name_en": "Qiqihar Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Heilongjiang University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "East University of Heilongjiang",
+    "city": ""
+  },
+  {
+    "name_en": "Heilongjiang Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Qiqihar Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Heilongjiang International University",
+    "city": ""
+  },
+  {
+    "name_en": "Heilongjiang University of Finance and Economic",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Cambridge University",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Guangsha College",
+    "city": ""
+  },
+  {
+    "name_en": "Harbin Huade University",
+    "city": ""
+  },
+  {
+    "name_en": "Heihe University",
+    "city": ""
+  },
+  {
+    "name_en": "East University",
+    "city": ""
+  },
+  {
+    "name_en": "Changchun University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin Jianzhu University (JLJU)",
+    "city": ""
+  },
+  {
+    "name_en": "Northeast Electric Power University",
+    "city": ""
+  },
+  {
+    "name_en": "Changchun University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin Jianzhu University",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Changchun University of Chinese Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Beihua University",
+    "city": ""
+  },
+  {
+    "name_en": "Tonghua Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Changchun Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Baicheng Normal University",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin Sport University",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin University of Arts",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin University of Foreign Languages",
+    "city": ""
+  },
+  {
+    "name_en": "Jilin Business and Technology College",
+    "city": ""
+  },
+  {
+    "name_en": "Changchun Institute of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Changchun University",
+    "city": ""
+  },
+  {
+    "name_en": "Changchun Guanghua University",
+    "city": ""
+  },
+  {
+    "name_en": "Jinlin Medical University",
+    "city": ""
+  }
+]

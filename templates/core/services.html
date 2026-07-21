@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ services_meta_title }} | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}{{ services_meta_description }}{% endblock %}
+
+{% block meta_keywords %}{{ services_meta_keywords }}{% endblock %}
+
+{% block canonical_url %}{{ services_page_url }}{% endblock %}
+
+{% block og_title %}{{ services_og_title }}{% endblock %}
+{% block og_description %}{{ services_meta_description }}{% endblock %}
+{% block og_image %}{{ site_url }}{% static 'img/learning_img.png' %}{% endblock %}
+{% block twitter_title %}{{ services_og_title }}{% endblock %}
+{% block twitter_description %}{{ services_meta_description }}{% endblock %}
+{% block twitter_image %}{{ site_url }}{% static 'img/learning_img.png' %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/services.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/discovery-hub.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/ai-qa-section.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script>
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+window.PAGE_CONFIG.servicesSearchUrl = "{% url 'services_search' %}";
+window.PAGE_CONFIG.servicesSuggestUrl = "{% url 'services_suggest' %}";
+window.PAGE_CONFIG.servicesTrackUrl = "{% url 'services_track' %}";
+window.PAGE_CONFIG.servicesActiveCategory = "{{ active_category.slug|default:'' }}";
+</script>
+<script type="application/ld+json">{{ services_schema_json|safe }}</script>
+{% endblock %}
+
+{% block content %}
+{% url 'services' as services_url %}
+{% if active_category %}
+{% include "layout/page_hero.html" with hero_title=active_category.name hero_lead=active_category.description|default:"" crumb2_label="خدمات با ما" crumb2_url=services_url crumb3_label=active_category.name %}
+{% else %}
+{% include "layout/page_hero.html" with hero_title="خدمات با ما" hero_lead="از مشاوره و ارزیابی اولیه تا پذیرش دانشگاه، ویزای تحصیلی، بورسیه و استقرار در کشور مقصد — همراهی تخصصی در تمام مسیر مهاجرت تحصیلی." crumb2_label="خدمات با ما" %}
+{% endif %}
+
+{% include "layout/_answer_summary_banner.html" with answer_text=services_answer_summary answer_class="services-page__hero-answer ai-qa-section__answer" %}
+
+<section class="faq-page services-page section_padding" dir="rtl">
+    <div class="container">
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 faq-page__aside" aria-label="دسته‌بندی خدمات">
+                <div class="faq-page__panel faq-page__panel--sticky">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-layout-grid2" aria-hidden="true"></span>
+                        دسته‌بندی
+                    </h2>
+                    <nav class="faq-page__nav" aria-label="ناوبری دسته‌های خدمات">
+                        <a href="{% url 'services' %}"
+                           class="faq-page__nav-link{% if not active_category %} is-active{% endif %}"
+                           data-svc-category=""
+                           {% if not active_category %}aria-current="page"{% endif %}>
+                            همه خدمات
+                        </a>
+                        {% for cat in categories %}
+                        <a href="{% url 'services_category' category_slug=cat.slug %}"
+                           class="faq-page__nav-link{% if active_category and active_category.slug == cat.slug %} is-active{% endif %}"
+                           data-svc-category="{{ cat.slug }}"
+                           {% if active_category and active_category.slug == cat.slug %}aria-current="page"{% endif %}>
+                            {% if cat.icon %}<span class="{{ cat.icon }}" aria-hidden="true"></span>{% endif %}
+                            <span>{{ cat.name }}</span>
+                        </a>
+                        {% endfor %}
+                    </nav>
+                </div>
+
+                {% if featured_services %}
+                <div class="faq-page__panel faq-page__panel--featured">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-star" aria-hidden="true"></span>
+                        پرطرفدار
+                    </h2>
+                    <ul class="faq-page__popular">
+                        {% for service in featured_services %}
+                        <li>
+                            <button type="button"
+                                    class="faq-page__popular-btn"
+                                    data-svc-jump="{{ service.slug }}"
+                                    data-service-id="{{ service.id }}">
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+                                {{ service.title }}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 faq-page__main">
+                {% include "layout/_ai_qa_section.html" with ai_qa_blocks=services_ai_qa_blocks ai_qa_title=services_ai_qa_title ai_qa_lead=services_ai_qa_lead ai_qa_section_id="services-qa" %}
+
+                {% if featured_services %}
+                <div class="faq-page__chips" aria-label="خدمات پرطرفدار">
+                    <span class="faq-page__chips-label">پرطرفدار:</span>
+                    <div class="faq-page__chips-scroll">
+                        {% for service in featured_services %}
+                        <button type="button"
+                                class="faq-page__chip"
+                                data-svc-jump="{{ service.slug }}"
+                                data-service-id="{{ service.id }}">
+                            {{ service.title }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="svc-finder" aria-label="فیلتر هوشمند خدمات">
+                    <div class="svc-finder__head">
+                        <h2 class="svc-finder__title">
+                            <span class="ti-target" aria-hidden="true"></span>
+                            نیاز شما چیست؟
+                        </h2>
+                        <p class="svc-finder__lead">یک مورد را انتخاب کنید تا خدمات مرتبط فیلتر شوند.</p>
+                    </div>
+                    <div class="svc-needs" role="radiogroup" aria-label="انتخاب نیاز">
+                        {% for need in service_needs %}
+                        <label class="svc-need">
+                            <input type="radio"
+                                   class="svc-need__input"
+                                   name="svc-need"
+                                   value="{{ need.id }}"
+                                   data-svc-need="{{ need.id }}">
+                            <span class="svc-need__box">
+                                {% if need.icon %}<span class="svc-need__icon {{ need.icon }}" aria-hidden="true"></span>{% endif %}
+                                <span class="svc-need__text">
+                                    <span class="svc-need__label">{{ need.label }}</span>
+                                    <span class="svc-need__hint">{{ need.hint }}</span>
+                                </span>
+                                <span class="svc-need__check ti-check" aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="faq-page__search">
+                    <label class="faq-page__sr-only" for="services-search-input">جستجو در خدمات</label>
+                    <div class="faq-page__search-field">
+                        <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+                        <input type="search"
+                               id="services-search-input"
+                               class="faq-page__search-input"
+                               placeholder="جستجو… مثلاً ویزا، بورسیه، اپلای، ترجمه مدارک"
+                               autocomplete="off"
+                               enterkeyhint="search"
+                               aria-controls="services-content-wrapper">
+                        <div id="services-suggest-panel" class="faq-page__suggest" hidden role="listbox" aria-label="پیشنهاد خدمات"></div>
+                    </div>
+                </div>
+
+                <div class="faq-page__filters svc-category-filters" role="toolbar" aria-label="فیلتر دسته‌ها">
+                    <button type="button"
+                            class="faq-page__filter{% if not active_category %} is-active{% endif %}"
+                            data-svc-category="">همه</button>
+                    {% for cat in categories %}
+                    <button type="button"
+                            class="faq-page__filter{% if active_category and active_category.slug == cat.slug %} is-active{% endif %}"
+                            data-svc-category="{{ cat.slug }}">{{ cat.name }}</button>
+                    {% endfor %}
+                </div>
+
+                <div id="services-content-wrapper" class="faq-page__content services-page__content" role="region" aria-label="لیست خدمات">
+                    {% include "core/_services_content.html" with services_list=services_list search_q="" suggestions=None active_category_slug=active_category.slug|default:"" selected_need_ids=None filter_message="" filter_mode="all" need_labels=None need_matches=None %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include "layout/_discovery_hub.html" with discovery_title="صفحات پرجستجو" discovery_lead="از خدمات به راهنمای دانشگاه، رشته و مقالات تخصصی بروید." %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/services.js' %}" defer></script>
+{% endblock %}

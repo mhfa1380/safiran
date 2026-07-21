@@ -1,0 +1,133 @@
+{% with pathway=report.language_pathway %}
+{% if report and report.courses and lang_promo_slot == pathway.prominence %}
+<section class="evalr-lang-promo{% if pathway.prominence == 'low' %} evalr-lang-promo--subtle{% endif %}"
+         id="{% if pathway.prominence == 'low' %}evalLanguagePathSubtle{% else %}evalLanguagePath{% endif %}"
+         aria-labelledby="{% if pathway.prominence == 'low' %}evalLangPromoTitleSubtle{% else %}evalLangPromoTitle{% endif %}">
+    {% if pathway.prominence != 'low' %}
+    <div class="evalr-lang-promo__glow" aria-hidden="true"></div>
+    {% endif %}
+    <div class="evalr-lang-promo__inner">
+        <header class="evalr-lang-promo__head">
+            {% if pathway.prominence != 'low' %}
+            <div class="evalr-lang-promo__alert" role="status">
+                <span class="evalr-lang-promo__pulse" aria-hidden="true"></span>
+                <span class="ti-alert" aria-hidden="true"></span>
+                <span class="evalr-lang-promo__eyebrow">
+                    {% if pathway.urgency_eyebrow %}{{ pathway.urgency_eyebrow }}{% else %}قبل از هر تصمیمی{% endif %}
+                </span>
+            </div>
+            {% endif %}
+            <h2 class="evalr-lang-promo__title" id="{% if pathway.prominence == 'low' %}evalLangPromoTitleSubtle{% else %}evalLangPromoTitle{% endif %}">
+                {% if pathway.intro_title %}{{ pathway.intro_title }}{% else %}آخرش چی می‌شه؟{% endif %}
+            </h2>
+            <p class="evalr-lang-promo__lead">
+                {% if pathway.intro_lead %}{{ pathway.intro_lead|safe }}{% else %}
+                گزارش شما آماده است؛ اما در پرونده‌های واقعی، <strong>ضعیف‌ترین حلقه اغلب زبان است</strong> — نه کشور و نه رشته.
+                هر ماه تأخیر در زبان، یعنی یک موج اپلای کمتر و شانس بورسیه پایین‌تر.
+                {% endif %}
+            </p>
+            {% if pathway.urgency_headline and pathway.prominence != 'low' %}
+            <p class="evalr-lang-promo__hook">{{ pathway.urgency_headline }}</p>
+            {% endif %}
+            {% if pathway.urgency_chips and pathway.prominence != 'low' %}
+            <ul class="evalr-lang-promo__chips" aria-label="نکات کلیدی">
+                {% for chip in pathway.urgency_chips %}
+                <li class="evalr-lang-promo__chip">{{ chip }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </header>
+
+        {% if pathway.pathway_note and pathway.prominence != 'low' %}
+        <p class="evalr-lang-promo__note">
+            <span class="ti-light-bulb" aria-hidden="true"></span>
+            {{ pathway.pathway_note }}
+        </p>
+        {% endif %}
+
+        <div class="evalr-lang-promo__grid">
+            {% for course in report.courses %}
+            <article class="evalr-lang-card{% if course.is_primary %} is-primary{% endif %}">
+                <a href="{{ course.url }}" class="evalr-lang-card__link" target="_blank" rel="noopener noreferrer">
+                    <div class="evalr-lang-card__visual"{% if course.image %} style="background-image: url('{{ course.image }}');"{% endif %}>
+                        {% if course.is_primary and pathway.prominence != 'low' %}
+                        <span class="evalr-lang-card__ribbon">پیشنهاد اول پرونده شما</span>
+                        {% endif %}
+                        {% if course.badge %}
+                        <span class="evalr-lang-card__badge">{{ course.badge }}</span>
+                        {% endif %}
+                        {% if course.skills and pathway.prominence != 'low' %}
+                        <div class="evalr-lang-card__skills" aria-label="مهارت‌ها">
+                            {% for skill in course.skills %}
+                            <span class="evalr-lang-card__skill">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="evalr-lang-card__body">
+                        {% if course.is_primary and pathway.prominence != 'low' %}
+                        <span class="evalr-lang-card__featured">شروع از اینجا</span>
+                        {% endif %}
+                        {% if course.category %}
+                        <span class="evalr-lang-card__category">{{ course.category }}</span>
+                        {% endif %}
+                        <h3 class="evalr-lang-card__title">{{ course.title }}</h3>
+                        {% if course.short_description %}
+                        <p class="evalr-lang-card__desc">{{ course.short_description|truncatechars:160 }}</p>
+                        {% endif %}
+                        <ul class="evalr-lang-card__meta">
+                            {% if course.level_label %}
+                            <li><span class="ti-stats-up" aria-hidden="true"></span> {{ course.level_label }}</li>
+                            {% endif %}
+                            {% if course.target_toefl_label %}
+                            <li><span class="ti-target" aria-hidden="true"></span> {{ course.target_toefl_label }}</li>
+                            {% endif %}
+                            {% if course.sessions %}
+                            <li><span class="ti-time" aria-hidden="true"></span> {{ course.sessions }} جلسه{% if course.weeks %} / {{ course.weeks }} هفته{% endif %}</li>
+                            {% endif %}
+                        </ul>
+                        {% if course.reasons and pathway.prominence != 'low' %}
+                        <p class="evalr-lang-card__reason">{{ course.reasons.0 }}</p>
+                        {% endif %}
+                        <div class="evalr-lang-card__footer">
+                            {% if course.price %}
+                            <span class="evalr-lang-card__price">{{ course.price }}</span>
+                            {% endif %}
+                            <span class="evalr-lang-card__cta{% if course.is_primary and pathway.prominence != 'low' %} evalr-lang-card__cta--primary{% else %} evalr-lang-card__cta--ghost{% endif %}">
+                                {% if course.is_primary and pathway.prominence != 'low' %}
+                                <span class="evalr-lang-card__cta-text evalr-lang-card__cta-text--short">جزئیات دوره</span>
+                                <span class="evalr-lang-card__cta-text evalr-lang-card__cta-text--long">ثبت‌نام / جزئیات</span>
+                                {% else %}
+                                <span class="evalr-lang-card__cta-text">مشاهده</span>
+                                {% endif %}
+                                <span class="evalr-lang-card__cta-icon ti-angle-left" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+
+        <div class="evalr-block__hintrow evalr-block__hintrow--promo">
+            {% include "core/_evaluation_section_hint.html" with hint_section="language" %}
+        </div>
+
+        <footer class="evalr-lang-promo__foot">
+            {% if pathway.social_proof %}
+            <p class="evalr-lang-promo__social">
+                <span class="ti-user" aria-hidden="true"></span>
+                {{ pathway.social_proof }}
+            </p>
+            {% endif %}
+            <a href="{% if pathway.courses_list_url %}{{ pathway.courses_list_url }}{% else %}{% url 'courses_list' %}{% endif %}"
+               class="evalr-lang-promo__all"
+               target="_blank"
+               rel="noopener noreferrer">
+                همه دوره‌های زبان <span class="ti-angle-left" aria-hidden="true"></span>
+            </a>
+        </footer>
+    </div>
+</section>
+{% endif %}
+{% endwith %}

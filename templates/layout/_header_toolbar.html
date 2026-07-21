@@ -1,0 +1,8 @@
+<div class="site-header__toolbar" id="site-header-toolbar">
+    {% include "layout/_header_search.html" %}
+    {% if site_nav.header_eval %}
+    <a href="{{ site_nav.header_eval.url }}" class="site-header__eval-btn d-none d-xl-inline-flex">
+        <span class="site-header__eval-label">{{ site_nav.header_eval.label }}</span>
+    </a>
+    {% endif %}
+</div>

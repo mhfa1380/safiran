@@ -1,0 +1,86 @@
+<aside class="col-lg-4 school-detail__aside" aria-label="{{ sidebar_aria_label|default:'راهنمای صفحه' }}">
+    <div class="school-detail__sidebar school-detail__sidebar--compact">
+        <div class="faq-page__panel school-detail__sidebar-card school-detail__sidebar-card--accent">
+            {% if sidebar_subject %}
+            <p class="school-detail__sidebar-lead">
+                {% if sidebar_about == "major" %}
+                برای مشاوره درباره رشته {{ sidebar_subject }}{% if sidebar_country %} در {{ sidebar_country }}{% endif %} و شرایط تحصیل، جلسه رزرو کنید.
+                {% else %}
+                اگر {{ sidebar_subject }} یکی از گزینه‌های اصلی شماست، با رزرو جلسه مشاوره شرایط پذیرش و ویزا را بررسی کنید.
+                {% endif %}
+            </p>
+            {% elif sidebar_consult_lead %}
+            <p class="school-detail__sidebar-lead">{{ sidebar_consult_lead }}</p>
+            {% endif %}
+            <div class="school-detail__sidebar-actions">
+                <a href="{% if sidebar_evaluation_url %}{{ sidebar_evaluation_url }}{% else %}{% url 'evaluation' %}{% endif %}"
+                   class="school-detail__sidebar-btn school-detail__sidebar-btn--eval school-detail__sidebar-btn--primary">
+                    ارزیابی هوشمند
+                </a>
+                <a href="{% if sidebar_appointment_url %}{{ sidebar_appointment_url }}{% else %}{% url 'appointment' %}?about={{ sidebar_about|default:'general' }}&amp;title={{ sidebar_subject|default:''|urlencode }}{% if sidebar_country %}&amp;country={{ sidebar_country|urlencode }}{% endif %}{% endif %}"
+                   class="school-detail__sidebar-btn school-detail__sidebar-btn--ghost">
+                    رزرو مشاوره
+                </a>
+            </div>
+            {% if sidebar_extra_url and sidebar_extra_count %}
+            <p class="school-detail__sidebar-extra">
+                <a href="{{ sidebar_extra_url }}" class="school-detail__sidebar-extra-link">
+                    <span class="ti-layout-grid2" aria-hidden="true"></span>
+                    {% if sidebar_extra_count %}
+                    مشاهده {{ sidebar_extra_count }} {{ sidebar_extra_unit|default:"مورد" }}
+                    {% else %}
+                    {{ sidebar_extra_label }}
+                    {% endif %}
+                </a>
+            </p>
+            {% endif %}
+            {% if sidebar_website %}
+            <p class="school-detail__sidebar-extra">
+                <a href="{{ sidebar_website }}"
+                   class="school-detail__sidebar-website-link"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   dir="ltr"
+                   aria-label="وب‌سایت رسمی — باز شدن در تب جدید">
+                    <span class="ti-world" aria-hidden="true"></span>
+                    <span class="school-detail__sidebar-website-text">{{ sidebar_website }}</span>
+                    <span class="ti-new-window" aria-hidden="true"></span>
+                </a>
+            </p>
+            {% endif %}
+            <div class="school-detail__sidebar-foot">
+                <a href="tel:{{ institute.phone }}" class="school-detail__sidebar-phone tel-ltr">
+                    {{ institute.phone_formatted }}
+                </a>
+                <div class="school-detail__share" role="group" aria-label="اشتراک‌گذاری">
+                    <a href="https://wa.me/?text={{ request.build_absolute_uri|urlencode }}"
+                       class="school-detail__share-btn school-detail__share-btn--wa"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       title="واتساپ"
+                       aria-label="اشتراک در واتساپ">
+                        <span class="school-detail__share-icon school-detail__share-icon--wa" aria-hidden="true"></span>
+                    </a>
+                    <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}"
+                       class="school-detail__share-btn school-detail__share-btn--tg"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       title="تلگرام"
+                       aria-label="اشتراک در تلگرام">
+                        <span class="school-detail__share-icon school-detail__share-icon--tg" aria-hidden="true"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% if sidebar_nav_links %}
+        <nav class="school-detail__sidebar-nav" aria-label="پیوندهای مرتبط">
+            {% for link in sidebar_nav_links %}
+            <a href="{{ link.url }}" class="school-detail__sidebar-nav-link">
+                {% if link.icon %}<span class="{{ link.icon }}" aria-hidden="true"></span>{% endif %}
+                <span>{{ link.label }}</span>
+            </a>
+            {% endfor %}
+        </nav>
+        {% endif %}
+    </div>
+</aside>

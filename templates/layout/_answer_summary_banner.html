@@ -1,0 +1,19 @@
+{% if answer_text %}
+{% if answer_inline %}
+<div class="answer-summary-banner answer-summary-banner--inline" dir="rtl" lang="fa" aria-label="{{ aria_label|default:'خلاصه پاسخ' }}">
+    <div class="answer-summary-banner__card">
+        <span class="answer-summary-banner__icon ti-light-bulb" aria-hidden="true"></span>
+        <p class="answer-summary-banner__text {{ answer_class }}"{% if answer_id %} id="{{ answer_id }}"{% endif %}>{{ answer_text }}</p>
+    </div>
+</div>
+{% else %}
+<section class="answer-summary-banner" dir="rtl" lang="fa" aria-label="{{ aria_label|default:'خلاصه پاسخ' }}">
+    <div class="container">
+        <div class="answer-summary-banner__card">
+            <span class="answer-summary-banner__icon ti-light-bulb" aria-hidden="true"></span>
+            <p class="answer-summary-banner__text {{ answer_class }}"{% if answer_id %} id="{{ answer_id }}"{% endif %}>{{ answer_text }}</p>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endif %}

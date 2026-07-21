@@ -1,0 +1,57 @@
+{% load static %}
+<article class="cr-card{% if course.uses_external_link %} cr-card--external{% endif %}" id="course-{{ course.slug }}" data-course-slug="{{ course.slug }}">
+    <a href="{{ course.get_course_url }}" class="cr-card__media" aria-hidden="true" tabindex="-1"{% include "content/_course_link_attrs.html" %}>
+        {% if course.image %}
+        <img src="{{ course.image }}" alt="" loading="lazy" decoding="async">
+        {% else %}
+        <img src="{% static 'img/single_cource.webp' %}" alt="" loading="lazy" decoding="async">
+        {% endif %}
+        {% if course.uses_external_link %}
+        <span class="cr-card__external-badge" aria-hidden="true"><span class="ti-new-window"></span></span>
+        {% endif %}
+    </a>
+    <div class="cr-card__body">
+        <header class="cr-card__head">
+            <div class="cr-card__titles">
+                <h3 class="cr-card__title">
+                    <a href="{{ course.get_course_url }}"{% include "content/_course_link_attrs.html" %}>{{ course.title }}</a>
+                </h3>
+                <div class="cr-card__meta">
+                    {% if course.country %}
+                    <span class="cr-card__tag cr-card__tag--country">{{ course.get_country_display }}</span>
+                    {% endif %}
+                    {% if course.delivery_mode %}
+                    <span class="cr-card__tag cr-card__tag--mode">{{ course.get_delivery_mode_display }}</span>
+                    {% endif %}
+                    {% if course.duration_hours %}
+                    <span class="cr-card__tag cr-card__tag--duration"><span class="ti-time" aria-hidden="true"></span> {{ course.duration_hours }} ساعت</span>
+                    {% endif %}
+                    {% if course.price %}
+                    <span class="cr-card__tag cr-card__tag--price">{{ course.price }}</span>
+                    {% endif %}
+                    {% if course.uses_external_link %}
+                    <span class="cr-card__tag cr-card__tag--external">لینک خارجی</span>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+        {% if course.short_description %}
+        <p class="cr-card__lead">{{ course.short_description|truncatechars:220 }}</p>
+        {% endif %}
+        {% with highlights=course.get_features_list %}
+        {% if highlights %}
+        <ul class="cr-card__highlights">
+            {% for item in highlights|slice:":4" %}
+            <li><span class="cr-card__check ti-check" aria-hidden="true"></span>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        <div class="cr-card__actions">
+            <a href="{{ course.get_course_url }}" class="cr-card__btn cr-card__btn--primary"{% include "content/_course_link_attrs.html" %}>{{ course.get_course_cta_label }}</a>
+            {% if not course.uses_external_link %}
+            <a href="{% url 'appointment' %}?about=course&amp;title={{ course.title|urlencode }}" class="cr-card__btn cr-card__btn--ghost">درخواست مشاوره</a>
+            {% endif %}
+        </div>
+    </div>
+</article>

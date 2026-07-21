@@ -1,0 +1,22 @@
+﻿{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="content" dir="rtl" style="text-align:right;max-width:42rem">
+    <h1>بازگردانی تغییر</h1>
+    <p><strong>شیء:</strong> {{ log.object_repr }}</p>
+    <p><strong>عملیات:</strong> {{ log.get_action_display }}</p>
+    <p><strong>زمان:</strong> {{ log.created_at }}</p>
+    {% if log.changed_fields %}
+    <p><strong>فیلدهای تغییر یافته:</strong> {{ log.changed_fields|join:", " }}</p>
+    {% endif %}
+    <p class="help">با تأیید، داده به وضعیت <em>قبل از این تغییر</em> برمی‌گردد. این عمل خودش در لاگ ثبت می‌شود.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="submit-row">
+            <input type="submit" class="default" value="بله، بازگردانی کن">
+            <a href="{% url 'admin:core_adminchangelog_changelist' %}" class="button cancel-link">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

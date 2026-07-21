@@ -1,264 +1,320 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ university.meta_title|default:university.name_fa }} | {{ institute.name }}{% endblock %}
+{% block title %}{% if university.meta_title %}{{ university.meta_title }}{% else %}{{ university.name_fa }} | {{ institute.name }}{% endif %}{% endblock %}
 {% block meta_description %}{{ university.meta_description|default:university.short_description|truncatechars:160 }}{% endblock %}
-{% block og_title %}{{ university.meta_title|default:university.name_fa }} | {{ institute.name }}{% endblock %}
+{% block og_title %}{% if university.meta_title %}{{ university.meta_title }}{% else %}{{ university.name_fa }} | {{ institute.name }}{% endif %}{% endblock %}
 {% block og_description %}{{ university.meta_description|default:university.short_description|truncatechars:160 }}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
 <link rel="stylesheet" href="{% static 'css/app/pages/schools.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/school-detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/content-guide.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/ai-qa-section.css' %}">
 {% endblock %}
 
 {% block og_image %}{% if university.image %}{{ site_url }}{{ university.image.url }}{% else %}{{ site_url }}{% static 'img/blog/single_blog_4.png' %}{% endif %}{% endblock %}
 {% block twitter_image %}{% if university.image %}{{ site_url }}{{ university.image.url }}{% else %}{{ site_url }}{% static 'img/blog/single_blog_4.png' %}{% endif %}{% endblock %}
 
 {% block extra_head %}
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه اصلی","item":"{{ site_url }}/"},{"@type":"ListItem","position":2,"name":"دانشگاه‌ها","item":"{{ site_url }}{% url 'schools_list' %}"},{"@type":"ListItem","position":3,"name":"{{ university.name_fa|escapejs }}","item":"{{ canonical_url }}"}]}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "CollegeOrUniversity",
-  "name": "{{ university.name_en }}",
-  "alternateName": "{{ university.name_fa }}",
-  "description": "{{ university.short_description|default:''|truncatechars:200 }}",
-  "url": "{{ canonical_url }}",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "{{ university.city }}",
-    "addressCountry": "{% if university.country == 'china' %}CN{% elif university.country == 'canada' %}CA{% elif university.country == 'spain' %}ES{% else %}IR{% endif %}"
-  },
-  "image": "{% if university.image %}{{ site_url }}{{ university.image.url }}{% else %}{{ site_url }}{% static 'img/blog/single_blog_4.png' %}{% endif %}",
-  "sameAs": "{% if university.website %}{{ university.website }}{% endif %}"
-}
-</script>
-{% if university_faqs %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {% for faq in university_faqs %}
-    {
-      "@type": "Question",
-      "name": "{{ faq.question|escapejs }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ faq.answer|striptags|escapejs }}"
-      }
-    }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-  ]
-}
-</script>
-{% endif %}
+<script type="application/ld+json">{{ university_schema_json|safe }}</script>
 {% endblock %}
 
-
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>{{ university.name_fa }}</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span><a href="{% url 'schools_list' %}">دانشگاه‌ها</a><span>/</span>{{ university.name_fa }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% url 'schools_list' as schools_url %}
+{% include "layout/page_hero.html" with hero_title=university.name_fa hero_compact=1 crumb2_label="دانشگاه‌ها" crumb2_url=schools_url crumb3_label=university.name_fa %}
 
-<section class="school-detail section_padding" dir="rtl">
+<section class="school-detail school-detail-v2 section_padding" dir="rtl" lang="fa">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="school-detail__hero">
-                    <div class="school-detail__hero-img">
-                        {% if university.image %}
-                            <img src="{{ university.image.url }}" alt="{{ university.name_fa }}">
-                        {% else %}
-                            <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ university.name_fa }}">
-                        {% endif %}
-                        <span class="school-detail__hero-badge">
-                            {% if university.country == "china" %}چین{% elif university.country == "canada" %}کانادا{% elif university.country == "spain" %}اسپانیا{% else %}سایر{% endif %}
+        {% include "layout/_answer_summary_banner.html" with answer_text=university_answer_summary answer_class="school-detail__hero-answer ai-qa-section__answer" answer_inline=True %}
+
+        <header class="sd-hero" id="school-intro">
+            <div class="sd-hero__card">
+                <div class="sd-hero__body">
+                    {% if university.name_en %}
+                    <p class="sd-hero__name-en">{{ university.name_en }}</p>
+                    {% endif %}
+                    {% if university.short_description %}
+                    <p class="sd-hero__summary">{{ university.short_description }}</p>
+                    {% endif %}
+                    <div class="sd-hero__chips">
+                        <span class="sd-hero__chip">
+                            <span class="ti-location-pin" aria-hidden="true"></span>
+                            {{ university.city }}{% if university.country %}، {{ university.get_country_display }}{% endif %}
                         </span>
+                        {% if university.world_rank %}
+                        <span class="sd-hero__chip sd-hero__chip--rank" id="school-rank">
+                            <span class="ti-medall" aria-hidden="true"></span>
+                            رتبه جهانی {{ university.world_rank }}
+                        </span>
+                        {% endif %}
+                        <span class="sd-hero__chip">
+                            <span class="{{ type_icon }}" aria-hidden="true"></span>
+                            {{ university.get_type_display }}
+                        </span>
+                        {% if linked_majors_count %}
+                        <span class="sd-hero__chip">
+                            <span class="ti-book" aria-hidden="true"></span>
+                            {{ linked_majors_count }} رشته مرتبط
+                        </span>
+                        {% endif %}
                     </div>
-                    <div class="school-detail__hero-body">
-                        <h1 class="school-detail__title">{{ university.name_fa }}</h1>
-                        {% if university.name_en %}<p class="school-detail__subtitle">{{ university.name_en }}</p>{% endif %}
-                        <div class="school-detail__meta">
-                            <span class="school-detail__meta-item">
-                                <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                {{ university.city }}{% if university.country %}، {% if university.country == "china" %}چین{% elif university.country == "canada" %}کانادا{% elif university.country == "spain" %}اسپانیا{% else %}سایر{% endif %}{% endif %}
-                            </span>
-                            {% if university.world_rank %}
-                                <span class="school-detail__meta-item">
-                                    <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                    رتبه {{ university.world_rank }}
-                                </span>
-                            {% endif %}
-                            <span class="school-detail__meta-item">
-                                <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                                {% if university.type == "university" %}دانشگاه{% elif university.type == "college" %}کالج{% elif university.type == "school" %}مدرسه{% elif university.type == "institute" %}موسسه{% else %}آموزشی{% endif %}
-                            </span>
-                        </div>
-                        {% if university.is_approved_by_mo_science or university.is_approved_by_mo_health %}
-                            <div class="school-detail__badges">
-                                {% if university.is_approved_by_mo_science %}
-                                    <span class="school-detail__badge school-detail__badge--science">وزارت علوم</span>
-                                {% endif %}
-                                {% if university.is_approved_by_mo_health %}
-                                    <span class="school-detail__badge school-detail__badge--health">وزارت بهداشت</span>
-                                {% endif %}
-                            </div>
+                    {% if university.is_approved_by_mo_science or university.is_approved_by_mo_health %}
+                    <div class="sd-hero__approvals">
+                        {% if university.is_approved_by_mo_science %}
+                        <span class="sd-hero__approval sd-hero__approval--science">
+                            <span class="ti-check" aria-hidden="true"></span>
+                            تأیید وزارت علوم
+                        </span>
+                        {% endif %}
+                        {% if university.is_approved_by_mo_health %}
+                        <span class="sd-hero__approval sd-hero__approval--health">
+                            <span class="ti-check" aria-hidden="true"></span>
+                            تأیید وزارت بهداشت
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    <div class="sd-hero__actions">
+                        <a href="{{ evaluation_url }}" class="sd-hero__btn sd-hero__btn--primary">
+                            <span class="ti-clipboard" aria-hidden="true"></span>
+                            ارزیابی هوشمند رایگان
+                        </a>
+                        <a href="#school-cta" class="sd-hero__btn sd-hero__btn--ghost">
+                            <span class="ti-calendar" aria-hidden="true"></span>
+                            رزرو مشاوره
+                        </a>
+                        {% if university.website %}
+                        <a href="{{ university.website }}"
+                           class="sd-hero__btn sd-hero__btn--ghost sd-hero__btn--website"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           dir="ltr">
+                            <span class="ti-world" aria-hidden="true"></span>
+                            وب‌سایت رسمی
+                        </a>
                         {% endif %}
                     </div>
                 </div>
+                <figure class="sd-hero__media">
+                    {% if university.image %}
+                    <img src="{{ university.image.url }}"
+                         alt="{{ university.name_fa }}"
+                         class="sd-hero__img"
+                         width="640"
+                         height="360"
+                         loading="eager">
+                    {% else %}
+                    <img src="{% static 'img/blog/single_blog_4.png' %}"
+                         alt="{{ university.name_fa }}"
+                         class="sd-hero__img"
+                         width="640"
+                         height="360"
+                         loading="eager">
+                    {% endif %}
+                    <span class="sd-hero__country">
+                        {% if country_flag %}
+                        <img src="{% static country_flag %}" alt="" class="sd-hero__flag" width="20" height="14" loading="lazy">
+                        {% endif %}
+                        {{ university.get_country_display }}
+                    </span>
+                </figure>
+            </div>
+        </header>
+
+        <div class="row g-4 school-detail__layout">
+            <div class="col-lg-8 school-detail__main">
+                <nav class="sd-jump" id="school-jump-nav" aria-label="پرش به بخش‌های صفحه">
+                    <ul class="sd-jump__list">
+                        <li><button type="button" class="sd-jump__link is-active" data-sd-jump="school-intro"><span class="ti-home" aria-hidden="true"></span> معرفی</button></li>
+                        {% if university.gallery_images.exists %}
+                        <li><button type="button" class="sd-jump__link" data-sd-jump="school-gallery"><span class="ti-gallery" aria-hidden="true"></span> گالری</button></li>
+                        {% endif %}
+                        <li><button type="button" class="sd-jump__link" data-sd-jump="school-about"><span class="ti-book" aria-hidden="true"></span> درباره</button></li>
+                        {% if major_groups %}
+                        <li><button type="button" class="sd-jump__link" data-sd-jump="school-majors"><span class="ti-layout-grid2" aria-hidden="true"></span> رشته‌ها</button></li>
+                        {% endif %}
+                        {% if university_faqs %}
+                        <li><button type="button" class="sd-jump__link" data-sd-jump="school-faq"><span class="ti-help-alt" aria-hidden="true"></span> سوالات</button></li>
+                        {% endif %}
+                        <li><button type="button" class="sd-jump__link" data-sd-jump="school-cta"><span class="ti-headphone-alt" aria-hidden="true"></span> مشاوره</button></li>
+                    </ul>
+                </nav>
+
+                {% include "layout/_ai_qa_section.html" with ai_qa_blocks=university_ai_qa_blocks ai_qa_title=university_ai_qa_title ai_qa_lead=university_ai_qa_lead ai_qa_section_id="school-qa" %}
 
                 {% if university.gallery_images.exists %}
-                <div class="school-detail__gallery">
-                    <h3 class="school-detail__section-title">گالری تصاویر</h3>
+                <section class="sd-card" id="school-gallery" aria-labelledby="school-gallery-title">
+                    <div class="sd-card__head">
+                        <span class="sd-card__icon"><span class="ti-gallery" aria-hidden="true"></span></span>
+                        <h2 id="school-gallery-title" class="sd-card__title">گالری تصاویر</h2>
+                    </div>
                     <div class="school-detail__gallery-grid">
                         {% for img in university.gallery_images.all %}
                         <figure class="school-detail__gallery-item">
                             <a href="{{ img.image.url }}" class="popup-gallery" title="{{ img.caption }}">
-                                <img src="{{ img.image.url }}" alt="{{ img.caption|default:university.name_fa }}">
+                                <img src="{{ img.image.url }}" alt="{{ img.caption|default:university.name_fa }}" loading="lazy" width="320" height="240">
                             </a>
                             {% if img.caption %}
-                                <figcaption>{{ img.caption }}</figcaption>
+                            <figcaption>{{ img.caption }}</figcaption>
                             {% endif %}
                         </figure>
                         {% endfor %}
                     </div>
-                </div>
+                </section>
                 {% endif %}
 
-                {% if university.description or university.short_description %}
-                <div class="school-detail__block">
-                    <div class="school-detail__block-content ck-content">
-                        {% if university.description %}{{ university.description|safe }}{% else %}{{ university.short_description|linebreaks }}{% endif %}
+                <section class="sd-card" id="school-about" aria-labelledby="school-about-title">
+                    <div class="sd-card__head">
+                        <span class="sd-card__icon"><span class="ti-book" aria-hidden="true"></span></span>
+                        <h2 id="school-about-title" class="sd-card__title">درباره {{ university.name_fa }}</h2>
                     </div>
-                </div>
-                {% else %}
-                <div class="school-detail__block">
-                    <div class="school-detail__block-content">
-                        اطلاعات تکمیلی این دانشگاه به زودی توسط تیم {{ institute.name }} تکمیل خواهد شد.
+                    <div class="school-detail__content guide-content ck-content">
+                        {% if university.description %}
+                        {{ university.description|safe }}
+                        {% elif university.short_description %}
+                        {{ university.short_description|linebreaks }}
+                        {% else %}
+                        <p>اطلاعات تکمیلی این دانشگاه به زودی توسط تیم {{ institute.name }} تکمیل خواهد شد.</p>
+                        {% endif %}
                     </div>
-                </div>
-                {% endif %}
+                </section>
 
-                {% if university_faqs %}
-                <div class="school-detail__block">
-                    <h3 class="school-detail__section-title">سوالات متداول درباره {{ university.name_fa }}</h3>
-                    <div class="school-detail__block-content">
-                        {% for faq in university_faqs %}
-                        <h4 class="school-detail__faq-question">{{ forloop.counter }}. {{ faq.question }}</h4>
-                        <p>{{ faq.answer|linebreaks }}</p>
+                {% if major_groups %}
+                <section class="sd-card school-detail__majors" id="school-majors" aria-labelledby="school-majors-title">
+                    <div class="sd-card__head">
+                        <span class="sd-card__icon"><span class="ti-layout-grid2" aria-hidden="true"></span></span>
+                        <h2 id="school-majors-title" class="sd-card__title">رشته‌های {{ university.name_fa }}</h2>
+                    </div>
+                    <p class="sd-card__lead">
+                        از هر دسته چند رشته پرطرفدار نمایش داده شده است.
+                        برای مشاهده {{ linked_majors_count }} رشته مرتبط، به صفحه فیلترشده رشته‌ها بروید.
+                    </p>
+                    <div class="school-detail__major-groups">
+                        {% for group in major_groups %}
+                        <div class="school-detail__major-group">
+                            <div class="school-detail__major-group-head">
+                                <h3 class="school-detail__major-group-title">{{ group.label }}</h3>
+                                {% if group.more_count %}
+                                <span class="school-detail__major-group-meta">+{{ group.more_count }} رشته دیگر</span>
+                                {% endif %}
+                            </div>
+                            <ul class="school-detail__major-chips" role="list">
+                                {% for major in group.majors %}
+                                <li>
+                                    <a href="{% url 'major_details' major.slug %}" class="school-detail__major-chip">
+                                        {{ major.title }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                         {% endfor %}
                     </div>
-                </div>
-                {% endif %}
-
-                <a href="{% url 'schools_list' %}" class="btn_2 mt-3">بازگشت به لیست دانشگاه‌ها</a>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="school-detail__sidebar">
-                    <div class="school-detail__card">
-                        <h4 class="school-detail__card-title">درخواست مشاوره</h4>
-                        <p class="school-detail__card_desc">
-                            اگر این دانشگاه یکی از گزینه‌های اصلی شماست، با رزرو جلسه مشاوره، شرایط پذیرش و ویزا را بررسی کنید.
-                        </p>
-                        <a href="{% url 'appointment' %}?about=university&title={{ university.name_fa|urlencode }}" class="btn_1 school-detail__btn-consult">رزرو مشاوره</a>
-                    </div>
-
-                    <div class="school-detail__card">
-                        <h4 class="school-detail__card-title">تماس با موسسه</h4>
-                        <div class="school-detail__contact-row">
-                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            <a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a>
-                        </div>
-                        <div class="school-detail__contact-row">
-                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            <a href="mailto:{{ institute.email }}">{{ institute.email }}</a>
-                        </div>
-                        <div class="school-detail__contact-row">
-                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            <span>{{ institute.address }}</span>
-                        </div>
-                    </div>
-
-                    {% if university.website %}
-                    <div class="school-detail__card">
-                        <h4 class="school-detail__card-title">وب‌سایت رسمی دانشگاه</h4>
-                        <a href="{{ university.website }}" target="_blank" rel="noopener" class="school-detail__website_link">
-                            {{ university.website }}
+                    <div class="school-detail__majors-cta">
+                        <a href="{{ evaluation_url }}" class="school-detail__majors-cta-btn school-detail__majors-cta-btn--primary">
+                            <span class="ti-clipboard" aria-hidden="true"></span>
+                            ارزیابی هوشمند
+                        </a>
+                        <a href="{{ majors_list_url }}" class="school-detail__majors-cta-btn school-detail__majors-cta-btn--secondary">
+                            <span class="ti-layout-grid2" aria-hidden="true"></span>
+                            همه {{ linked_majors_count }} رشته
                         </a>
                     </div>
-                    {% endif %}
+                </section>
+                {% endif %}
 
-                    <div class="school-detail__card">
-                        <h4 class="school-detail__card-title">اشتراک‌گذاری</h4>
-                        <div class="school-detail__share">
-                            <a href="https://wa.me/?text={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" title="واتساپ">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.462 4.436-9.908 9.898-9.908 2.65 0 5.122 1.03 6.982 2.769a9.825 9.825 0 012.76 6.965c-.003 5.463-4.437 9.908-9.885 9.908m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                            </a>
-                            <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" title="تلگرام">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                            </a>
-                            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ university.name_fa|urlencode }}" target="_blank" rel="noopener" title="توییتر">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                            </a>
-                            <a href="mailto:?subject={{ university.name_fa|urlencode }}&body={{ request.build_absolute_uri|urlencode }}" title="ایمیل">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                            </a>
-                            <a href="#" onclick="window.print(); return false;" class="school-detail__share-print" title="چاپ">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
-                            </a>
-                        </div>
-                    </div>
+                <div class="sd-card sd-eval-banner" aria-label="ارزیابی هوشمند">
+                    <p class="sd-eval-banner__text">
+                        می‌خواهید بدانید برای <strong>{{ university.name_fa }}</strong> واجد شرایط هستید؟
+                        با چند سؤال کوتاه، گزارش شخصی‌سازی‌شده پذیرش و بورسیه را دریافت کنید.
+                    </p>
+                    <a href="{{ evaluation_url }}" class="sd-eval-banner__btn">
+                        <span class="ti-clipboard" aria-hidden="true"></span>
+                        شروع ارزیابی رایگان
+                    </a>
                 </div>
+
+                {% if university_faqs %}
+                <section class="sd-card" id="school-faq" aria-labelledby="school-faq-title">
+                    <div class="sd-card__head">
+                        <span class="sd-card__icon"><span class="ti-help-alt" aria-hidden="true"></span></span>
+                        <h2 id="school-faq-title" class="sd-card__title">سوالات متداول</h2>
+                    </div>
+                    <div class="sd-faq" role="list">
+                        {% for faq in university_faqs %}
+                        <details class="sd-faq__item faq-page__item" id="school-faq-{{ forloop.counter }}" role="listitem">
+                            <summary class="sd-faq__trigger faq-page__trigger">
+                                <span class="sd-faq__q-wrap">
+                                    <span class="sd-faq__num" aria-hidden="true">{{ forloop.counter }}</span>
+                                    <span class="sd-faq__q faq-page__trigger-text">{{ faq.question }}</span>
+                                </span>
+                                <span class="sd-faq__chevron faq-page__chevron ti-angle-down" aria-hidden="true"></span>
+                            </summary>
+                            <div class="sd-faq__answer faq-page__answer">
+                                <div class="sd-faq__answer-body faq-page__answer-body">{{ faq.answer|linebreaks }}</div>
+                            </div>
+                        </details>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endif %}
+
+                <section class="sd-consult faq-page__cta" id="school-cta" aria-labelledby="school-cta-title">
+                    <div class="faq-page__cta-body">
+                        <h2 id="school-cta-title" class="faq-page__cta-title">مشاوره پذیرش {{ university.name_fa }}</h2>
+                        <p class="faq-page__cta-text">مشاوران {{ institute.name }} شرایط شما را بررسی می‌کنند و مسیر پذیرش و ویزا را پیشنهاد می‌دهند.</p>
+                    </div>
+                    <div class="faq-page__cta-actions">
+                        <a href="{{ evaluation_url }}" class="faq-page__btn faq-page__btn--primary">ارزیابی هوشمند رایگان</a>
+                        <a href="{{ appointment_url }}" class="faq-page__btn faq-page__btn--ghost">رزرو مشاوره</a>
+                    </div>
+                </section>
+
+                <nav class="school-detail__back" aria-label="بازگشت به لیست دانشگاه‌ها">
+                    <a href="{% url 'schools_list' %}{% if university.country %}?country={{ university.country }}{% endif %}" class="school-detail__back-link">
+                        <span class="ti-angle-right" aria-hidden="true"></span>
+                        بازگشت به لیست دانشگاه‌ها
+                    </a>
+                </nav>
             </div>
+
+            {% if major_groups %}
+            {% include "schools/_detail_sidebar.html" with sidebar_aria_label="مشاوره و تماس" sidebar_about="university" sidebar_subject=university.name_fa sidebar_country=university.get_country_display sidebar_appointment_url=appointment_url sidebar_evaluation_url=evaluation_url sidebar_extra_url=majors_list_url sidebar_extra_count=linked_majors_count sidebar_extra_unit="رشته" sidebar_website=university.website only %}
+            {% else %}
+            {% include "schools/_detail_sidebar.html" with sidebar_aria_label="مشاوره و تماس" sidebar_about="university" sidebar_subject=university.name_fa sidebar_country=university.get_country_display sidebar_appointment_url=appointment_url sidebar_evaluation_url=evaluation_url sidebar_website=university.website only %}
+            {% endif %}
         </div>
 
         {% if related_universities %}
-        <div class="row mt-5">
-            <div class="col-12">
-                <h3 class="school-detail__section-title">دانشگاه‌های مشابه در همین کشور</h3>
-                <div class="row">
-                    {% for rel in related_universities %}
-                    <div class="col-6 col-md-3 mb-3">
-                        <a href="{% url 'school_detail' rel.slug %}" class="text-decoration-none">
-                            <div class="school-detail__related-card">
-                                <div class="card-img-wrap">
-                                    {% if rel.image %}
-                                        <img src="{{ rel.image.url }}" alt="{{ rel.name_fa }}">
-                                    {% else %}
-                                        <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ rel.name_fa }}">
-                                    {% endif %}
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="text-dark">{{ rel.name_fa }}</h5>
-                                    <p>{{ rel.city }}</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    {% endfor %}
-                </div>
+        <section class="school-detail__related" aria-labelledby="school-related-title">
+            <h2 id="school-related-title" class="school-detail__section-title school-detail__section-title--plain">
+                <span class="ti-layout-grid2" aria-hidden="true"></span>
+                دانشگاه‌های مشابه در {{ university.get_country_display }}
+            </h2>
+            <div class="schools-grid schools-grid--related">
+                {% for rel in related_universities %}
+                {% include "schools/_uni_card.html" with uni=rel compact=True %}
+                {% endfor %}
             </div>
-        </div>
+        </section>
         {% endif %}
     </div>
 </section>
 
+<div class="sd-mobile-bar" aria-label="اقدامات سریع">
+    <a href="{{ evaluation_url }}" class="sd-mobile-bar__btn sd-mobile-bar__btn--primary">
+        <span class="ti-clipboard" aria-hidden="true"></span>
+        ارزیابی
+    </a>
+    <a href="#school-cta" class="sd-mobile-bar__btn sd-mobile-bar__btn--accent">
+        <span class="ti-calendar" aria-hidden="true"></span>
+        مشاوره
+    </a>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/app/pages/schools.js' %}"></script>
+<script src="{% static 'js/app/pages/schools.js' %}" defer></script>
 {% endblock %}

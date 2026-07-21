@@ -1,0 +1,47 @@
+<article class="svc-card{% if is_best_match %} svc-card--best{% endif %}"
+         id="service-{{ service.slug }}"
+         data-service-id="{{ service.id }}"
+         data-service-slug="{{ service.slug }}">
+    <header class="svc-card__head">
+        {% if is_best_match %}
+        <span class="faq-page__match-badge">بهترین تطابق</span>
+        {% endif %}
+        {% if service.icon %}
+        <span class="svc-card__icon {{ service.icon }}" aria-hidden="true"></span>
+        {% endif %}
+        <div class="svc-card__titles">
+            <h4 class="svc-card__title">{{ service.title }}</h4>
+            {% if service.category %}
+            <span class="svc-card__cat">{{ service.category.name }}</span>
+            {% endif %}
+            {% if service.matched_need_labels %}
+            <span class="svc-card__needs">
+                {% for label in service.matched_need_labels %}
+                <span class="svc-card__need-tag">{{ label }}</span>
+                {% endfor %}
+            </span>
+            {% endif %}
+        </div>
+    </header>
+    <div class="svc-card__body">
+        {% if service.get_display_summary %}
+        <p class="svc-card__lead">{{ service.get_display_summary }}</p>
+        {% endif %}
+        {% if service.description %}
+        <div class="svc-card__desc content-pre-line">{{ service.description }}</div>
+        {% endif %}
+        {% with highlights=service.get_highlights_list %}
+        {% if highlights %}
+        <ul class="svc-card__highlights">
+            {% for item in highlights %}
+            <li><span class="svc-card__check ti-check" aria-hidden="true"></span>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        <div class="svc-card__actions">
+            <a href="{% url 'appointment' %}?about=service&amp;title={{ service.title|urlencode }}{% if service.category %}&amp;category={{ service.category.name|urlencode }}{% endif %}" class="svc-card__btn svc-card__btn--primary">درخواست مشاوره</a>
+            <a href="{% url 'pricing' %}" class="svc-card__btn svc-card__btn--ghost">مشاهده تعرفه</a>
+        </div>
+    </div>
+</article>

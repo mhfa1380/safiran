@@ -1,0 +1,53 @@
+{% load static evaluation_tags %}
+<article class="schools-uni-card{% if compact %} schools-uni-card--compact{% endif %}"
+         id="uni-{{ uni.slug }}"
+         data-uni-slug="{{ uni.slug }}">
+    <a href="{% url 'school_detail' uni.slug %}" class="schools-uni-card__media" tabindex="-1" aria-hidden="true">
+        {% if uni.image %}
+        <img src="{{ uni.image.url }}" alt="{{ uni.name_fa }}" class="schools-uni-card__image" width="400" height="220" loading="lazy">
+        {% else %}
+        <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ uni.name_fa }}" class="schools-uni-card__image" width="400" height="220" loading="lazy">
+        {% endif %}
+        <span class="schools-uni-card__country">
+            {% if uni.country == "china" %}چین{% elif uni.country == "canada" %}کانادا{% elif uni.country == "spain" %}اسپانیا{% else %}سایر{% endif %}
+        </span>
+    </a>
+    <div class="schools-uni-card__body">
+        <header class="schools-uni-card__head">
+            <h3 class="schools-uni-card__title">
+                <a href="{% url 'school_detail' uni.slug %}">{{ uni.name_fa }}</a>
+            </h3>
+            {% if uni.name_en %}
+            <p class="schools-uni-card__subtitle">{{ uni.name_en }}</p>
+            {% endif %}
+            <div class="schools-uni-card__meta">
+                <span><span class="ti-location-pin" aria-hidden="true"></span> {{ uni.city }}</span>
+                {% if uni.world_rank %}
+                <span><span class="ti-medall" aria-hidden="true"></span> رتبه {{ uni.world_rank }}</span>
+                {% endif %}
+            </div>
+        </header>
+        {% if uni.short_description and not compact %}
+        <p class="schools-uni-card__desc">{{ uni.short_description|truncatechars:100 }}</p>
+        {% endif %}
+        {% if not compact %}
+        {% if uni.is_approved_by_mo_science or uni.is_approved_by_mo_health %}
+        <div class="schools-uni-card__badges">
+            {% if uni.is_approved_by_mo_science %}
+            <span class="schools-uni-card__badge schools-uni-card__badge--science">تأیید وزارت علوم</span>
+            {% endif %}
+            {% if uni.is_approved_by_mo_health %}
+            <span class="schools-uni-card__badge schools-uni-card__badge--health">تأیید وزارت بهداشت</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endif %}
+        <div class="schools-uni-card__actions">
+            <a href="{% url 'school_detail' uni.slug %}" class="schools-uni-card__btn schools-uni-card__btn--ghost">جزئیات</a>
+            {% if not compact %}
+            <a href="{% evaluation_url country=uni.country university=uni.slug ref='uni-card' %}"
+               class="schools-uni-card__btn schools-uni-card__btn--primary">ارزیابی هوشمند</a>
+            {% endif %}
+        </div>
+    </div>
+</article>

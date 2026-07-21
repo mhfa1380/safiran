@@ -1,0 +1,56 @@
+<section class="page-hero{% if hero_compact %} page-hero--compact{% endif %}" dir="rtl" aria-labelledby="page-hero-title">
+    <div class="page-hero__bg" aria-hidden="true"></div>
+    <div class="container">
+        <nav class="page-hero__nav" aria-label="مسیر صفحه">
+            <ol class="page-hero__crumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li class="page-hero__crumb" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a href="{% url 'index' %}" itemprop="item"><span itemprop="name">صفحه اصلی</span></a>
+                    <meta itemprop="position" content="1">
+                </li>
+                {% if crumb2_label %}
+                <li class="page-hero__crumb" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    {% if crumb3_label or crumb4_label %}
+                        {% if crumb2_url %}
+                        <a href="{{ crumb2_url }}" itemprop="item"><span itemprop="name">{{ crumb2_label }}</span></a>
+                        {% elif crumb2_url_name %}
+                        <a href="{% url crumb2_url_name %}" itemprop="item"><span itemprop="name">{{ crumb2_label }}</span></a>
+                        {% else %}
+                        <span itemprop="name">{{ crumb2_label }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span itemprop="name" aria-current="page">{{ crumb2_label }}</span>
+                        <link itemprop="item" href="{{ canonical_url }}">
+                    {% endif %}
+                    <meta itemprop="position" content="2">
+                </li>
+                {% endif %}
+                {% if crumb3_label %}
+                <li class="page-hero__crumb" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    {% if crumb4_label %}
+                        {% if crumb3_url %}
+                        <a href="{{ crumb3_url }}" itemprop="item"><span itemprop="name">{{ crumb3_label }}</span></a>
+                        {% elif crumb3_url_name %}
+                        <a href="{% url crumb3_url_name %}" itemprop="item"><span itemprop="name">{{ crumb3_label }}</span></a>
+                        {% else %}
+                        <span itemprop="name">{{ crumb3_label }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span itemprop="name" aria-current="page">{{ crumb3_label }}</span>
+                        <link itemprop="item" href="{{ canonical_url }}">
+                    {% endif %}
+                    <meta itemprop="position" content="3">
+                </li>
+                {% endif %}
+                {% if crumb4_label %}
+                <li class="page-hero__crumb" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <span itemprop="name" aria-current="page">{{ crumb4_label }}</span>
+                    <link itemprop="item" href="{{ canonical_url }}">
+                    <meta itemprop="position" content="4">
+                </li>
+                {% endif %}
+            </ol>
+        </nav>
+        <h1 id="page-hero-title" class="page-hero__title">{{ hero_title }}</h1>
+        {% if hero_lead %}<p class="page-hero__lead">{{ hero_lead }}</p>{% endif %}
+    </div>
+</section>

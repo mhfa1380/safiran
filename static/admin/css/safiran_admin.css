@@ -1,243 +1,1055 @@
 /**
- * سفیران - استایل‌های تکمیلی ادمین
- * هماهنگ با سایت اصلی، ریسپانسیو و خوانا
+ * سفیران — تم ادمین (هماهنگ با سایت اصلی)
+ * فقط لایه ظاهری؛ منطق Django دست‌نخورده می‌ماند.
  */
 
-/* فونت استاندارد */
-body {
-    font-family: IRANSans, Tanha, Tahoma, Arial, sans-serif !important;
-    font-size: 0.8125rem !important;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
+/* ─── توکن‌های تم (هم‌رنگ variables.css سایت) ─── */
+html[data-theme="light"],
+:root {
+    --primary: #2e65a5;
+    --secondary: #0c2e60;
+    --accent: #ff663b;
+    --primary-fg: #fff;
+
+    --body-fg: #334155;
+    --body-bg: #f4f6fa;
+    --body-quiet-color: #64748b;
+    --body-loud-color: #0c2e60;
+
+    --header-color: #e8eef8;
+    --header-branding-color: #fff;
+    --header-bg: linear-gradient(135deg, #0c2e60 0%, #1a4a8a 55%, #2e65a5 100%);
+    --header-link-color: #fff;
+
+    --breadcrumbs-fg: #cbd5e1;
+    --breadcrumbs-link-fg: #fff;
+    --breadcrumbs-bg: #1e3a5f;
+
+    --link-fg: #1d5aa8;
+    --link-hover-color: #0c2e60;
+    --link-selected-fg: #2e65a5;
+
+    --hairline-color: #e2e8f0;
+    --border-color: #d8e2ef;
+
+    --darkened-bg: #eef2f8;
+    --selected-bg: #e0ebf8;
+    --selected-row: #f0f6ff;
+
+    --button-fg: #fff;
+    --button-bg: #2e65a5;
+    --button-hover-bg: #24528a;
+    --default-button-bg: #0c2e60;
+    --default-button-hover-bg: #081f42;
+
+    --object-tools-bg: #475569;
+    --object-tools-hover-bg: #334155;
+
+    --font-family-primary: IRANSans, Tahoma, Arial, sans-serif;
+    --font-family-display: Vazirmatn, IRANSans, Tahoma, sans-serif;
+
+    --safiran-radius: 10px;
+    --safiran-radius-sm: 8px;
+    --safiran-shadow: 0 4px 18px rgba(12, 46, 96, 0.08);
+    --safiran-shadow-lg: 0 8px 28px rgba(12, 46, 96, 0.12);
 }
 
-/* هدر و عناوین ماژول‌ها */
+html[data-theme="dark"] {
+    --primary: #3b82c4;
+    --secondary: #1e3a5f;
+    --accent: #ff8a65;
+
+    --body-fg: #e2e8f0;
+    --body-bg: #0f1419;
+    --body-quiet-color: #94a3b8;
+    --body-loud-color: #f1f5f9;
+
+    --header-bg: linear-gradient(135deg, #0a1628 0%, #132d4f 100%);
+    --header-branding-color: #fff;
+    --header-link-color: #e2e8f0;
+
+    --breadcrumbs-bg: #1a2d44;
+    --breadcrumbs-link-fg: #e2e8f0;
+
+    --link-fg: #7eb8f0;
+    --link-hover-color: #a8d4ff;
+
+    --hairline-color: #1e293b;
+    --border-color: #334155;
+
+    --darkened-bg: #1a2332;
+    --selected-bg: #1e3050;
+    --selected-row: #1a2f4a;
+
+    --button-bg: #3b82c4;
+    --default-button-bg: #1e3a5f;
+}
+
+/* ─── تایپوگرافی ─── */
+body {
+    font-family: var(--font-family-primary) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.01em;
+}
+
+h1, h2, h3, h4,
+.module h2,
+.module caption,
 #branding h1,
-#branding h1 a:link,
-#branding h1 a:visited {
-    color: var(--header-branding-color) !important;
-    font-weight: 600;
-    font-size: 0.95rem !important;
+#branding #site-name a {
+    font-family: var(--font-family-display) !important;
+}
+
+#branding h1,
+#branding #site-name a {
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    letter-spacing: -0.02em;
 }
 
 .module h2,
 .module caption {
-    font-size: 0.875rem !important;
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
 }
 
-/* جداول - سایز استاندارد */
-#result_list th,
-#result_list td,
-.changelist table th,
-.changelist table td,
-#changelist table thead th,
-#changelist table tbody td,
-#changelist table tfoot td {
-    padding: 6px 8px !important;
+/* ─── هدر (نوار بالا) — فشرده ─── */
+#header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    gap: 0.75rem !important;
+    min-height: 2.75rem !important;
+    padding: 0.4rem 1.25rem !important;
+    background: var(--header-bg) !important;
+    box-shadow: var(--safiran-shadow);
+    border-bottom: none;
+    overflow: visible !important;
+}
+
+#branding {
+    display: flex !important;
+    align-items: center !important;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#branding h1,
+#branding #site-name {
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1.35 !important;
+}
+
+#branding h1 a:link,
+#branding h1 a:visited,
+#branding #site-name a:link,
+#branding #site-name a:visited {
+    color: var(--header-branding-color) !important;
+    text-decoration: none !important;
+    font-size: 0.9375rem !important;
+    font-weight: 700 !important;
+    white-space: nowrap;
+}
+
+#branding #site-name a:hover,
+#branding h1 a:hover {
+    opacity: 0.92;
+}
+
+/* نوار ابزار کاربر */
+.safiran-admin-header__tools,
+#user-tools.safiran-admin-header__tools,
+#user-tools {
+    float: none !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    gap: 0.5rem 0.65rem !important;
+    flex: 0 1 auto;
+    max-width: 100%;
+    text-align: left !important;
     font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    line-height: 1.5 !important;
 }
 
-#changelist table thead th {
-    font-size: 0.6875rem !important;
+[dir="rtl"] .safiran-admin-header__tools,
+[dir="rtl"] #user-tools {
+    justify-content: flex-start !important;
+    text-align: right !important;
 }
 
-/* لینک‌های داخل جدول (ویرایش، افزودن، مشاهده) */
-td .changelink,
-td .addlink,
-td .viewlink,
-td .deletelink {
+.safiran-admin-header__welcome {
+    margin: 0;
+    padding: 0;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+}
+
+.safiran-admin-header__welcome strong {
+    color: #fff;
+    font-weight: 700;
+}
+
+.safiran-admin-header__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.safiran-admin-header__actions .safiran-admin-header__link,
+.safiran-admin-header__link,
+#user-tools .safiran-admin-header__link,
+#user-tools .safiran-admin-header__actions a,
+#user-tools a,
+#logout-form button.safiran-admin-header__link,
+#logout-form button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    height: 1.625rem !important;
+    min-height: 1.625rem !important;
+    padding: 0 0.55rem !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    border-radius: 5px !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--header-link-color) !important;
+    text-decoration: none !important;
     font-size: 0.75rem !important;
-    padding: 2px 6px 2px 0 !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-/* فیلتر سایدبار */
-#changelist-filter h2 {
-    font-size: 0.75rem !important;
+.safiran-admin-header__link:hover,
+#user-tools .safiran-admin-header__actions a:focus,
+#user-tools .safiran-admin-header__actions a:hover,
+#user-tools a:focus,
+#user-tools a:hover,
+#logout-form button:hover,
+#logout-form button:focus,
+#logout-form button:active {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.45) !important;
+    margin-bottom: 0 !important;
+    text-decoration: none !important;
 }
 
-#changelist-filter h3,
-#changelist-filter details summary,
-#changelist-filter a {
-    font-size: 0.75rem !important;
+#logout-form {
+    display: inline-flex !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
-/* اکشن‌های جدول */
-#changelist .actions select,
-#changelist .actions label,
-#changelist .actions span {
-    font-size: 0.75rem !important;
+.safiran-admin-header__link--btn {
+    font-family: inherit !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
 }
 
-/* صفحه‌بندی */
-.paginator {
-    font-size: 0.75rem !important;
+#user-tools .theme-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 1.625rem !important;
+    height: 1.625rem !important;
+    min-height: 1.625rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 5px !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    flex-shrink: 0;
 }
 
-.paginator a,
-.paginator .this-page {
-    padding: 4px 8px !important;
+#user-tools .theme-toggle:hover,
+#user-tools .theme-toggle:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
 }
 
-/* داشبورد - جداول ماژول‌ها */
+#user-tools .theme-toggle svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: currentColor;
+    color: #fff;
+}
+
+/* ─── محتوا و داشبورد ─── */
+#content {
+    padding: 1.25rem 1.5rem 2rem !important;
+    min-width: 0;
+}
+
+.dashboard #content {
+    width: auto !important;
+    max-width: 1280px;
+}
+
+.dashboard #content-main {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.dashboard #content-main > .admin-quick-panel {
+    grid-column: 1 / -1;
+}
+
+#content .module {
+    border-radius: var(--safiran-radius);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    box-shadow: var(--safiran-shadow);
+    margin-bottom: 1rem;
+}
+
+html[data-theme="light"] #content .module {
+    background: #fff;
+}
+
+.dashboard .module {
+    margin-bottom: 0 !important;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--safiran-shadow);
+    background: var(--body-bg);
+}
+
+html[data-theme="light"] .dashboard .module {
+    background: #fff;
+}
+
+.module h2,
+.module caption {
+    background: var(--secondary) !important;
+    color: #fff !important;
+    padding: 0.45rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+}
+
+.module caption a.section {
+    color: #fff !important;
+    font-weight: 600;
+}
+
 .dashboard .module table th,
 .dashboard .module table td {
     font-size: 0.75rem !important;
-    padding: 6px 8px !important;
+    padding: 0.35rem 0.6rem !important;
+    line-height: 1.4;
 }
 
-.dashboard .module table td a {
+.dashboard .module table th a {
+    font-weight: 600;
     font-size: 0.75rem !important;
+    color: var(--body-loud-color);
 }
 
-/* ابزارهای آبجکت (بالای فرم) */
-.object-tools li a,
-.addlink,
-.changelink,
-.viewlink {
+/* لینک‌های اضافه/ویرایش — متنی و ریز، نه دکمهٔ حجیم */
+.dashboard .module table td a.changelink,
+.dashboard .module table td a.addlink,
+#nav-sidebar .module table td a.changelink,
+#nav-sidebar .module table td a.addlink {
+    display: inline-block;
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem !important;
+    font-size: 0.6875rem !important;
+    font-weight: 600;
+    line-height: 1.35;
+    background: transparent !important;
+    border: none !important;
+    opacity: 0.85;
+}
+
+.dashboard .module table td a.changelink:hover,
+.dashboard .module table td a.addlink:hover,
+#nav-sidebar .module table td a.changelink:hover,
+#nav-sidebar .module table td a.addlink:hover {
+    opacity: 1;
+    background: var(--selected-bg) !important;
+}
+
+/* سایدبار «فعالیت‌های اخیر» */
+#content-related .module {
+    border-radius: var(--safiran-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--safiran-shadow);
+    overflow: hidden;
+}
+
+html[data-theme="light"] #content-related .module {
+    background: #fff;
+}
+
+#content-related .module h2 {
+    background: var(--darkened-bg) !important;
+    color: var(--body-loud-color) !important;
+    font-size: 0.875rem !important;
+    padding: 0.65rem 1rem !important;
+}
+
+#content-related .actionlist li {
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--hairline-color);
+    font-size: 0.8125rem;
+}
+
+/* ─── نان (breadcrumbs) ─── */
+div.breadcrumbs {
+    background: var(--breadcrumbs-bg) !important;
+    padding: 0.55rem 1.5rem;
+    font-size: 0.8125rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ─── جداول changelist ─── */
+#result_list th,
+#result_list td,
+#changelist table thead th,
+#changelist table tbody td {
+    padding: 0.5rem 0.65rem !important;
+    font-size: 0.8125rem !important;
+}
+
+#changelist table thead th {
     font-size: 0.75rem !important;
+    font-weight: 600;
+    text-transform: none;
+    background: var(--darkened-bg);
 }
 
-.object-tools li a {
-    padding: 4px 10px !important;
+#changelist .actions {
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--safiran-radius-sm);
+    background: var(--darkened-bg);
 }
 
-/* جداول فرم و اینلاین */
-.form-row td,
-.form-row th,
-.inline-group table th,
-.inline-group table td {
-    font-size: 0.75rem !important;
-    padding: 6px 8px !important;
-}
-
-/* toolbar جستجو */
-#toolbar form input,
-#toolbar #searchbar {
-    font-size: 0.75rem !important;
-}
-
-#changelist .toplinks a {
-    font-size: 0.75rem !important;
-}
-
-/* فرم‌ها */
+/* ─── فرم‌ها و ورودی‌ها ─── */
 input[type="text"],
 input[type="password"],
 input[type="email"],
 input[type="number"],
 input[type="url"],
+input[type="search"],
 textarea,
 select {
-    font-size: 0.8125rem !important;
-    padding: 6px 10px !important;
+    font-family: var(--font-family-primary) !important;
+    font-size: 0.875rem !important;
+    padding: 0.45rem 0.65rem !important;
+    border-radius: var(--safiran-radius-sm);
+    border-color: var(--border-color);
 }
 
-/* دکمه‌ها */
+select:not([multiple]):not([size]):not(.admin-autocomplete) {
+    height: 2.275rem !important;
+    min-height: 2.275rem !important;
+    box-sizing: border-box !important;
+    line-height: 1.5 !important;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="url"],
+input[type="search"] {
+    height: 2.275rem !important;
+    min-height: 2.275rem !important;
+    box-sizing: border-box !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary);
+    outline: 2px solid rgba(46, 101, 165, 0.2);
+    outline-offset: 0;
+}
+
+/* ─── راهنمای تصویر در CKEditor ─── */
+.cke_editable.ck-content::before {
+    content: "برای تغییر اندازه تصویر: روی عکس کلیک کنید → دکمه Image یا منوی Styles (اندازه/وسط‌چین)";
+    display: block;
+    font-size: 0.75rem;
+    color: #6b7280;
+    background: #f0f4fa;
+    border: 1px dashed #c5d4e8;
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    margin-bottom: 0.75rem;
+}
+
+.cke_editable.ck-content:not(:empty)::before {
+    display: none;
+}
+
+/* ─── Selectها — عرض کافی برای نمایش کامل متن فارسی ─── */
+.form-row select:not([multiple]),
+.aligned .form-row select:not([multiple]),
+fieldset select:not([multiple]):not(.admin-autocomplete) {
+    box-sizing: border-box;
+    width: auto;
+    min-width: 18em;
+    max-width: min(42em, 100%);
+}
+
+#changelist .actions select {
+    min-width: 12em;
+    max-width: 24em;
+}
+
+.inline-group select:not([multiple]) {
+    min-width: 14em;
+    max-width: 100%;
+}
+
+/* wrapper مربوط به FK — نباید متن select را ببرد */
+.related-widget-wrapper {
+    overflow: visible !important;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: 100%;
+}
+
+.related-widget-wrapper select.admin-autocomplete,
+.related-widget-wrapper .select2-container--admin-autocomplete {
+    flex: 1 1 18em;
+    min-width: 18em;
+    max-width: min(42em, 100%);
+}
+
+/* Select2 / autocomplete */
+select.admin-autocomplete {
+    width: min(42em, 100%) !important;
+    min-width: 18em;
+    max-width: 100%;
+}
+
+.select2-container--admin-autocomplete.select2-container {
+    width: min(42em, 100%) !important;
+    min-width: 18em !important;
+    max-width: 100% !important;
+}
+
+.select2-container--admin-autocomplete .select2-selection--single {
+    min-height: 2rem;
+    height: auto;
+}
+
+.select2-container--admin-autocomplete .select2-selection--single .select2-selection__rendered {
+    line-height: 1.45;
+    padding: 0.35rem 1.75rem 0.35rem 0.65rem;
+    white-space: normal;
+    word-break: break-word;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+[dir="rtl"] .select2-container--admin-autocomplete .select2-selection--single .select2-selection__rendered {
+    padding: 0.35rem 0.65rem 0.35rem 1.75rem;
+}
+
+.select2-container--admin-autocomplete .select2-results__option {
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* فیلتر افقی / selector چندانتخابی — عرض پیش‌فرض Django */
+.selector select,
+.selector-available select,
+.selector-chosen select {
+    min-width: 0 !important;
+    width: 18em !important;
+    max-width: 100% !important;
+}
+
+@media (max-width: 767px) {
+    .form-row select:not([multiple]),
+    .aligned .form-row select:not([multiple]),
+    select.admin-autocomplete,
+    .select2-container--admin-autocomplete.select2-container {
+        min-width: 100%;
+        width: 100% !important;
+        max-width: 100%;
+    }
+}
+
+/* ─── دکمه‌ها (فرم‌ها) — کمی فشرده‌تر ─── */
 .button,
 input[type="submit"],
 input[type="button"],
-.submit-row input {
-    padding: 8px 16px !important;
+.submit-row input,
+a.button {
+    font-family: var(--font-family-primary) !important;
     font-size: 0.8125rem !important;
+    font-weight: 600;
+    padding: 0.4rem 0.85rem !important;
+    border-radius: 6px !important;
+    transition: background 0.15s, transform 0.1s;
 }
 
-/* ریسپانسیو موبایل */
-@media (max-width: 767px) {
-    #header {
-        padding: 10px 14px !important;
-    }
-
-    #branding h1 {
-        font-size: 0.9rem !important;
-    }
-
-    #content {
-        padding: 12px 14px !important;
-    }
-
-    .module h2,
-    .module caption {
-        font-size: 0.875rem !important;
-    }
-
-    #result_list th,
-    #result_list td {
-        padding: 6px 8px !important;
-        font-size: 0.75rem !important;
-    }
-
-    .dashboard .module table td {
-        padding: 6px 8px !important;
-    }
+.button:active,
+input[type="submit"]:active {
+    transform: translateY(1px);
 }
 
-/* سایدبار ناوبری - سایز استاندارد */
+.submit-row {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    border-radius: var(--safiran-radius-sm) var(--safiran-radius-sm) 0 0;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+    padding: 0.85rem 1rem !important;
+}
+
+/* ─── سایدبار ناوبری — فشرده و ریز ─── */
+#nav-sidebar {
+    flex: 0 0 248px !important;
+    left: -249px;
+    margin-left: -249px;
+    background: var(--body-bg);
+    border-color: var(--border-color) !important;
+}
+
+[dir="rtl"] #nav-sidebar {
+    left: 0;
+    margin-left: 0;
+    right: -249px;
+    margin-right: -249px;
+}
+
+#nav-sidebar .module {
+    border-radius: 6px;
+    margin-bottom: 0.35rem;
+    overflow: hidden;
+    border-width: 1px;
+    box-shadow: none;
+}
+
 #nav-sidebar .module caption,
 #nav-sidebar .module th {
-    font-size: 0.8125rem !important;
+    font-size: 0.75rem !important;
+    padding: 0.4rem 0.65rem !important;
+}
+
+#nav-sidebar .module caption a.section {
+    font-size: 0.75rem !important;
+    font-weight: 600;
+}
+
+#nav-sidebar .module th {
+    font-size: 0.75rem !important;
+    font-weight: 500;
 }
 
 #nav-sidebar .module td {
-    padding: 5px 8px !important;
-    font-size: 0.8125rem !important;
+    padding: 0.28rem 0.5rem !important;
+    font-size: 0.75rem !important;
 }
 
-/* تضاد و خوانایی در دارک مود */
-html[data-theme="dark"] #content,
-html[data-theme="dark"] .module {
-    color: var(--body-fg);
+#nav-sidebar .module th,
+#nav-sidebar .module caption {
+    padding-left: 0.65rem !important;
+    padding-right: 0.65rem !important;
 }
 
-html[data-theme="dark"] .module h2,
-html[data-theme="dark"] .module caption {
-    color: var(--body-loud-color);
+[dir="rtl"] #nav-sidebar .module th,
+[dir="rtl"] #nav-sidebar .module caption {
+    padding-left: 0.65rem !important;
+    padding-right: 0.65rem !important;
 }
 
-/* badge پیام جدید */
+#nav-sidebar .admin-pending-badge {
+    font-size: 0.625rem !important;
+    padding: 0.05rem 0.4rem;
+    margin-inline: 0.25rem;
+}
+
+.main.shifted > #nav-sidebar + .content {
+    max-width: calc(100% - 272px);
+}
+
+.toggle-nav-sidebar {
+    flex: 0 0 20px !important;
+    width: 20px !important;
+    font-size: 1rem !important;
+}
+
+/* ─── badge پیام جدید ─── */
 .admin-pending-badge {
-    font-family: IRANSans, Tanha, sans-serif !important;
+    display: inline-block;
+    margin-inline: 0.35rem;
+    padding: 0.15rem 0.55rem;
+    font-family: var(--font-family-primary) !important;
+    font-size: 0.6875rem !important;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #fff !important;
+    background: var(--accent);
+    border-radius: 999px;
+    vertical-align: middle;
+    box-shadow: 0 2px 6px rgba(255, 102, 59, 0.35);
 }
 
-/* صفحه لاگین */
+/* ─── پنل دسترسی سریع داشبورد ─── */
+.admin-quick-panel {
+    margin-bottom: 0;
+    padding: 0.85rem 1rem;
+    background: linear-gradient(135deg, #eef4fc 0%, #fff 55%, #f8fafc 100%);
+    border: 1px solid #c5d4e8;
+    border-radius: var(--safiran-radius);
+    box-shadow: var(--safiran-shadow-lg);
+}
+
+.admin-quick-panel__title {
+    margin: 0 0 0.65rem;
+    font-family: var(--font-family-display) !important;
+    font-size: 0.9375rem !important;
+    font-weight: 700;
+    color: #0c2e60;
+}
+
+.admin-quick-panel__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.5rem;
+}
+
+.admin-quick-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.55rem 0.7rem;
+    background: #fff;
+    border: 1px solid #d8e2ef;
+    border-radius: var(--safiran-radius-sm);
+    color: inherit !important;
+    text-decoration: none !important;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.admin-quick-card:hover {
+    transform: translateY(-2px);
+    border-color: #2e65a5;
+    box-shadow: 0 6px 16px rgba(12, 46, 96, 0.12);
+}
+
+.admin-quick-card--primary {
+    border-color: #2e65a5;
+    background: linear-gradient(145deg, #eef4fc, #fff);
+}
+
+.admin-quick-card--warn .admin-quick-card__value {
+    color: #dc2626;
+}
+
+.admin-quick-card__label {
+    font-size: 0.75rem !important;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.admin-quick-card__value {
+    font-family: var(--font-family-display) !important;
+    font-size: 1.2rem !important;
+    font-weight: 700;
+    color: #0c2e60;
+    line-height: 1.15;
+}
+
+.admin-quick-card__hint {
+    font-size: 0.7rem !important;
+    color: #94a3b8;
+}
+
+html[data-theme="dark"] .admin-quick-panel {
+    background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%);
+    border-color: #334155;
+}
+
+html[data-theme="dark"] .admin-quick-panel__title {
+    color: #f1f5f9;
+}
+
+html[data-theme="dark"] .admin-quick-card {
+    background: #1a2332;
+    border-color: #334155;
+}
+
+html[data-theme="dark"] .admin-quick-card__value {
+    color: #e2e8f0;
+}
+
+/* ─── گروه اولویت‌دار (کال‌سنتر) ─── */
+.dashboard .module--priority,
+#nav-sidebar .module--priority {
+    border: 1px solid #2e65a5 !important;
+    box-shadow: 0 2px 8px rgba(46, 101, 165, 0.12);
+}
+
+.dashboard .module--priority caption,
+#nav-sidebar .module--priority caption {
+    background: linear-gradient(90deg, #0c2e60, #2e65a5) !important;
+}
+
+/* ─── کال‌سنتر / ارزیابی ─── */
+.eval-admin-badge {
+    display: inline-block;
+    color: #fff !important;
+    font-size: 0.6875rem !important;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.eval-admin-overdue {
+    color: #dc2626 !important;
+    font-weight: 700;
+}
+
+.eval-admin-result-link {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    background: #eef4fc;
+    border: 1px solid #b8d4f0;
+    border-radius: var(--safiran-radius-sm);
+    font-size: 0.8125rem !important;
+    line-height: 1.65;
+}
+
+.eval-admin-result-link__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.65rem;
+}
+
+.eval-admin-result-link__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1.75rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 5px;
+    border: 1px solid #2e65a5;
+    background: #2e65a5;
+    color: #fff !important;
+    font-size: 0.75rem !important;
+    font-weight: 600;
+    text-decoration: none !important;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.eval-admin-result-link__btn:hover,
+.eval-admin-result-link__btn:focus {
+    background: #24528a;
+    border-color: #24528a;
+    color: #fff !important;
+}
+
+.eval-admin-result-link__btn--ghost {
+    background: #fff;
+    color: #2e65a5 !important;
+}
+
+.eval-admin-result-link__btn--ghost:hover,
+.eval-admin-result-link__btn--ghost:focus {
+    background: #e8eef8;
+    color: #0c2e60 !important;
+}
+
+.eval-admin-result-link__meta {
+    display: block;
+    margin-top: 0.35rem;
+    color: #64748b;
+    font-size: 0.75rem !important;
+}
+
+.eval-admin-form-hint {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    background: #fff8e6;
+    border: 1px solid #f0d78c;
+    border-radius: var(--safiran-radius-sm);
+    font-size: 0.8125rem !important;
+    line-height: 1.65;
+}
+
+.inline-group.eval-contact-log-inline {
+    border: 2px solid #2e65a5 !important;
+    border-radius: var(--safiran-radius);
+    margin-bottom: 1.25rem !important;
+}
+
+.inline-group.eval-contact-log-inline h2 {
+    background: #eef4fc !important;
+    color: #0c2e60 !important;
+}
+
+html[data-theme="dark"] .eval-admin-result-link {
+    background: #1a2d44;
+    border-color: #2e4a6e;
+}
+
+html[data-theme="dark"] .eval-admin-result-link__meta {
+    color: #94a3b8;
+}
+
+html[data-theme="dark"] .eval-admin-form-hint {
+    background: #2d2610;
+    border-color: #5c4d1a;
+}
+
+/* ─── پیام‌های سیستم ─── */
+.messagelist li {
+    border-radius: var(--safiran-radius-sm);
+    font-size: 0.875rem;
+    padding: 0.65rem 1rem;
+}
+
+/* ─── لاگین ─── */
+.login {
+    background: linear-gradient(160deg, #eef4fc 0%, #f4f6fa 50%, #e8eef8 100%) !important;
+    min-height: 100vh;
+}
+
+.login #header {
+    background: var(--header-bg) !important;
+    border-radius: 0;
+}
+
 .login #container {
-    min-width: 280px;
-    max-width: 95vw;
+    border-radius: var(--safiran-radius);
+    box-shadow: var(--safiran-shadow-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
 .login .form-row label {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
+    font-weight: 600;
 }
 
-@media (max-width: 480px) {
-    .login #container {
-        width: 100% !important;
-        margin: 20px auto !important;
-    }
-
-    .login #content {
-        padding: 16px !important;
-    }
+/* ─── اسکرول‌بار ─── */
+:root ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-/* حداقل عرض برای خوانایی */
-#content {
-    min-width: 0;
-}
-
-/* اسکرول‌بار هماهنگ با تم */
 :root ::-webkit-scrollbar-thumb {
-    background: #0c2e60;
+    background: #94a3b8;
     border-radius: 4px;
 }
 
 :root ::-webkit-scrollbar-thumb:hover {
-    background: #2e65a5;
+    background: #64748b;
 }
 
 html[data-theme="dark"] ::-webkit-scrollbar-thumb {
     background: #475569;
 }
 
-html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
+/* ─── ریسپانسیو ─── */
+@media (max-width: 1024px) {
+    .dashboard #content-main {
+        grid-template-columns: 1fr;
+    }
+
+    #content {
+        padding: 1rem !important;
+    }
+}
+
+@media (max-width: 900px) {
+    #header {
+        flex-wrap: wrap !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+        padding: 0.75rem 1.25rem !important;
+    }
+
+    .safiran-admin-header__tools,
+    #user-tools {
+        width: 100%;
+        justify-content: space-between !important;
+    }
+
+    .safiran-admin-header__welcome {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 767px) {
+    #header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .safiran-admin-header__tools,
+    #user-tools {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 0.65rem !important;
+    }
+
+    .safiran-admin-header__actions {
+        width: 100%;
+    }
+
+    .safiran-admin-header__actions .safiran-admin-header__link,
+    .safiran-admin-header__link,
+    #user-tools .safiran-admin-header__actions a,
+    #user-tools a,
+    #logout-form button {
+        flex: 0 1 auto;
+        justify-content: center !important;
+        height: 1.5rem !important;
+        min-height: 1.5rem !important;
+        line-height: 1 !important;
+    }
+
+    #branding #site-name a,
+    #branding h1 a {
+        font-size: 0.95rem !important;
+        white-space: normal;
+    }
+
+    .admin-quick-panel__grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-quick-panel__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .login #container {
+        width: calc(100% - 2rem) !important;
+        margin: 2rem auto !important;
+    }
 }

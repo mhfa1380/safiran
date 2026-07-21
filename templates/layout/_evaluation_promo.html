@@ -1,0 +1,28 @@
+{% load evaluation_tags %}
+<aside class="eval-promo faq-page__panel" dir="rtl" lang="fa" aria-label="ارزیابی هوشمند">
+    <div class="eval-promo__inner">
+        <div class="eval-promo__icon" aria-hidden="true">
+            <span class="ti-clipboard"></span>
+        </div>
+        <div class="eval-promo__body">
+            <p class="eval-promo__eyebrow">رایگان · آنلاین · گزارش فوری</p>
+            <h2 class="eval-promo__title">{{ promo_title|default:"ارزیابی هوشمند شرایط تحصیل" }}</h2>
+            <p class="eval-promo__text">
+                {{ promo_text|default:"در چند دقیقه شرایط خود را ثبت کنید — کشور، رشته، بورسیه و هزینه پیشنهادی را بلافاصله ببینید." }}
+            </p>
+        </div>
+        <div class="eval-promo__actions">
+            <a href="{% if promo_url %}{{ promo_url }}{% else %}{% evaluation_url country=promo_country major=promo_major university=promo_university ref=promo_ref %}{% endif %}"
+               class="faq-page__btn faq-page__btn--primary eval-promo__cta">
+                <span class="ti-clipboard" aria-hidden="true"></span>
+                ارزیابی رایگان
+            </a>
+            {% if promo_show_appointment|default:True %}
+            <a href="{% url 'appointment' %}{% if promo_country %}?country={{ promo_country|urlencode }}{% endif %}"
+               class="faq-page__btn faq-page__btn--ghost eval-promo__cta-secondary">
+                رزرو مشاوره
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</aside>

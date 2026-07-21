@@ -1,0 +1,57 @@
+{% load static %}
+<header class="main_menu site-header home_menu" id="site-header">
+    <div class="container site-header__inner">
+        <nav class="navbar navbar-expand-xl navbar-light site-header__nav" aria-label="منوی اصلی">
+            <a class="navbar-brand site-header__brand" href="{% url 'index' %}">
+                <img src="{% static 'img/logo.png' %}" alt="{{ institute.name }} - موسسه اعزام دانشجو" class="logohead" width="130" height="48">
+            </a>
+
+            <div class="site-header__mobile-actions d-xl-none">
+                {% if site_nav.header_eval %}
+                <a href="{{ site_nav.header_eval.url }}" class="site-header__eval-btn site-header__eval-btn--mobile">
+                    <span class="site-header__eval-label">{{ site_nav.header_eval.label }}</span>
+                </a>
+                {% endif %}
+                <button type="button"
+                        class="site-header__icon-btn site-header__search-toggle"
+                        id="site-header-search-toggle"
+                        aria-expanded="false"
+                        aria-controls="site-header-search"
+                        aria-label="باز کردن جستجو">
+                    <span class="ti-search" aria-hidden="true"></span>
+                </button>
+                <button class="navbar-toggler site-header__toggler site-header__icon-btn collapsed"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="باز کردن منو">
+                    <span class="site-header__toggler-icon site-header__toggler-icon--open ti-menu" aria-hidden="true"></span>
+                    <span class="site-header__toggler-icon site-header__toggler-icon--close ti-close" aria-hidden="true"></span>
+                    <span class="navbar-toggler-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+
+            {% include "layout/_header_toolbar.html" %}
+
+            <div class="collapse navbar-collapse main-menu-item site-header__collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav site-header__menu">
+                    {% include "layout/_header_nav.html" %}
+                </ul>
+
+                {% if site_nav.header_cta %}
+                <div class="site-header__cta-wrap site-header__cta-wrap--mobile d-xl-none">
+                    <a class="btn_1 site-header__cta" href="{{ site_nav.header_cta.url }}">{{ site_nav.header_cta.label }}</a>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if site_nav.header_cta %}
+            <div class="site-header__actions d-none d-xl-flex align-items-center">
+                <a class="btn_1 site-header__cta" href="{{ site_nav.header_cta.url }}">{{ site_nav.header_cta.label }}</a>
+            </div>
+            {% endif %}
+        </nav>
+    </div>
+</header>

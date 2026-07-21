@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>نتیجه ارزیابی — {{ institute.name }}</title>
+    <style>
+        body { font-family: Tahoma, Arial, sans-serif; font-size: 12px; color: #222; direction: rtl; margin: 24px; }
+        h1 { color: #0c2e60; font-size: 18px; }
+        h2 { color: #0c2e60; font-size: 14px; margin-top: 20px; }
+        .box { border: 1px solid #ddd; padding: 12px; margin: 12px 0; border-radius: 8px; }
+        .muted { color: #666; font-size: 11px; }
+        ul { padding-right: 18px; }
+    </style>
+</head>
+<body>
+    <h1>پیشنهاد هوشمند ارزیابی — {{ institute.name }}</h1>
+    <p class="muted">تاریخ: {{ share.created_at|date:"Y-m-d H:i" }} — معتبر تا {{ share.expires_at|date:"Y-m-d" }}</p>
+
+    {% if report.has_data %}
+    <div class="box">
+        <p><strong>تطابق:</strong> {{ report.top_pick.match_percent }}٪</p>
+        <p>{{ report.top_pick.summary }}</p>
+        <p><strong>کشور:</strong> {{ report.top_pick.country.name }}</p>
+        {% if report.top_pick.university %}
+        <p><strong>دانشگاه:</strong> {{ report.top_pick.university.name_fa }} ({{ report.top_pick.university.city }})</p>
+        {% endif %}
+        <p><strong>رشته:</strong> {{ report.top_pick.major.title }}</p>
+    </div>
+
+    {% if report.insights or report.blog_insight_items %}
+    <h2>نکات کلیدی</h2>
+    <ul>
+        {% for tip in report.insights %}
+        <li>{{ tip }}</li>
+        {% endfor %}
+        {% for post in report.blog_insight_items %}
+        <li>
+            {% if post.is_scholarship %}از مطلب{% else %}مطلب{% endif %}
+            «{{ post.title }}»: {{ post.excerpt }}
+            {% if post.is_scholarship %} — برای برنامه بورسیه شما قابل استفاده است.{% endif %}
+            ({{ post.url }})
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <p class="muted">این گزارش جایگزین مشاوره تخصصی نیست.</p>
+    {% else %}
+    <p>{{ report.message }}</p>
+    {% endif %}
+</body>
+</html>

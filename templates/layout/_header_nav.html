@@ -1,0 +1,53 @@
+{% load static %}
+{% for group in site_nav.header_menu %}
+<li class="nav-item dropdown site-header__dropdown">
+    <a class="nav-link dropdown-toggle site-header__nav-trigger"
+       href="{{ group.url }}"
+       id="nav{{ group.id|title }}"
+       role="button"
+       aria-haspopup="true"
+       aria-expanded="false">
+        <span class="site-header__nav-label">{{ group.label }}</span>
+    </a>
+    <div class="dropdown-menu site-header__panel{% if group.panel_wide %} site-header__panel--wide{% endif %}{% if group.panel_class %} {{ group.panel_class }}{% endif %}"
+         aria-labelledby="nav{{ group.id|title }}">
+        {% if group.panel_title %}
+        <p class="site-header__panel-title">{{ group.panel_title }}</p>
+        {% endif %}
+
+        {% if group.sections %}
+        <div class="site-header__panel-sections">
+            {% for section in group.sections %}
+            <div class="site-header__panel-section{% if section.css_class %} {{ section.css_class }}{% endif %}">
+                {% if section.title %}
+                <p class="site-header__panel-section-title">{{ section.title }}</p>
+                {% endif %}
+                <div class="site-header__panel-grid">
+                    {% for item in section.items %}
+                    <a class="dropdown-item {{ item.css_class }}" href="{{ item.url }}">
+                        {% if item.flag_static %}
+                        <img src="{% static item.flag_static %}" alt="" class="site-header__dest-flag" width="18" height="13" loading="lazy" decoding="async">
+                        {% endif %}
+                        <span class="site-header__dest-label">{{ item.label }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="site-header__panel-grid">
+            {% for item in group.items %}
+            <a class="dropdown-item {{ item.css_class }}" href="{{ item.url }}">{{ item.label }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</li>
+{% endfor %}
+
+{% for link in site_nav.header_standalone %}
+<li class="nav-item site-header__nav-item">
+    <a class="nav-link site-header__nav-link" href="{{ link.url }}">{{ link.label }}</a>
+</li>
+{% endfor %}

@@ -2,12 +2,12 @@
 
 {% if app_list %}
   {% for app in app_list %}
-    <div class="app-{{ app.app_label }} module{% if app.app_url in request.path|urlencode %} current-app{% endif %}">
+    <div class="app-{{ app.app_label }} module{% if app.is_priority %} module--priority{% endif %}{% if app.app_url in request.path|urlencode %} current-app{% endif %}">
       <table>
         <caption>
           <a href="{{ app.app_url }}" class="section" title="{% blocktranslate with name=app.name %}Models in the {{ name }} application{% endblocktranslate %}">{{ app.name }}</a>
           {% if app.pending_count %}
-            <span class="admin-pending-badge" title="پیام / درخواست / تایم رزرو شده جدید">+{{ app.pending_count }}</span>
+            <span class="admin-pending-badge" title="{{ app.pending_badge_title|default:'موارد جدید مشاهده‌نشده' }}">{{ app.pending_count }}</span>
           {% endif %}
         </caption>
         {% for model in app.models %}

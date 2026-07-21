@@ -1,246 +1,534 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}فرم ارزیابی شرایط مهاجرت تحصیلی | {{ institute.name }}{% endblock %}
-
-{% block meta_description %}فرم ارزیابی آنلاین شرایط مهاجرت تحصیلی شما برای اعزام دانشجو به کانادا، آلمان، اروپا، چین و سایر کشورها. کارشناسان {{ institute.name }} پس از بررسی با شما تماس می‌گیرند و بهترین گزینه‌ها را پیشنهاد می‌دهند.{% endblock %}
+{% block title %}{{ eval_meta_title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ eval_meta_description }}{% endblock %}
+{% block meta_keywords %}{{ eval_meta_keywords }}{% endblock %}
+{% block canonical_url %}{{ eval_page_url }}{% endblock %}
+{% block og_title %}{{ eval_og_title }}{% endblock %}
+{% block og_description %}{{ eval_meta_description }}{% endblock %}
+{% block twitter_title %}{{ eval_og_title }}{% endblock %}
+{% block twitter_description %}{{ eval_meta_description }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/app/pages/eval.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/major-combobox.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/referral-source.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<meta property="og:url" content="{{ eval_page_url }}">
+<script type="application/ld+json">{{ eval_schema_json|safe }}</script>
+<script>
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+window.PAGE_CONFIG.evalJalaliYear = {{ eval_jalali_year }};
+window.PAGE_CONFIG.evalIntakeTerms = {{ eval_intake_terms_json|safe }};
+window.PAGE_CONFIG.evalIntakeYearsAhead = {{ eval_intake_years_ahead }};
+window.PAGE_CONFIG.evalIntakeExtendStep = {{ eval_intake_extend_step }};
+{% if eval_start_step %}window.PAGE_CONFIG.evalStartStep = {{ eval_start_step }};{% endif %}
+window.PAGE_CONFIG.evalSubmitUrl = "{% url 'evaluation_submit' %}";
+window.PAGE_CONFIG.evalProcessUrl = "{% url 'evaluation_process' %}";
+window.PAGE_CONFIG.evalMajorOptions = {{ eval_major_options_json|safe }};
+window.PAGE_CONFIG.evalMajorSuggestUrl = "{% url 'evaluation_majors_suggest' %}";
+window.PAGE_CONFIG.evalCountrySuggestUrl = "{% url 'evaluation_country_suggest' %}";
+window.PAGE_CONFIG.evalRealCountryCodes = {{ eval_real_country_codes_json|safe }};
+window.PAGE_CONFIG.staticUrl = "{% get_static_prefix %}";
+</script>
 {% endblock %}
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>فرم ارزیابی</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>فرم ارزیابی</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% include "layout/page_hero.html" with hero_title="ارزیابی رایگان آنلاین مهاجرت تحصیلی" hero_lead=eval_hero_lead crumb2_label="ارزیابی رایگان مهاجرت" %}
 
-<section class="eval_area section_padding" dir="rtl">
+{% include "layout/_answer_summary_banner.html" with answer_text=eval_answer_summary answer_class="eval-answer-summary" answer_id="eval-answer-summary" aria_label="خلاصه ارزیابی" %}
+
+<section class="eval_area section_padding" dir="rtl" lang="fa">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
-                <div class="eval_intro">
-                    <h3>ارزیابی اولیه شرایط مهاجرت تحصیلی شما</h3>
+            <div class="col-lg-9 eval_main-flow">
+                <div class="eval_intro eval_main-flow__intro">
+                    <p class="eval_intro__badge" aria-label="رایگان">رایگان · آنلاین · تحلیل فوری</p>
+                    <h2 class="eval_intro__title">فرم ارزیابی هوشمند شرایط مهاجرت تحصیلی</h2>
                     <p>
-                        با تکمیل این فرم، تصویر دقیقی از <strong>شرایط مهاجرت تحصیلی</strong> شما (مدرک، سن، زبان، بودجه و اهداف) به دست می‌آوریم
-                        و کارشناسان {{ institute.name }} بهترین مسیرهای ممکن برای اعزام دانشجو به خارج را پیشنهاد خواهند داد.
+                        در چند مرحله کوتاه اطلاعات را وارد کنید — با <kbd>Enter</kbd> به مرحله بعد بروید.
+                        پس از ثبت، <strong>گزارش تحلیل هوشمند رایگان</strong> با پیشنهاد کشور، رشته، بورسیه و هزینه
+                        نمایش داده می‌شود؛ در صورت تمایل کارشناسان {{ institute.name }} برای مشاوره تماس می‌گیرند.
                     </p>
+                    {% if eval_blog_guide_link %}
+                    <p class="eval_intro__guide">
+                        <a href="{{ eval_blog_guide_link.url }}">{{ eval_blog_guide_link.label }}</a>
+                    </p>
+                    {% endif %}
                 </div>
 
-                <div class="eval_form-card">
-                    {% if success %}
-                        <div class="eval_success">
-                            فرم شما با موفقیت ثبت شد. کارشناسان {{ institute.name }} پس از بررسی با شما تماس خواهند گرفت.
-                        </div>
-                    {% endif %}
+                <div class="eval_main-flow__banner">{% include "layout/_nav_degree_banner.html" %}</div>
 
-                    <form method="post" novalidate class="eval_form">
+                <div class="eval_form-card eval_main-flow__form">
+                    {% include "core/_eval_progress_panel.html" with panel_class="eval_progress-card--mobile d-lg-none eval_main-flow__progress" panel_id="evalMobileProgress" %}
+                    <form method="post" novalidate class="eval_form eval_form--wizard" id="evalWizardForm"
+                          data-initial-step="{% if eval_start_step %}{{ eval_start_step }}{% elif form.errors %}{% if form.current_degree.errors or form.field_of_study.errors or form.average_grade.errors %}2{% elif form.desired_countries.errors or form.target_country.errors or form.captcha_answer.errors %}4{% else %}1{% endif %}{% else %}1{% endif %}"
+                          {% if nav_degree_prefill %}data-prefill-degree="{{ nav_degree_prefill }}"{% endif %}
+                          {% if nav_target_degree %}data-target-degree="{{ nav_target_degree }}"{% endif %}
+                          {% if nav_intent %}data-nav-intent="{{ nav_intent }}"{% endif %}
+                          {% if eval_prefill_country %}data-prefill-country="{{ eval_prefill_country }}"{% endif %}
+                          {% if eval_prefill_major %}data-prefill-major="{{ eval_prefill_major }}"{% endif %}
+                          {% if eval_prefill_university %}data-prefill-university="{{ eval_prefill_university }}"{% endif %}>
                         {% csrf_token %}
+                        {% if nav_target_degree %}
+                        <input type="hidden" name="nav_target_degree" value="{{ nav_target_degree }}">
+                        {% endif %}
+                        {% if nav_intent %}
+                        <input type="hidden" name="nav_intent" value="{{ nav_intent }}">
+                        {% endif %}
 
-                        <div class="eval_section">
-                            <div class="eval_section-title">اطلاعات شخصی</div>
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی</label>
-                                        {{ form.full_name }}
-                                        {% if form.full_name.errors %}<small class="text-danger">{{ form.full_name.errors|striptags }}</small>{% endif %}
+                        <div class="eval_wizard-body">
+                            <div class="eval_wizard-panel is-active" data-panel="1" data-hint="نام و شماره تماس را وارد کنید">
+                                <h4 class="eval_panel-title">اطلاعات شخصی</h4>
+
+                                <div class="eval_block">
+                                    <p class="eval_block-lead">برای تماس کارشناسان و شخصی‌سازی گزارش</p>
+                                    <div class="eval_field-grid eval_field-grid--2">
+                                        <div class="eval_field eval_field--compact">
+                                            <label for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی <span class="eval_req">*</span></label>
+                                            {{ form.full_name }}
+                                            {% if form.full_name.errors %}<small class="eval_error">{{ form.full_name.errors|striptags }}</small>{% endif %}
+                                        </div>
+                                        <div class="eval_field eval_field--compact">
+                                            <label for="{{ form.phone.id_for_label }}">شماره تماس <span class="eval_req">*</span></label>
+                                            {{ form.phone }}
+                                            <small class="eval_feedback" id="evalPhoneFeedback" hidden aria-live="polite"></small>
+                                            {% if form.phone.errors %}<small class="eval_error">{{ form.phone.errors|striptags }}</small>{% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="eval_field-grid eval_field-grid--2">
+                                        <div class="eval_field eval_field--compact">
+                                            <label for="{{ form.email.id_for_label }}">ایمیل <span class="eval_opt">(اختیاری)</span></label>
+                                            {{ form.email }}
+                                        </div>
+                                        <div class="eval_field eval_field--compact">
+                                            <label>سال تولد <span class="eval_opt">(اختیاری)</span></label>
+                                            <button type="button" class="eval_year-trigger" data-year-picker="{{ form.birth_year.html_name }}" aria-haspopup="dialog">
+                                                <span class="eval_year-trigger__text" data-year-display>انتخاب سال</span>
+                                                <span class="eval_year-trigger__chev" aria-hidden="true"></span>
+                                            </button>
+                                            {{ form.birth_year }}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.phone.id_for_label }}">شماره تماس</label>
-                                        {{ form.phone }}
-                                        {% if form.phone.errors %}<small class="text-danger">{{ form.phone.errors|striptags }}</small>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.email.id_for_label }}">ایمیل (اختیاری)</label>
-                                        {{ form.email }}
-                                        {% if form.email.errors %}<small class="text-danger">{{ form.email.errors|striptags }}</small>{% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-3">
-                                    <div class="form-group">
-                                        <label for="{{ form.birth_year.id_for_label }}">سال تولد</label>
-                                        {{ form.birth_year }}
-                                        {% if form.birth_year.errors %}<small class="text-danger">{{ form.birth_year.errors|striptags }}</small>{% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-3">
-                                    <div class="form-group">
-                                        <label for="{{ form.marital_status.id_for_label }}">وضعیت تاهل</label>
+
+                                <div class="eval_block">
+                                    <p class="eval_block-lead">برنامه مهاجرت</p>
+                                    <div class="eval_field eval_field--compact">
+                                        <label>وضعیت تأهل</label>
+                                        <div class="eval_segment eval_segment--2" data-sync-select="{{ form.marital_status.html_name }}">
+                                            {% for val, lbl in form.fields.marital_status.choices %}
+                                            {% if val %}
+                                            <button type="button" class="eval_segment__btn" data-value="{{ val }}">{{ lbl }}</button>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
                                         {{ form.marital_status }}
-                                        {% if form.marital_status.errors %}<small class="text-danger">{{ form.marital_status.errors|striptags }}</small>{% endif %}
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.apply_timeline.id_for_label }}">کی قصد اپلای دارید؟</label>
+                                    <div class="eval_field eval_field--compact">
+                                        <label>کی قصد اپلای دارید؟</label>
+                                        <div class="eval_segment eval_segment--3" data-sync-select="{{ form.apply_timeline.html_name }}">
+                                            {% for val, lbl in form.fields.apply_timeline.choices %}
+                                            {% if val %}
+                                            <button type="button" class="eval_segment__btn" data-value="{{ val }}">{{ lbl }}</button>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
                                         {{ form.apply_timeline }}
-                                        {% if form.apply_timeline.errors %}<small class="text-danger">{{ form.apply_timeline.errors|striptags }}</small>{% endif %}
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group form-check eval_form_check_pt">
-                                        {{ form.has_financial_capacity }}
-                                        <label class="form-check-label" for="{{ form.has_financial_capacity.id_for_label }}">تمکن مالی بالای یک میلیارد تومان دارم</label>
-                                        {% if form.has_financial_capacity.errors %}<small class="text-danger">{{ form.has_financial_capacity.errors|striptags }}</small>{% endif %}
+                                    <div class="eval_fin-wrap">
+                                        <label class="eval_fin-btn">
+                                            {{ form.has_financial_capacity }}
+                                            <span class="eval_fin-btn__title">تمکن مالی</span>
+                                            <span class="eval_fin-btn__sub">بالای یک میلیارد تومان</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="eval_section">
-                            <div class="eval_section-title">سوابق تحصیلی</div>
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.current_degree.id_for_label }}">آخرین مدرک</label>
+                            <div class="eval_wizard-panel" data-panel="2" hidden data-hint="مدرک، رشته و معدل را وارد کنید">
+                                <h4 class="eval_panel-title">سوابق تحصیلی</h4>
+
+                                <div class="eval_block">
+                                    <div class="eval_field eval_field--compact">
+                                        <label>آخرین مدرک <span class="eval_req">*</span></label>
+                                        <div class="eval_option-grid" data-sync-select="{{ form.current_degree.html_name }}">
+                                            {% for val, lbl in form.fields.current_degree.choices %}
+                                            <button type="button" class="eval_option" data-value="{{ val }}">{{ lbl }}</button>
+                                            {% endfor %}
+                                        </div>
                                         {{ form.current_degree }}
-                                        {% if form.current_degree.errors %}<small class="text-danger">{{ form.current_degree.errors|striptags }}</small>{% endif %}
+                                        {% if form.current_degree.errors %}<small class="eval_error">{{ form.current_degree.errors|striptags }}</small>{% endif %}
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.field_of_study.id_for_label }}">رشته تحصیلی</label>
-                                        {{ form.field_of_study }}
-                                        {% if form.field_of_study.errors %}<small class="text-danger">{{ form.field_of_study.errors|striptags }}</small>{% endif %}
+
+                                <div class="eval_block">
+                                    <div class="eval_field-grid eval_field-grid--2">
+                                        <div class="eval_field eval_field--compact">
+                                            <label for="{{ form.field_of_study.id_for_label }}">رشته تحصیلی <span class="eval_req">*</span></label>
+                                            <div class="major-combobox" data-major-combobox data-required="true">
+                                                {{ form.field_of_study }}
+                                            </div>
+                                            <small class="eval_feedback eval_feedback--neutral">از لیست جستجو کنید یا نام دقیق رشته را خودتان بنویسید.</small>
+                                            {% if form.field_of_study.errors %}<small class="eval_error">{{ form.field_of_study.errors|striptags }}</small>{% endif %}
+                                        </div>
+                                        <div class="eval_field eval_field--compact">
+                                            <label for="{{ form.average_grade.id_for_label }}">معدل <span class="eval_req">*</span></label>
+                                            {{ form.average_grade }}
+                                            <small class="eval_feedback" id="evalGpaFeedback" hidden aria-live="polite"></small>
+                                            {% if form.average_grade.errors %}<small class="eval_error">{{ form.average_grade.errors|striptags }}</small>{% endif %}
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="{{ form.average_grade.id_for_label }}">معدل</label>
-                                        {{ form.average_grade }}
-                                        {% if form.average_grade.errors %}<small class="text-danger">{{ form.average_grade.errors|striptags }}</small>{% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="{{ form.graduation_year.id_for_label }}">سال فارغ‌التحصیلی</label>
+                                    <div class="eval_field eval_field--compact">
+                                        <label>سال فارغ‌التحصیلی <span class="eval_opt">(اختیاری)</span></label>
+                                        <button type="button" class="eval_year-trigger" data-year-picker="{{ form.graduation_year.html_name }}" aria-haspopup="dialog">
+                                            <span class="eval_year-trigger__text" data-year-display>انتخاب سال</span>
+                                            <span class="eval_year-trigger__chev" aria-hidden="true"></span>
+                                        </button>
                                         {{ form.graduation_year }}
-                                        {% if form.graduation_year.errors %}<small class="text-danger">{{ form.graduation_year.errors|striptags }}</small>{% endif %}
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="eval_section">
-                            <div class="eval_section-title">آزمون زبان</div>
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.language_test_type.id_for_label }}">نوع آزمون</label>
+                            <div class="eval_wizard-panel" data-panel="3" hidden data-hint="وضعیت زبان و دستاوردها (اختیاری)">
+                                <h4 class="eval_panel-title">آزمون زبان</h4>
+
+                                <div class="eval_block">
+                                    <div class="eval_field eval_field--compact">
+                                        <label>نوع آزمون</label>
+                                        <div class="eval_lang-grid" data-sync-select="{{ form.language_test_type.html_name }}">
+                                            {% for val, lbl in form.fields.language_test_type.choices %}
+                                            <button type="button" class="eval_lang-tile{% if val == 'none' %} eval_lang-tile--none{% endif %}" data-value="{{ val }}" title="{{ lbl }}">
+                                                <span class="eval_lang-tile__label">{{ lbl }}</span>
+                                            </button>
+                                            {% endfor %}
+                                        </div>
                                         {{ form.language_test_type }}
-                                        {% if form.language_test_type.errors %}<small class="text-danger">{{ form.language_test_type.errors|striptags }}</small>{% endif %}
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.language_score.id_for_label }}">نمره (در صورت وجود)</label>
+                                    <div class="eval_field eval_field--compact" id="evalLangScoreWrap">
+                                        <label for="{{ form.language_score.id_for_label }}">نمره آزمون</label>
                                         {{ form.language_score }}
-                                        {% if form.language_score.errors %}<small class="text-danger">{{ form.language_score.errors|striptags }}</small>{% endif %}
+                                        <small class="eval_feedback" id="evalLangFeedback" hidden aria-live="polite"></small>
+                                        {% if form.language_score.errors %}<small class="eval_error">{{ form.language_score.errors|striptags }}</small>{% endif %}
                                     </div>
+                                    {{ form.has_ielts }}
                                 </div>
-                            </div>
-                            <div class="form-group form-check">
-                                {{ form.has_ielts }}
-                                <label class="form-check-label" for="{{ form.has_ielts.id_for_label }}">مدرک زبان معتبر دارم</label>
-                                {% if form.has_ielts.errors %}<small class="text-danger">{{ form.has_ielts.errors|striptags }}</small>{% endif %}
-                            </div>
-                        </div>
 
-                        <div class="eval_section">
-                            <div class="eval_section-title">دستاوردها</div>
-                            <div class="eval_check-grid">
-                                <div class="form-check">{{ form.has_journal_article }}<label class="form-check-label" for="{{ form.has_journal_article.id_for_label }}">مقاله ژورنالی</label></div>
-                                <div class="form-check">{{ form.has_conference_article }}<label class="form-check-label" for="{{ form.has_conference_article.id_for_label }}">مقاله کنفرانسی</label></div>
-                                <div class="form-check">{{ form.has_book }}<label class="form-check-label" for="{{ form.has_book.id_for_label }}">چاپ/ترجمه کتاب</label></div>
-                                <div class="form-check">{{ form.has_international_tests }}<label class="form-check-label" for="{{ form.has_international_tests.id_for_label }}">SAT, GRE, GMAT</label></div>
+                                <h4 class="eval_panel-title eval_panel-title--sub">دستاوردها <span class="eval_opt">(اختیاری)</span></h4>
+                                <div class="eval_achieve-grid">
+                                    <label class="eval_achieve-card">
+                                        {{ form.has_journal_article }}
+                                        <span>مقاله ژورنالی</span>
+                                    </label>
+                                    <label class="eval_achieve-card">
+                                        {{ form.has_conference_article }}
+                                        <span>مقاله کنفرانسی</span>
+                                    </label>
+                                    <label class="eval_achieve-card">
+                                        {{ form.has_book }}
+                                        <span>چاپ / ترجمه کتاب</span>
+                                    </label>
+                                    <label class="eval_achieve-card">
+                                        {{ form.has_international_tests }}
+                                        <span>SAT, GRE, GMAT</span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="eval_section">
-                            <div class="eval_section-title">اولویت‌ها</div>
-                            <div class="form-group">
-                                <label>کشورهای مورد نظر</label>
-                                <div class="eval_countries-grid">
-                                    {{ form.desired_countries }}
+                            <div class="eval_wizard-panel" data-panel="4" hidden data-hint="کشورها و اولویت‌های نهایی">
+                                <h4 class="eval_panel-title">کشورهای مقصد</h4>
+                                <p class="eval_panel-lead">یک یا چند کشور را انتخاب کنید. اولین کشور واقعی انتخاب‌شده به‌عنوان مقصد اصلی در نظر گرفته می‌شود.</p>
+                                <div class="eval_country-grid" id="evalCountryGrid">
+                                    {% for c in eval_country_cards %}
+                                    <label class="eval_country-card">
+                                        <input type="checkbox" name="desired_countries" value="{{ c.code }}"
+                                               class="eval_country-card__input"
+                                               {% if c.code in selected_countries %}checked{% endif %}>
+                                        <span class="eval_country-card__face">
+                                            <img src="{% static c.flag %}" alt="" width="48" height="32" loading="lazy">
+                                            <span class="eval_country-card__name">{{ c.label }}</span>
+                                        </span>
+                                    </label>
+                                    {% endfor %}
+                                    {% for c in eval_country_extras %}
+                                    <label class="eval_country-card eval_country-card--meta">
+                                        <input type="checkbox" name="desired_countries" value="{{ c.code }}"
+                                               class="eval_country-card__input"
+                                               {% if c.code in selected_countries %}checked{% endif %}>
+                                        <span class="eval_country-card__face">
+                                            <span class="eval_country-card__icon {{ c.icon }}" aria-hidden="true"></span>
+                                            <span class="eval_country-card__name">{{ c.label }}</span>
+                                        </span>
+                                    </label>
+                                    {% endfor %}
                                 </div>
-                                {% if form.desired_countries.errors %}<small class="text-danger">{{ form.desired_countries.errors|striptags }}</small>{% endif %}
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.target_country.id_for_label }}">کشور مقصد اصلی</label>
-                                        {{ form.target_country }}
-                                        {% if form.target_country.errors %}<small class="text-danger">{{ form.target_country.errors|striptags }}</small>{% endif %}
+                                <p class="eval_country-error" id="evalCountryError" hidden role="alert">حداقل یک کشور مقصد را انتخاب کنید.</p>
+
+                                <div class="eval_country-suggest" id="evalCountrySuggestPanel" hidden>
+                                    <h5 class="eval_country-suggest__title">پیشنهاد کشور بر اساس پروفایل شما</h5>
+                                    <p class="eval_country-suggest__lead">بر اساس رشته، معدل و زبان شما این مقصدها پیشنهاد می‌شوند. روی هر کدام بزنید تا به انتخاب‌هایتان اضافه شود.</p>
+                                    <div class="eval_country-suggest__list" id="evalCountrySuggestList" role="list"></div>
+                                    <p class="eval_country-suggest__hint" id="evalCountrySuggestHint" hidden>در حال تحلیل…</p>
+                                </div>
+
+                                {{ form.target_country }}
+
+                                <div class="eval_block eval_block--step4">
+                                    <div class="eval_field-grid eval_field-grid--2 eval_step4-major-intake">
+                                        <div class="eval_field eval_field--spaced">
+                                            <label for="{{ form.desired_major.id_for_label }}">رشته مورد نظر <span class="eval_req">*</span></label>
+                                            <div class="major-combobox" data-major-combobox data-required="true">
+                                                {{ form.desired_major }}
+                                            </div>
+                                        </div>
+                                        <div class="eval_field eval_field--spaced">
+                                            <label>ترم / سال شروع <span class="eval_opt">(اختیاری)</span></label>
+                                            <button type="button" class="eval_year-trigger eval_year-trigger--block" data-year-picker="{{ form.preferred_intake.html_name }}" aria-haspopup="dialog">
+                                                <span class="eval_year-trigger__text" data-year-display>انتخاب ترم / سال</span>
+                                                <span class="eval_year-trigger__chev" aria-hidden="true"></span>
+                                            </button>
+                                            {{ form.preferred_intake }}
+                                            {% if form.preferred_intake.errors %}<small class="eval_error">{{ form.preferred_intake.errors|striptags }}</small>{% endif %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.desired_major.id_for_label }}">رشته مورد نظر</label>
-                                        {{ form.desired_major }}
-                                        {% if form.desired_major.errors %}<small class="text-danger">{{ form.desired_major.errors|striptags }}</small>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.service_scope.id_for_label }}">بخش کار با موسسه</label>
+                                    <div class="eval_field eval_field--spaced">
+                                        <label>همکاری با موسسه <span class="eval_opt">(اختیاری)</span></label>
+                                        <div class="eval_service-scope" data-sync-select="{{ form.service_scope.html_name }}">
+                                            {% for val, lbl in form.fields.service_scope.choices %}
+                                            {% if val %}
+                                            <button type="button" class="eval_service-scope__item" data-value="{{ val }}">
+                                                <span class="eval_service-scope__icon" aria-hidden="true">
+                                                    {% if val == "full" %}
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                                                    {% elif val == "partial" %}
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17h7"/><path d="M14 14h7"/></svg>
+                                                    {% else %}
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>
+                                                    {% endif %}
+                                                </span>
+                                                <span class="eval_service-scope__label">{{ lbl }}</span>
+                                            </button>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
                                         {{ form.service_scope }}
-                                        {% if form.service_scope.errors %}<small class="text-danger">{{ form.service_scope.errors|striptags }}</small>{% endif %}
+                                    </div>
+                                    <div class="eval_field eval_field--spaced">
+                                        <label for="{{ form.notes.id_for_label }}">توضیحات تکمیلی</label>
+                                        {{ form.notes }}
+                                    </div>
+                                    {% include "layout/_referral_source_picker.html" with referral_heading_id="eval-ref-src-heading" %}
+                                    <div class="eval_field eval_field--last">
+                                        {% include "layout/_form_captcha.html" with captcha_class="eval_captcha-block" captcha_form_key="evaluation" %}
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="{{ form.preferred_intake.id_for_label }}">ترم/سال شروع</label>
-                                        {{ form.preferred_intake }}
-                                        {% if form.preferred_intake.errors %}<small class="text-danger">{{ form.preferred_intake.errors|striptags }}</small>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="{{ form.notes.id_for_label }}">توضیحات تکمیلی</label>
-                                {{ form.notes }}
-                                {% if form.notes.errors %}<small class="text-danger">{{ form.notes.errors|striptags }}</small>{% endif %}
                             </div>
                         </div>
 
-                        <button type="submit" class="btn_1 eval_btn-submit">ثبت ارزیابی</button>
+                        <div class="eval_year-sheet" id="evalYearSheet" hidden aria-hidden="true">
+                            <button type="button" class="eval_year-sheet__backdrop" data-year-close tabindex="-1" aria-label="بستن"></button>
+                            <div class="eval_year-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="evalYearSheetTitle">
+                                <header class="eval_year-sheet__head">
+                                    <h5 id="evalYearSheetTitle">انتخاب سال</h5>
+                                </header>
+                                <button type="button" class="eval_year-sheet__close" data-year-close aria-label="بستن">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <div class="eval_year-sheet__preview" aria-live="polite">
+                                    <span class="eval_year-sheet__preview-value" id="evalYearSheetValue">—</span>
+                                    <span class="eval_year-sheet__preview-unit" id="evalYearSheetUnit">سال شمسی</span>
+                                </div>
+                                <div class="eval_year-wheel-wrap">
+                                    <div class="eval_year-wheel-mask eval_year-wheel-mask--top" aria-hidden="true"></div>
+                                    <div class="eval_year-wheel" id="evalYearWheel" tabindex="0" role="listbox"></div>
+                                    <div class="eval_year-wheel-mask eval_year-wheel-mask--bottom" aria-hidden="true"></div>
+                                    <div class="eval_year-wheel-indicator" aria-hidden="true"></div>
+                                </div>
+                                <div class="eval_year-sheet__actions">
+                                    <button type="button" class="eval_year-sheet__btn eval_year-sheet__btn--ghost" data-year-close>انصراف</button>
+                                    <button type="button" class="eval_year-sheet__btn eval_year-sheet__btn--primary" data-year-confirm>تأیید</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="eval_wizard-nav">
+                            <button type="button" class="btn_2 eval_wizard-prev" id="evalPrev" hidden>مرحله قبل</button>
+                            <button type="button" class="btn_1 eval_wizard-next" id="evalNext">مرحله بعد</button>
+                            <button type="submit" class="btn_1 eval_btn-submit eval_wizard-submit" id="evalSubmit" hidden>
+                                ثبت و دریافت پیشنهاد
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
 
-            <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="col-lg-3 mt-4 mt-lg-0">
                 <div class="eval_sidebar eval_sidebar_sticky">
-                    <div class="eval_sidebar-title">{{ institute.name }}</div>
-                    <p>{{ institute.type_title }}</p>
-                    <p>مجوز: {{ institute.license_issue_date }}</p>
-                    <p><a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
-                    <p><a href="mailto:{{ institute.email }}">{{ institute.email }}</a></p>
-                    <a href="{% url 'contact' %}" class="btn_2 d-block text-center mt-3 eval_sidebar_btn">تماس با ما</a>
+                    {% include "core/_eval_progress_panel.html" with panel_class="eval_progress-card--sidebar d-none d-lg-block" panel_id="evalSidebarProgress" %}
+                    <div class="eval_sidebar-guide" id="evalSidebarGuide" aria-live="polite">
+                        <div class="eval_sidebar-title" id="evalSidebarGuideTitle">چطور کار می‌کند؟</div>
+                        <ol class="eval_sidebar_steps" id="evalSidebarGuideList">
+                            <li>نام و شماره تماس را برای تماس کارشناس وارد کنید.</li>
+                            <li>برنامه مهاجرت و وضعیت تأهل را مشخص کنید.</li>
+                            <li>در صورت تمکن مالی، گزینه مربوط را فعال کنید.</li>
+                        </ol>
+                    </div>
+                    <div class="eval_sidebar-contact">
+                        <div class="eval_sidebar-title">{{ institute.name }}</div>
+                        <p><a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
+                        {% if institute.mobile %}<p><a href="tel:{{ institute.mobile }}" class="tel-ltr">{{ institute.mobile_formatted }}</a></p>{% endif %}
+                        <a href="{% url 'contact' %}" class="btn_2 d-block text-center mt-3 eval_sidebar_btn">تماس با ما</a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="eval-seo" id="eval-guide" dir="rtl" lang="fa">
+            <p class="eval-seo__intro">{{ eval_seo_intro }}</p>
+
+            <nav class="eval-seo__links" aria-label="صفحات مرتبط مهاجرت تحصیلی">
+                <span class="eval-seo__links-label">مسیرهای مرتبط:</span>
+                <ul class="eval-seo__links-list">
+                    {% for link in eval_related_links %}
+                    <li><a href="{{ link.url }}">{{ link.label }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+
+            <div class="eval-seo__grid">
+                <article class="eval-seo__card">
+                    <h2 class="eval-seo__heading">چرا ارزیابی رایگان {{ institute.name }}؟</h2>
+                    <p class="eval-seo__lead">
+                        اگر می‌خواهید بدانید برای مهاجرت تحصیلی به کانادا، آلمان، ایتالیا، اروپا یا چین
+                        چه شانسی دارید — بدون پرداخت هزینه اولیه و بدون انتظار برای تماس —
+                        همین صفحه نقطه شروع شماست.
+                    </p>
+                    <ul class="eval-seo__benefits">
+                        {% for title, desc in eval_benefits %}
+                        <li>
+                            <strong>{{ title }}</strong>
+                            <span>{{ desc }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </article>
+                <article class="eval-seo__card">
+                    <h2 class="eval-seo__heading">گزارش تحلیل هوشمند چه می‌گوید؟</h2>
+                    <p class="eval-seo__lead">
+                        موتور ارزیابی بر اساس داده‌های دانشگاه‌ها، بورسیه‌ها، تعرفه خدمات و تجربیات پرونده‌های موفق،
+                        یک تصویر اولیه از مسیر شما می‌سازد:
+                    </p>
+                    <ul class="eval-seo__checks">
+                        <li>تطابق معدل و زبان با دانشگاه‌های منتخب</li>
+                        <li>کشورها و رشته‌های متناسب با هدف شما</li>
+                        <li>مسیرهای بورسیه و فاند تحصیلی</li>
+                        <li>مطالب وبلاگ و داستان‌های موفق مرتبط</li>
+                        <li>برآورد اولیه هزینه خدمات و زمان‌بندی اپلای</li>
+                    </ul>
+                    <p class="eval-seo__note">
+                        این گزارش جایگزین مشاوره تخصصی نیست؛ برای تصمیم نهایی می‌توانید
+                        {% if eval_appointment_link %}<a href="{{ eval_appointment_link.url }}">{{ eval_appointment_link.label }}</a>{% endif %}
+                        کنید یا
+                        {% if eval_pricing_link %}<a href="{{ eval_pricing_link.url }}">{{ eval_pricing_link.label }}</a>{% endif %}
+                        را ببینید.
+                    </p>
+                </article>
+            </div>
+
+            <article class="eval-seo__card eval-seo__card--steps">
+                <h2 class="eval-seo__heading">چطور کار می‌کند؟</h2>
+                <ol class="eval-seo__steps">
+                    {% for step in eval_howto_steps %}
+                    <li>{{ step }}</li>
+                    {% endfor %}
+                </ol>
+                <p class="eval-seo__cta-wrap">
+                    <a href="#evalWizardForm" class="btn_1 eval-seo__cta">شروع ارزیابی رایگان</a>
+                    {% for link in eval_related_links %}{% if link.key == "faq" %}
+                    <a href="{{ link.url }}" class="btn_2 eval-seo__cta-secondary">{{ link.label }}</a>
+                    {% endif %}{% endfor %}
+                </p>
+            </article>
+
+            <section class="eval-seo__faq" aria-labelledby="eval-faq-title">
+                <h2 id="eval-faq-title" class="eval-seo__heading">سوالات متداول ارزیابی رایگان مهاجرت تحصیلی</h2>
+                <div class="eval-seo__faq-list">
+                    {% for question, answer in eval_faqs %}
+                    <article class="eval-seo__faq-item eval-seo__faq-item--open">
+                        <h3 class="eval-seo__faq-question">{{ question }}</h3>
+                        <p class="eval-seo__faq-answer">{{ answer }}</p>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
     </div>
 </section>
+
+<div class="eval-analyze" id="evalAnalyzeModal" hidden aria-hidden="true">
+    <div class="eval-analyze__backdrop" aria-hidden="true"></div>
+    <div
+        class="eval-analyze__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="evalAnalyzeTitle"
+        aria-describedby="evalAnalyzeDesc"
+    >
+        <div class="eval-analyze__icon" aria-hidden="true">
+            <span class="eval-analyze__spinner"></span>
+        </div>
+        <h2 class="eval-analyze__title" id="evalAnalyzeTitle">تحلیل هوشمند پرونده شما</h2>
+        <p class="eval-analyze__desc" id="evalAnalyzeDesc">پرونده شما در حال بررسی توسط بهترین الگوریتم‌های هوش مصنوعی است.</p>
+        <div class="eval-analyze__queue" id="evalAnalyzeQueue" hidden>
+            <p class="eval-analyze__queue-badge" id="evalAnalyzeQueueBadge" aria-live="polite"></p>
+            <p class="eval-analyze__queue-lock" id="evalAnalyzeQueueLock" aria-live="polite"></p>
+        </div>
+        <div class="eval-analyze__bar-wrap" aria-hidden="true">
+            <div class="eval-analyze__bar" id="evalAnalyzeBar" style="width: 0%"></div>
+        </div>
+        <p class="eval-analyze__percent" id="evalAnalyzePercent" aria-live="polite">۰٪</p>
+        <p class="eval-analyze__step" id="evalAnalyzeStep" aria-live="polite">آماده‌سازی…</p>
+        <p class="eval-analyze__reconnect" id="evalAnalyzeReconnect" hidden aria-live="polite">
+            در انتظار اینترنت…
+        </p>
+        <div class="eval-analyze__steps-viewport" aria-hidden="true">
+            <ul class="eval-analyze__checklist" id="evalAnalyzeChecklist">
+                <li data-step="validate">بررسی اطلاعات فرم</li>
+                <li data-step="profile">پروفایل تحصیلی و زبانی</li>
+                <li data-step="countries">کشور، رشته و دانشگاه</li>
+                <li data-step="scholarships">بورسیه و فاند</li>
+                <li data-step="blogs">وبلاگ و تجربیات موفق</li>
+                <li data-step="pricing">تعرفه و برآورد هزینه</li>
+                <li data-step="match">درصد تطابق</li>
+                <li data-step="finalize">گزارش نهایی</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="eval-error-dialog" id="evalErrorDialog" hidden aria-hidden="true">
+    <div class="eval-error-dialog__backdrop" data-eval-error-close aria-hidden="true"></div>
+    <div
+        class="eval-error-dialog__panel"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="evalErrorDialogTitle"
+        aria-describedby="evalErrorDialogMessage"
+    >
+        <h2 class="eval-error-dialog__title" id="evalErrorDialogTitle">ثبت انجام نشد</h2>
+        <p class="eval-error-dialog__message" id="evalErrorDialogMessage"></p>
+        <button type="button" class="eval-error-dialog__btn" id="evalErrorDialogClose" data-eval-error-close>
+            متوجه شدم
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/components/major-combobox.js' %}" defer></script>
+<script src="{% static 'js/app/components/referral-source.js' %}" defer></script>
+<script src="{% static 'js/app/pages/evaluation.js' %}?v=20260625b" defer></script>
 {% endblock %}

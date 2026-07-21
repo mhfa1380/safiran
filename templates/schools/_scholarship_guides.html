@@ -1,0 +1,51 @@
+{% if scholarship_guides %}
+<aside class="schools-scholarships schools-scholarships--compact" aria-label="خلاصه بورسیه به تفکیک کشور">
+    <details class="schools-scholarships__details">
+        <summary class="schools-scholarships__summary">
+            <span class="schools-scholarships__icon ti-wallet" aria-hidden="true"></span>
+            <span class="schools-scholarships__summary-text">
+                <strong class="schools-scholarships__summary-title">
+                    بورسیه‌ها و فاند{% if nav_degree_level %} — {{ nav_degree_level.label }}{% endif %}
+                </strong>
+                <span class="schools-scholarships__summary-meta">
+                    {{ scholarship_guides|length }} کشور · خلاصه برنامه‌های پرطرفدار
+                </span>
+            </span>
+            <span class="schools-scholarships__chevron ti-angle-down" aria-hidden="true"></span>
+        </summary>
+        <div class="schools-scholarships__panel">
+            {% for guide in scholarship_guides %}
+            <section class="schools-sch-country" aria-labelledby="sch-country-{{ guide.code }}">
+                <header class="schools-sch-country__head">
+                    {% if guide.flag_url %}
+                    <img class="schools-sch-country__flag" src="{{ guide.flag_url }}" alt="" width="28" height="20" loading="lazy">
+                    {% endif %}
+                    <h3 class="schools-sch-country__name" id="sch-country-{{ guide.code }}">{{ guide.name }}</h3>
+                    <a href="{{ guide.country_url }}" class="schools-sch-country__link">راهنمای کامل</a>
+                </header>
+                <ul class="schools-sch-programs">
+                    {% for p in guide.programs %}
+                    <li class="schools-sch-program">
+                        <span class="schools-sch-program__main">
+                            <span class="schools-sch-program__name">{{ p.name }}</span>
+                            {% if p.provider %}
+                            <span class="schools-sch-program__provider">{{ p.provider }}</span>
+                            {% endif %}
+                        </span>
+                        <span class="schools-sch-program__coverage">{{ p.coverage }}</span>
+                        {% if p.tags %}
+                        <span class="schools-sch-program__tags" aria-label="برچسب‌ها">
+                            {% for tag in p.tags|slice:":2" %}
+                            <span>{{ tag }}</span>
+                            {% endfor %}
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endfor %}
+        </div>
+    </details>
+</aside>
+{% endif %}

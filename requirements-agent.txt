@@ -1,0 +1,4 @@
+# عامل systemd سرور MHFA — جدا از وب‌سایت
+# نصب: pip install -r requirements-agent.txt
+-r requirements.txt
+psutil>=5.9.0

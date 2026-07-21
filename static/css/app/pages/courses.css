@@ -1,185 +1,446 @@
 /**
- * صفحه لیست دوره‌ها - courses
+ * صفحه لیست دوره‌ها — مکمل faq.css (الگوی صفحه خدمات)
  */
-.courses_area {
-    padding-top: 60px;
-    padding-bottom: 60px;
-    background-color: #f7f9fc;
+
+.courses-page__content {
+    min-width: 0;
 }
-.courses_area .filter-card {
-    border-radius: 16px;
-    border: 1px solid #e3e6ef;
-    box-shadow: 0 10px 30px rgba(12, 46, 96, 0.06);
-}
-.courses-filter-select {
-    display: block;
-    width: 100%;
-    height: calc(1.5em + .75rem + 17px);
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out;
-}
-.course-card {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 18px 40px rgba(15, 35, 95, 0.12);
-    background-color: #fff;
+
+.courses-page .faq-page__filters {
     display: flex;
-    flex-direction: column;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    height: 100%;
 }
-.course-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 24px 60px rgba(15, 35, 95, 0.18);
+
+.cr-country-filters .faq-page__filter {
+    text-decoration: none;
 }
-.course-card__image {
-    position: relative;
-    height: 180px;
-    overflow: hidden;
-    background: linear-gradient(135deg, #e8eef5 0%, #f0f4f9 100%);
+
+/* ─── معرفی ─── */
+.cr-intro {
+    margin-bottom: 1rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-sm);
 }
-.course-card__image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-.course-card:hover .course-card__image img {
-    transform: scale(1.08);
-}
-.course-card__badge {
-    position: absolute;
-    left: 16px;
-    bottom: 16px;
-    background: rgba(0, 0, 0, 0.65);
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-}
-.course-card__body {
-    padding: 1.25rem 1.5rem;
-    flex: 1;
+
+.cr-intro__text {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.85;
+    color: var(--color-text-muted);
     text-align: right;
 }
-.course-card__title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: #0f2137;
-}
-.course-card__desc {
-    font-size: 0.9rem;
-    color: #4a4a4a;
-    line-height: 1.7;
-    text-align: justify;
-}
-.course-card__link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-.course-card__link:hover { color: inherit; }
-.course-card__footer {
-    padding: 10px 1.5rem 1.25rem;
-    border-top: 1px solid #edeff2;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
-}
-.course-card__footer .btn_2,
-.course-card__footer .btn_4 {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-}
-.courses_empty {
-    text-align: center;
-    padding: 3rem 2rem;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(12, 46, 96, 0.06);
-}
-.courses_empty p {
-    color: #6c757d;
-    margin-bottom: 1.5rem;
-}
-/* Intro - متن و دکمه‌ها در یک ردیف */
-.courses_intro {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 1rem 1.5rem;
-    margin-bottom: 1.25rem;
-}
-.courses_intro_text {
-    flex: 1;
-    min-width: 280px;
-    margin: 0;
-    text-align: justify;
-    line-height: 1.7;
-    color: #4a4a4a;
-}
-.courses_intro_actions {
+
+/* ─── وضعیت فیلتر ─── */
+.cr-filter-status {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: var(--radius-md);
+    background: rgba(12, 46, 96, 0.06);
+    border: 1px solid rgba(12, 46, 96, 0.12);
+    font-size: 0.84rem;
+    line-height: 1.6;
+    color: var(--color-primary);
+}
+
+.cr-filter-status__icon {
     flex-shrink: 0;
+    font-size: 1rem;
 }
-.courses_consult_btn {
-    padding: 8px 18px;
-    font-size: 0.9rem;
-    white-space: nowrap;
+
+.cr-filter-status__clear {
+    margin-inline-start: auto;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
-.courses_filter_toggle_btn {
+
+.cr-filter-status__clear:hover {
+    color: var(--color-primary-dark);
+}
+
+/* ─── سایدبار ─── */
+.faq-page__nav-link .cr-nav__icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: var(--color-primary);
+    opacity: 0.85;
+}
+
+.cr-nav__count {
+    margin-inline-start: auto;
+    padding: 0.1rem 0.45rem;
+    border-radius: var(--radius-pill);
+    background: rgba(12, 46, 96, 0.08);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.faq-page__nav-link.is-active .cr-nav__count {
+    background: rgba(255, 255, 255, 0.2);
+    color: inherit;
+}
+
+.cr-sidebar-cta {
+    padding: 1.15rem 1.25rem;
+    background: linear-gradient(165deg, rgba(12, 46, 96, 0.06) 0%, var(--color-bg) 60%);
+}
+
+.cr-sidebar-cta__text {
+    margin: 0 0 0.85rem;
+    font-size: 0.84rem;
+    line-height: 1.75;
+    color: var(--color-text-muted);
+}
+
+.cr-sidebar-cta__btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.9rem;
+    justify-content: center;
+    width: 100%;
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
 }
-.courses_filter_toggle_btn .ti-filter { font-size: 0.9rem; }
-.courses_filter_wrap {
+
+.cr-sidebar-cta__btn:hover {
+    background: var(--color-primary-dark);
+    color: var(--color-on-primary);
+    text-decoration: none;
+}
+
+/* ─── گرید دوره‌ها ─── */
+.courses-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+}
+
+/* ─── کارت دوره ─── */
+.cr-card {
+    display: grid;
+    grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+    gap: 0;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    margin-bottom: 1.5rem;
-    transition: max-height 0.35s ease, opacity 0.25s ease;
+    scroll-margin-top: 100px;
+    transition: box-shadow 0.2s, border-color 0.2s;
 }
-.courses_filter_wrap.is_open {
-    max-height: 400px;
-    opacity: 1;
+
+.cr-card:hover {
+    border-color: rgba(12, 46, 96, 0.18);
+    box-shadow: 0 12px 28px rgba(12, 46, 96, 0.08);
 }
-.courses_filter_wrap .filter-card { margin-top: 0; }
-.courses_filter_form { text-align: right; background-color: #fff; }
-.courses_btn_minwidth { min-width: 120px; padding: 8px 16px !important; font-size: 0.9rem !important; }
-.courses_btn_clear { padding: 8px 14px; font-size: 0.9rem; }
+
+.cr-card.is-highlight {
+    animation: faqPagePulse 1.2s ease;
+    border-color: rgba(12, 46, 96, 0.28);
+}
+
+.cr-card__media {
+    display: block;
+    position: relative;
+    min-height: 160px;
+    background: linear-gradient(135deg, #e8eef5 0%, #f0f4f9 100%);
+    overflow: hidden;
+}
+
+.cr-card__media img {
+    width: 100%;
+    height: 100%;
+    min-height: 160px;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.cr-card:hover .cr-card__media img {
+    transform: scale(1.05);
+}
+
+.cr-card__external-badge {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--color-primary);
+    box-shadow: 0 4px 14px rgba(12, 46, 96, 0.12);
+    font-size: 0.95rem;
+}
+
+.cr-card__tag--external {
+    background: rgba(201, 162, 39, 0.14);
+    color: #8a6d12;
+}
+
+.cr-card__body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.15rem 1.35rem 1.25rem;
+    text-align: right;
+}
+
+.cr-card__head {
+    margin-bottom: 0.5rem;
+}
+
+.cr-card__title {
+    margin: 0 0 0.45rem;
+    font-family: var(--font-display);
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.cr-card__title a {
+    color: var(--color-heading);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.cr-card__title a:hover {
+    color: var(--color-primary);
+}
+
+.cr-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.22rem;
+    margin-top: 0.15rem;
+}
+
+.cr-card__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.04rem 0.38rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.6rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+}
+
+.cr-card__tag [class^="ti-"] {
+    font-size: 0.72em;
+    opacity: 0.75;
+}
+
+.cr-card__tag--country {
+    background: rgba(12, 46, 96, 0.06);
+    color: var(--color-primary);
+}
+
+.cr-card__tag--mode {
+    background: rgba(255, 102, 59, 0.08);
+    color: #b45309;
+}
+
+.cr-card__tag--duration {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid rgba(12, 46, 96, 0.1);
+}
+
+.cr-card__tag--price {
+    background: rgba(34, 139, 34, 0.07);
+    color: #15803d;
+}
+
+.cr-card__lead {
+    margin: 0 0 0.85rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md);
+    background: rgba(12, 46, 96, 0.04);
+    border-inline-start: 3px solid var(--color-primary);
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--color-text-muted);
+}
+
+.courses-page .cr-card__highlights {
+    margin: 0 0 1rem;
+    padding: 0.85rem 1.1rem 0.85rem 0.95rem;
+    list-style: none;
+    border-radius: var(--radius-md);
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border-light);
+}
+
+.cr-card__highlights li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin-bottom: 0.45rem;
+    font-size: 0.86rem;
+    line-height: 1.75;
+    color: var(--color-text-dark);
+}
+
+.cr-card__highlights li:last-child {
+    margin-bottom: 0;
+}
+
+.cr-card__check {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-accent);
+    font-size: 0.72rem;
+}
+
+.cr-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.cr-card__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.95rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.cr-card__btn--primary {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.cr-card__btn--primary:hover {
+    background: var(--color-primary-dark);
+    color: var(--color-on-primary);
+    text-decoration: none;
+}
+
+.cr-card__btn--ghost {
+    border: 1px solid rgba(12, 46, 96, 0.2);
+    color: var(--color-primary);
+    background: transparent;
+}
+
+.cr-card__btn--ghost:hover {
+    background: rgba(12, 46, 96, 0.06);
+    text-decoration: none;
+}
+
+/* ─── خالی / جستجو ─── */
+.cr-empty {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.cr-empty__icon {
+    display: block;
+    margin: 0 auto 1rem;
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    opacity: 0.5;
+}
+
+.cr-empty__title {
+    margin: 0 0 0.65rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-heading);
+}
+
+.cr-empty__text {
+    margin: 0 0 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--color-text-muted);
+    max-width: 28rem;
+    margin-inline: auto;
+}
+
+.cr-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.cr-search-empty {
+    margin: 1rem 0 0;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(12, 46, 96, 0.05);
+    border: 1px dashed rgba(12, 46, 96, 0.2);
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.cr-card.is-hidden {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    .cr-card {
+        grid-template-columns: 1fr;
+    }
+
+    .cr-card__media {
+        min-height: 180px;
+    }
+
+    .cr-card__media img {
+        min-height: 180px;
+    }
+}
+
 @media (max-width: 767.98px) {
-    .courses_area { padding-top: 40px; padding-bottom: 40px; }
-    .courses_intro {
+    .cr-card__body {
+        padding: 1rem 1.1rem 1.1rem;
+    }
+
+    .cr-card__title {
+        font-size: 1rem;
+    }
+
+    .cr-card__actions {
         flex-direction: column;
-        gap: 1rem;
     }
-    .courses_intro_text { min-width: 100%; }
-    .courses_intro_actions {
+
+    .cr-card__btn {
         width: 100%;
-        justify-content: flex-start;
     }
-    .course-card__image { height: 160px; }
-    .course-card__body { padding: 1rem 1.25rem; }
-    .course-card__title { font-size: 1rem; }
-    .course-card__footer {
-        flex-wrap: wrap;
+
+    .cr-filter-status__clear {
+        margin-inline-start: 0;
+        width: 100%;
     }
 }

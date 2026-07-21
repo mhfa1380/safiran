@@ -1,0 +1,55 @@
+/**
+ * ابزارهای هدر ادمین — بعد از responsive.css بارگذاری می‌شود
+ * تا «نمایش وبگاه»، «تغییر گذرواژه» و «خروج» یک اندازه بمانند.
+ */
+
+#user-tools .safiran-admin-header__actions .safiran-admin-header__link,
+#user-tools .safiran-admin-header__actions a,
+#logout-form button.safiran-admin-header__link,
+#logout-form button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    height: 1.625rem !important;
+    min-height: 1.625rem !important;
+    padding: 0 0.55rem !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    border-radius: 5px !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    text-decoration: none !important;
+}
+
+#user-tools .safiran-admin-header__actions a:hover,
+#user-tools .safiran-admin-header__actions a:focus,
+#logout-form button:hover,
+#logout-form button:focus,
+#logout-form button:active {
+    margin-bottom: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.45) !important;
+}
+
+@media (max-width: 1024px) {
+    #user-tools .safiran-admin-header__actions a,
+    #logout-form button {
+        display: inline-flex !important;
+        line-height: 1 !important;
+        height: 1.625rem !important;
+        min-height: 1.625rem !important;
+    }
+}
+
+@media (max-width: 767px) {
+    #user-tools .safiran-admin-header__actions a,
+    #logout-form button {
+        height: 1.5rem !important;
+        min-height: 1.5rem !important;
+    }
+}

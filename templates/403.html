@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/content.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title="دسترسی غیرمجاز" hero_lead="شما اجازه دسترسی به این صفحه را ندارید." crumb2_label="دسترسی غیرمجاز" %}
+
+<section class="sample-text-area error404_margin">
+    <div class="container box_1170 text-center">
+        <h3 class="text-heading">۴۰۳</h3>
+        <p class="sample-text">
+            اگر فکر می‌کنید این یک خطا است، لطفاً با پشتیبانی تماس بگیرید.
+        </p>
+        <div class="mt-4 error404_links">
+            <a href="{% url 'index' %}" class="btn_1">صفحه اصلی</a>
+            <a href="{% url 'contact' %}" class="btn_2 mr-3">تماس با ما</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

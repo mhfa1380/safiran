@@ -1,0 +1,6 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+{% if role_help_html %}{{ role_help_html }}{% endif %}
+{{ block.super }}
+{% endblock %}

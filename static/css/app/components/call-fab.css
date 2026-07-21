@@ -1,0 +1,58 @@
+/* دکمه شناور تماس — همیشه دیده می‌شود */
+.site-call-fab {
+    position: fixed;
+    z-index: 1050;
+    left: max(0.75rem, env(safe-area-inset-left, 0px));
+    bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 3rem;
+    padding: 0.55rem 1rem 0.55rem 0.7rem;
+    border-radius: 999px;
+    text-decoration: none !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #0b7a3e 0%, #14964f 55%, #1fb35c 100%);
+    box-shadow: 0 8px 24px rgba(11, 122, 62, 0.35), 0 0 0 1px rgba(255,255,255,0.12) inset;
+    font-family: var(--font-sans, Vazirmatn, sans-serif);
+    font-weight: 800;
+    font-size: 0.92rem;
+    line-height: 1;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.site-call-fab:hover,
+.site-call-fab:focus-visible {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 12px 28px rgba(11, 122, 62, 0.42);
+    color: #fff !important;
+}
+.site-call-fab:focus-visible {
+    outline: 2px solid #0b7a3e;
+    outline-offset: 3px;
+}
+.site-call-fab__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    font-size: 1.05rem;
+}
+.site-call-fab__text {
+    letter-spacing: 0.02em;
+}
+@media (max-width: 575.98px) {
+    .site-call-fab {
+        left: max(0.65rem, env(safe-area-inset-left, 0px));
+        bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+        padding: 0.5rem 0.85rem 0.5rem 0.55rem;
+        font-size: 0.82rem;
+    }
+    .site-call-fab__icon {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.95rem;
+    }
+}

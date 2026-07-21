@@ -2,125 +2,179 @@
 {% load static %}
 
 {% block title %}دوره‌ها و برنامه‌های تحصیلی | {{ institute.name }}{% endblock %}
-
-{% block meta_description %}لیست دوره‌ها و برنامه‌های تحصیلی ارائه‌شده توسط {{ institute.name }} برای اعزام دانشجو به کانادا، چین، اسپانیا و سایر کشورها.{% endblock %}
+{% block meta_description %}لیست دوره‌ها و برنامه‌های تحصیلی {{ institute.name }} برای آمادگی و مهارت‌های مرتبط با مهاجرت تحصیلی به چین، کانادا، اسپانیا و سایر کشورها.{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
 <link rel="stylesheet" href="{% static 'css/app/pages/courses.css' %}">
 {% endblock %}
 
+{% block extra_head %}
+<script>
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+window.PAGE_CONFIG.coursesSearchUrl = "{% url 'courses_search' %}";
+window.PAGE_CONFIG.coursesSuggestUrl = "{% url 'courses_suggest' %}";
+window.PAGE_CONFIG.coursesActiveCountry = "{{ filter_country|default:'' }}";
+</script>
+{% endblock %}
+
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
+{% url 'courses_list' as courses_url %}
+{% if filter_country and filter_country_label %}
+{% include "layout/page_hero.html" with hero_title="دوره‌های "|add:filter_country_label hero_lead="دوره‌ها و برنامه‌های تحصیلی مرتبط با "|add:filter_country_label|add:" — با مشاوره و پشتیبانی تخصصی موسسه." crumb2_label="دوره‌های تحصیلی" crumb2_url=courses_url crumb3_label=filter_country_label %}
+{% else %}
+{% include "layout/page_hero.html" with hero_title="دوره‌ها و برنامه‌های تحصیلی" hero_lead="دوره‌های آمادگی زبان، مهارت‌های تحصیلی و برنامه‌های تخصصی برای مسیر مهاجرت تحصیلی — با مجوز رسمی وزارت علوم و پشتیبانی در تمام مراحل." crumb2_label="دوره‌های تحصیلی" %}
+{% endif %}
+
+<section class="faq-page courses-page section_padding" dir="rtl">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>دوره‌ها و برنامه‌های تحصیلی</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>دوره‌ها</p>
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 faq-page__aside" aria-label="فیلتر کشور">
+                <div class="faq-page__panel faq-page__panel--sticky">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-world" aria-hidden="true"></span>
+                        کشور مقصد
+                    </h2>
+                    <nav class="faq-page__nav" aria-label="فیلتر کشور">
+                        <a href="{% url 'courses_list' %}"
+                           class="faq-page__nav-link{% if not filter_country %} is-active{% endif %}"
+                           data-cr-country=""
+                           {% if not filter_country %}aria-current="page"{% endif %}>
+                            همه دوره‌ها
+                            {% if total_count %}<span class="cr-nav__count">{{ total_count }}</span>{% endif %}
+                        </a>
+                        {% for code, label, count in countries_nav %}
+                        <a href="{% url 'courses_list' %}?country={{ code }}"
+                           class="faq-page__nav-link{% if filter_country == code %} is-active{% endif %}"
+                           data-cr-country="{{ code }}"
+                           {% if filter_country == code %}aria-current="page"{% endif %}>
+                            <span class="cr-nav__icon {% if code == 'china' %}ti-flag-alt{% elif code == 'canada' %}ti-map{% elif code == 'spain' %}ti-location-pin{% else %}ti-pin{% endif %}" aria-hidden="true"></span>
+                            <span>{{ label }}</span>
+                            {% if count %}<span class="cr-nav__count">{{ count }}</span>{% endif %}
+                        </a>
+                        {% endfor %}
+                    </nav>
+                </div>
+
+                {% if featured_courses %}
+                <div class="faq-page__panel faq-page__panel--featured">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-star" aria-hidden="true"></span>
+                        پیشنهادی
+                    </h2>
+                    <ul class="faq-page__popular">
+                        {% for course in featured_courses %}
+                        <li>
+                            <button type="button"
+                                    class="faq-page__popular-btn"
+                                    data-cr-jump="{{ course.slug }}">
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+                                {{ course.title|truncatechars:48 }}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="cr-sidebar-cta faq-page__panel">
+                    <p class="cr-sidebar-cta__text">در انتخاب دوره مناسب سوال دارید؟ مشاوران ما راهنمایی‌تان می‌کنند.</p>
+                    <a href="{% url 'appointment' %}?about=courses" class="cr-sidebar-cta__btn">رزرو مشاوره رایگان</a>
+                </div>
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 faq-page__main">
+                {% if featured_courses %}
+                <div class="faq-page__chips" aria-label="دوره‌های پیشنهادی">
+                    <span class="faq-page__chips-label">پیشنهادی:</span>
+                    <div class="faq-page__chips-scroll">
+                        {% for course in featured_courses %}
+                        <button type="button"
+                                class="faq-page__chip"
+                                data-cr-jump="{{ course.slug }}">
+                            {{ course.title|truncatechars:36 }}
+                        </button>
+                        {% endfor %}
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
+                {% endif %}
 
-<section class="courses_area section_padding" dir="rtl">
-    <div class="container">
-        <div class="courses_intro">
-            <p class="courses_intro_text">
-                موسسه {{ institute.name }} با مجوز رسمی وزارت علوم، آماده ارائه خدمات مشاوره و اعزام دانشجو در دوره‌ها و برنامه‌های مختلف تحصیلی به کشورهای
-                <strong>چین، کانادا و اسپانیا</strong> است. در این صفحه می‌توانید دوره‌های ارائه‌شده را بر اساس کشور مقصد فیلتر کنید.
-                در مورد انتخاب دوره سوال دارید؟ با کمال میل راهنمایی‌تان می‌کنیم.
-            </p>
-            <div class="courses_intro_actions">
-                <a href="{% url 'appointment' %}?about=courses" class="btn_1 courses_consult_btn">نیاز به مشاوره دارم</a>
-                <button type="button" class="btn_2 courses_filter_toggle_btn" id="coursesFilterToggle" aria-expanded="{% if filter_country %}true{% else %}false{% endif %}">
-                    <span class="ti-filter"></span> <span class="courses_filter_toggle_label">{% if filter_country %}بستن فیلتر{% else %}فیلتر کردن{% endif %}</span>
-                </button>
-            </div>
-        </div>
+                <div class="cr-intro" aria-label="معرفی دوره‌ها">
+                    <p class="cr-intro__text">
+                        موسسه <strong>{{ institute.name }}</strong> با مجوز رسمی وزارت علوم، دوره‌ها و برنامه‌های تحصیلی و آمادگی را برای مسیر مهاجرت تحصیلی به
+                        <strong>چین، کانادا و اسپانیا</strong> ارائه می‌دهد. کشور مقصد را انتخاب کنید یا مستقیم از لیست زیر دوره مناسب خود را پیدا کنید.
+                    </p>
+                </div>
 
-        <div class="courses_filter_wrap {% if filter_country %}is_open{% endif %}" id="coursesFilterWrap">
-                <form method="get" class="filter-card p-3 p-md-4 courses_filter_form">
-                    <div class="form-row align-items-end">
-                        <div class="form-group col-12 col-md-4">
-                            <label for="country">کشور مقصد</label>
-                            <select id="country" name="country" class="form-control courses-filter-select">
-                                <option value="">همه کشورها</option>
-                                {% for code, label in countries %}
-                                    <option value="{{ code }}" {% if code == filter_country %}selected{% endif %}>
-                                        {{ label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group col-12 col-md-4">
-                            <button type="submit" class="btn_1 courses_btn_minwidth">جستجو</button>
-                            {% if filter_country %}
-                                <a href="{% url 'courses_list' %}" class="btn_2 mr-2 courses_btn_clear">پاک کردن فیلتر</a>
-                            {% endif %}
-                        </div>
+                <div class="faq-page__search">
+                    <label class="faq-page__sr-only" for="courses-search-input">جستجو در دوره‌ها</label>
+                    <div class="faq-page__search-field">
+                        <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+                        <input type="search"
+                               id="courses-search-input"
+                               class="faq-page__search-input"
+                               placeholder="جستجو در عنوان، توضیحات و سوالات دوره…"
+                               autocomplete="off"
+                               enterkeyhint="search"
+                               aria-controls="courses-content-wrapper">
+                        <div id="courses-suggest-panel" class="faq-page__suggest" hidden role="listbox" aria-label="پیشنهاد دوره"></div>
                     </div>
-                </form>
-        </div>
+                    <p class="faq-page__did-you-mean" id="courses-did-you-mean" hidden></p>
+                </div>
 
-        <div class="row">
-            {% if courses %}
-                {% for course in courses %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="course-card h-100">
-                            <a href="{% url 'course_details' course.slug %}" class="course-card__link">
-                                <div class="course-card__image">
-                                    {% if course.image %}
-                                        <img src="{{ course.image }}" alt="{{ course.title }}">
-                                    {% else %}
-                                        <img src="{% static 'img/single_cource.webp' %}" alt="{{ course.title }}">
-                                    {% endif %}
-                                    {% if course.country %}
-                                        <span class="course-card__badge">
-                                            {% if course.country == "china" %}چین{% elif course.country == "canada" %}کانادا{% elif course.country == "spain" %}اسپانیا{% else %}سایر کشورها{% endif %}
-                                        </span>
-                                    {% endif %}
-                                </div>
-                                <div class="course-card__body">
-                                    <h5 class="course-card__title">{{ course.title }}</h5>
-                                    <p class="course-card__desc">
-                                        {% if course.short_description %}
-                                            {{ course.short_description|truncatechars:120 }}
-                                        {% else %}
-                                            برای دریافت اطلاعات کامل درباره این دوره و شرایط شرکت، روی کارت کلیک کنید.
-                                        {% endif %}
-                                    </p>
-                                </div>
-                            </a>
-                            <div class="course-card__footer">
-                                <a href="{% url 'course_details' course.slug %}" class="btn_2">جزئیات دوره</a>
-                                <a href="{% url 'appointment' %}?about=course&title={{ course.title|urlencode }}" class="btn_4">درخواست مشاوره</a>
-                            </div>
-                        </div>
+                <div class="faq-page__filters cr-country-filters" role="toolbar" aria-label="فیلتر کشور">
+                    <a href="{% url 'courses_list' %}"
+                       class="faq-page__filter{% if not filter_country %} is-active{% endif %}"
+                       data-cr-country="">همه</a>
+                    {% for code, label in countries %}
+                    <a href="{% url 'courses_list' %}?country={{ code }}"
+                       class="faq-page__filter{% if filter_country == code %} is-active{% endif %}"
+                       data-cr-country="{{ code }}">{{ label }}</a>
+                    {% endfor %}
+                </div>
+
+                {% if filter_country and filter_country_label %}
+                <div class="cr-filter-status" role="status">
+                    <span class="cr-filter-status__icon ti-filter" aria-hidden="true"></span>
+                    <span>نمایش دوره‌های <strong>{{ filter_country_label }}</strong></span>
+                    <a href="{% url 'courses_list' %}" class="cr-filter-status__clear">پاک کردن فیلتر</a>
+                </div>
+                {% endif %}
+
+                <div id="courses-content-wrapper" class="faq-page__content courses-page__content" role="region" aria-label="لیست دوره‌ها">
+                    {% if courses %}
+                    <div class="courses-grid" id="courses-grid">
+                        {% for course in courses %}
+                        {% include "content/_course_card.html" %}
+                        {% endfor %}
                     </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-12">
-                    <div class="courses_empty">
-                        <h4 class="mb-3">دوره‌ای یافت نشد</h4>
-                        <p>
+                    <p class="cr-search-empty" id="courses-search-empty" hidden>دوره‌ای با این عبارت یافت نشد.</p>
+                    {% else %}
+                    <div class="cr-empty">
+                        <span class="cr-empty__icon ti-book" aria-hidden="true"></span>
+                        <h2 class="cr-empty__title">دوره‌ای یافت نشد</h2>
+                        <p class="cr-empty__text">
                             {% if filter_country %}
-                                در حال حاضر دوره‌ای برای کشور انتخاب‌شده ثبت نشده است. لطفاً فیلتر را پاک کنید یا با مشاوران ما تماس بگیرید.
+                            در حال حاضر دوره‌ای برای {{ filter_country_label }} ثبت نشده است. فیلتر را پاک کنید یا با مشاوران ما تماس بگیرید.
                             {% else %}
-                                در حال حاضر دوره‌ای در سیستم ثبت نشده است. برای دریافت اطلاعات درباره دوره‌های ارائه‌شده، با مشاوران {{ institute.name }} تماس بگیرید.
+                            در حال حاضر دوره‌ای در سیستم ثبت نشده است. برای اطلاعات بیشتر با مشاوران {{ institute.name }} در تماس باشید.
                             {% endif %}
                         </p>
-                        <a href="{% url 'appointment' %}?about=courses" class="btn_1">رزرو مشاوره</a>
+                        <div class="cr-empty__actions">
+                            {% if filter_country %}
+                            <a href="{% url 'courses_list' %}" class="cr-card__btn cr-card__btn--ghost">همه دوره‌ها</a>
+                            {% endif %}
+                            <a href="{% url 'appointment' %}?about=courses" class="cr-card__btn cr-card__btn--primary">رزرو مشاوره</a>
+                        </div>
                     </div>
+                    {% endif %}
                 </div>
-            {% endif %}
+            </div>
         </div>
     </div>
 </section>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/app/pages/courses.js' %}"></script>
+<script src="{% static 'js/app/pages/courses.js' %}" defer></script>
 {% endblock %}

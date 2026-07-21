@@ -1,160 +1,305 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static jalali_filters %}
 
-{% block title %}دانشگاه‌ها و موسسات مناسب پذیرش تحصیلی | {{ institute.name }}{% endblock %}
+{% block title %}{{ hero_title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ hero_lead }}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
 <link rel="stylesheet" href="{% static 'css/app/pages/schools.css' %}">
 {% endblock %}
 
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه اصلی","item":"{{ site_url }}/"},{"@type":"ListItem","position":2,"name":"دانشگاه‌های خارج","item":"{{ site_url }}{% url 'schools_list' %}"}]}
+</script>
+<script>
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+window.PAGE_CONFIG.quickConsultUrl = "{% url 'quick_consultation' %}";
+window.PAGE_CONFIG.schoolsSearchUrl = "{% url 'schools_search' %}";
+window.PAGE_CONFIG.schoolsSuggestUrl = "{% url 'schools_suggest' %}";
+window.PAGE_CONFIG.schoolsActiveCountry = "{{ filter_country|default:'' }}";
+window.PAGE_CONFIG.schoolsActiveTier = "{{ filter_tier|default:'' }}";
+window.PAGE_CONFIG.schoolsActiveType = "{{ filter_type|default:'' }}";
+window.PAGE_CONFIG.schoolsActiveMajor = "{{ filter_major_slug|default:'' }}";
+window.PAGE_CONFIG.schoolsPageSize = {{ schools_page_size|default:20 }};
+window.PAGE_CONFIG.schoolsHasMore = {% if schools_has_more %}true{% else %}false{% endif %};
+window.PAGE_CONFIG.schoolsTotal = {{ total_count|default:0 }};
+window.PAGE_CONFIG.schoolsNextOffset = {{ universities|length }};
+window.PAGE_CONFIG.schoolsWorldCountries = [
+    {% for item in world_country_nav %}
+    {
+        "code": "{{ item.code }}",
+        "label": "{{ item.label|escapejs }}",
+        "flag": "{% if item.flag %}{% static item.flag %}{% endif %}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+</script>
+{% endblock %}
+
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
+{% url 'schools_list' as schools_url %}
+{% include "layout/page_hero.html" with hero_title=hero_title hero_lead=hero_lead crumb2_label="دانشگاه‌ها" crumb2_url=schools_url %}
+
+<section class="faq-page schools-page section_padding" dir="rtl" lang="fa">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>دانشگاه‌ها و موسسات مناسب پذیرش تحصیلی</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>دانشگاه‌ها</p>
+        {% include "layout/_nav_degree_banner.html" %}
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 faq-page__aside schools-page__aside" aria-label="فیلتر دانشگاه‌ها">
+                <div class="faq-page__panel faq-page__panel--sticky schools-page__filters-panel">
+                    <div class="schools-aside__block">
+                        <h2 class="schools-aside__label">
+                            <span class="ti-world" aria-hidden="true"></span>
+                            کشور مقصد
+                        </h2>
+                        <nav class="faq-page__nav faq-page__nav--compact-grid" aria-label="فیلتر کشور">
+                            <a href="{% url 'schools_list' %}{% if filter_type or filter_q %}?{% endif %}{% if filter_type %}type={{ filter_type|urlencode }}{% if filter_q %}&{% endif %}{% endif %}{% if filter_q %}q={{ filter_q|urlencode }}{% endif %}{% if nav_degree_query %}{% if filter_type or filter_q %}&{% else %}?{% endif %}{{ nav_degree_query }}{% endif %}"
+                               class="faq-page__nav-link{% if not filter_country %} is-active{% endif %}"
+                               data-school-country=""
+                               {% if not filter_country %}aria-current="page"{% endif %}>
+                                <span class="ti-layout-grid2" aria-hidden="true"></span>
+                                <span>همه</span>
+                            </a>
+                            {% for item in country_nav %}
+                            <a href="{% url 'schools_list' %}?country={{ item.code }}{% if filter_type %}&type={{ filter_type|urlencode }}{% endif %}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if nav_degree_query %}&{{ nav_degree_query }}{% endif %}"
+                               class="faq-page__nav-link{% if filter_country == item.code %} is-active{% endif %}"
+                               data-school-country="{{ item.code }}"
+                               {% if filter_country == item.code %}aria-current="page"{% endif %}>
+                                {% if item.flag %}
+                                <img src="{% static item.flag %}" alt="" class="faq-page__nav-flag" width="20" height="14" loading="lazy">
+                                {% else %}
+                                <span class="ti-location-pin" aria-hidden="true"></span>
+                                {% endif %}
+                                <span>{{ item.label }}</span>
+                            </a>
+                            {% endfor %}
+                            {% if world_country_nav %}
+                            <button type="button"
+                                    class="faq-page__nav-link schools-world-country-trigger{% if active_world_country %} is-active{% endif %}"
+                                    data-school-country-picker
+                                    aria-haspopup="dialog"
+                                    aria-controls="schoolsCountryModal"
+                                    {% if active_world_country %}aria-current="page"{% endif %}>
+                                {% if active_world_country and active_world_country.flag %}
+                                <img src="{% static active_world_country.flag %}" alt="" class="faq-page__nav-flag" width="20" height="14" loading="lazy">
+                                {% else %}
+                                <span class="ti-world" aria-hidden="true"></span>
+                                {% endif %}
+                                <span class="schools-world-country-trigger__label">{% if active_world_country %}{{ active_world_country.label }}{% else %}سایر کشورها{% endif %}</span>
+                            </button>
+                            {% endif %}
+                        </nav>
                     </div>
+
+                    <div class="schools-aside__block">
+                        <h2 class="schools-aside__label">
+                            <span class="ti-medall" aria-hidden="true"></span>
+                            سطح دانشگاه
+                        </h2>
+                        <nav class="faq-page__nav faq-page__nav--compact-grid" aria-label="فیلتر سطح دانشگاه">
+                            <a href="{% url 'schools_list' %}{% if filter_country or filter_type or filter_q %}?{% endif %}{% if filter_country %}country={{ filter_country|urlencode }}{% if filter_type or filter_q %}&{% endif %}{% endif %}{% if filter_type %}type={{ filter_type|urlencode }}{% if filter_q %}&{% endif %}{% endif %}{% if filter_q %}q={{ filter_q|urlencode }}{% endif %}{% if nav_degree_query %}{% if filter_country or filter_type or filter_q %}&{% else %}?{% endif %}{{ nav_degree_query }}{% endif %}"
+                               class="faq-page__nav-link{% if not filter_tier %} is-active{% endif %}"
+                               data-school-tier=""
+                               {% if not filter_tier %}aria-current="page"{% endif %}>
+                                <span class="ti-layout-grid2" aria-hidden="true"></span>
+                                <span>همه</span>
+                            </a>
+                            <a href="{% url 'schools_list' %}?tier=other{% if filter_country %}&country={{ filter_country|urlencode }}{% endif %}{% if filter_type %}&type={{ filter_type|urlencode }}{% endif %}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if nav_degree_query %}&{{ nav_degree_query }}{% endif %}"
+                               class="faq-page__nav-link{% if filter_tier == 'other' %} is-active{% endif %}"
+                               data-school-tier="other"
+                               {% if filter_tier == 'other' %}aria-current="page"{% endif %}>
+                                <span class="ti-world" aria-hidden="true"></span>
+                                <span>{{ schools_tier_other_label }}</span>
+                            </a>
+                        </nav>
+                    </div>
+
+                    <div class="schools-aside__block">
+                        <h2 class="schools-aside__label">
+                            <span class="ti-layout-grid2" aria-hidden="true"></span>
+                            نوع موسسه
+                        </h2>
+                        <nav class="faq-page__nav faq-page__nav--compact-grid" aria-label="فیلتر نوع موسسه">
+                            <a href="{% url 'schools_list' %}{% if filter_country or filter_q %}?{% endif %}{% if filter_country %}country={{ filter_country|urlencode }}{% if filter_q %}&{% endif %}{% endif %}{% if filter_q %}q={{ filter_q|urlencode }}{% endif %}{% if nav_degree_query %}{% if filter_country or filter_q %}&{% else %}?{% endif %}{{ nav_degree_query }}{% endif %}"
+                               class="faq-page__nav-link{% if not filter_type %} is-active{% endif %}"
+                               data-school-type="">
+                                <span class="ti-layout-grid2" aria-hidden="true"></span>
+                                <span>همه</span>
+                            </a>
+                            {% for item in type_nav %}
+                            <a href="{% url 'schools_list' %}?type={{ item.code }}{% if filter_country %}&country={{ filter_country|urlencode }}{% endif %}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if nav_degree_query %}&{{ nav_degree_query }}{% endif %}"
+                               class="faq-page__nav-link{% if filter_type == item.code %} is-active{% endif %}"
+                               data-school-type="{{ item.code }}">
+                                <span class="{{ item.icon }}" aria-hidden="true"></span>
+                                <span>{{ item.label }}</span>
+                            </a>
+                            {% endfor %}
+                        </nav>
+                    </div>
+                </div>
+
+                {% if featured_universities %}
+                <div class="faq-page__panel faq-page__panel--featured schools-page__featured-panel">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-star" aria-hidden="true"></span>
+                        پرطرفدار
+                    </h2>
+                    <ul class="faq-page__popular">
+                        {% for uni in featured_universities %}
+                        <li>
+                            <button type="button"
+                                    class="faq-page__popular-btn"
+                                    data-uni-jump="{{ uni.slug }}">
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+                                {{ uni.name_fa }}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 faq-page__main">
+                {% include "layout/_evaluation_promo.html" with promo_country=filter_country promo_ref="schools-list" promo_title="ارزیابی هوشمند — کدام دانشگاه برای شما مناسب است؟" promo_text="با چند سؤال کوتاه، گزارش رایگان پذیرش، بورسیه و هزینه تحصیل دریافت کنید." %}
+
+                {% if filter_major %}
+                <div class="schools-major-banner faq-page__panel" role="status">
+                    <div class="schools-major-banner__body">
+                        <span class="ti-book schools-major-banner__icon" aria-hidden="true"></span>
+                        <div>
+                            <p class="schools-major-banner__title">
+                                دانشگاه‌های ارائه‌دهنده <strong>{{ filter_major.title }}</strong>
+                            </p>
+                            <p class="schools-major-banner__meta">
+                                {{ total_count }} دانشگاه — {{ filter_major.get_country_display }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="schools-major-banner__actions">
+                        <a href="{% url 'major_details' filter_major.slug %}" class="faq-page__btn faq-page__btn--ghost">صفحه رشته</a>
+                        <a href="{% url 'schools_list' %}{% if filter_country %}?country={{ filter_country }}{% endif %}" class="schools-major-banner__clear">حذف فیلتر رشته</a>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if featured_universities %}
+                <div class="faq-page__chips" aria-label="دانشگاه‌های پرطرفدار">
+                    <span class="faq-page__chips-label">پرطرفدار:</span>
+                    <div class="faq-page__chips-scroll">
+                        {% for uni in featured_universities %}
+                        <button type="button"
+                                class="faq-page__chip"
+                                data-uni-jump="{{ uni.slug }}">
+                            {{ uni.name_fa }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="schools-finder" aria-label="جستجوی دانشگاه">
+                    <div class="schools-finder__head">
+                        <h2 class="schools-finder__title">
+                            <span class="ti-target" aria-hidden="true"></span>
+                            دنبال چه دانشگاهی هستید؟
+                        </h2>
+                        <p class="schools-finder__lead">نام دانشگاه، شهر یا کشور را جستجو کنید یا یکی از شهرهای پرطرفدار را انتخاب کنید.</p>
+                    </div>
+                    <div class="schools-smart-tags" role="group" aria-label="جستجوی سریع شهر">
+                        <button type="button" class="schools-smart-tag" data-school-smart="تورنتو">تورنتو</button>
+                        <button type="button" class="schools-smart-tag" data-school-smart="ونکوور">ونکوور</button>
+                        <button type="button" class="schools-smart-tag" data-school-smart="پکن">پکن</button>
+                        <button type="button" class="schools-smart-tag" data-school-smart="شانگهای">شانگهای</button>
+                        <button type="button" class="schools-smart-tag" data-school-smart="بارسلونا">بارسلونا</button>
+                        <button type="button" class="schools-smart-tag" data-school-smart="مادرید">مادرید</button>
+                    </div>
+                </div>
+
+                <div class="faq-page__search" id="schoolsFilterForm">
+                    <label class="faq-page__sr-only" for="schools-search-input">جستجو در دانشگاه‌ها</label>
+                    <div class="faq-page__search-field">
+                        <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+                        <input type="search"
+                               id="schools-search-input"
+                               class="faq-page__search-input"
+                               value="{{ filter_q }}"
+                               placeholder="جستجو… نام دانشگاه، شهر یا کشور"
+                               autocomplete="off"
+                               enterkeyhint="search"
+                               aria-controls="schools-content-wrapper">
+                        <div id="schools-suggest-panel" class="faq-page__suggest" hidden role="listbox" aria-label="پیشنهاد دانشگاه"></div>
+                    </div>
+                    <p class="faq-page__search-note schools-results-count" id="schools-results-count" role="status" aria-live="polite">
+                        نتایج: <strong>{{ total_count|persian_numbers }}</strong> دانشگاه
+                    </p>
+                </div>
+
+                <div class="faq-page__filters schools-toolbar-filters" role="toolbar" aria-label="فیلتر کشور و نوع موسسه">
+                    <button type="button"
+                            class="faq-page__filter{% if not filter_country %} is-active{% endif %}"
+                            data-school-country="">همه</button>
+                    {% for item in country_nav %}
+                    <button type="button"
+                            class="faq-page__filter{% if filter_country == item.code %} is-active{% endif %}"
+                            data-school-country="{{ item.code }}">{{ item.label }}</button>
+                    {% endfor %}
+                    {% if world_country_nav %}
+                    <button type="button"
+                            class="faq-page__filter schools-world-country-trigger{% if active_world_country %} is-active{% endif %}"
+                            data-school-country-picker
+                            aria-haspopup="dialog"
+                            aria-controls="schoolsCountryModal">
+                        {% if active_world_country %}{{ active_world_country.label }}{% else %}سایر کشورها{% endif %}
+                    </button>
+                    {% endif %}
+                    <span class="schools-toolbar-filters__sep" aria-hidden="true"></span>
+                    <button type="button"
+                            class="faq-page__filter{% if not filter_tier %} is-active{% endif %}"
+                            data-school-tier="">همه سطح‌ها</button>
+                    <button type="button"
+                            class="faq-page__filter{% if filter_tier == 'other' %} is-active{% endif %}"
+                            data-school-tier="other">{{ schools_tier_other_label }}</button>
+                    <span class="schools-toolbar-filters__sep" aria-hidden="true"></span>
+                    <button type="button"
+                            class="faq-page__filter{% if not filter_type %} is-active{% endif %}"
+                            data-school-type="">همه انواع</button>
+                    {% for item in type_nav %}
+                    <button type="button"
+                            class="faq-page__filter{% if filter_type == item.code %} is-active{% endif %}"
+                            data-school-type="{{ item.code }}">{{ item.label }}</button>
+                    {% endfor %}
+                </div>
+
+                <div id="schools-content-wrapper" class="faq-page__content schools-page__content" role="region" aria-label="لیست دانشگاه‌ها">
+                    {% include "schools/_schools_list_content.html" with search_q=search_q suggestions=suggestions schools_has_more=schools_has_more %}
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="schools_list_area section_padding" dir="rtl">
-    <div class="container">
-        <div class="schools_intro">
-            <p class="schools_intro_text">
-                در این صفحه لیست دانشگاه‌ها و موسسات مناسب برای پذیرش تحصیلی در کشور‌های
-                <strong>چین، کانادا و اسپانیا</strong> را مشاهده می‌کنید. لیست بر اساس
-                اطلاعات وارد شده در سیستم {{ institute.name }} نمایش داده می‌شود و می‌توانید
-                با فیلتر کردن، سریع‌تر گزینه‌ی مناسب را پیدا کنید.
-                در مورد انتخاب دانشگاه یا موسسه سوال دارید؟ با کمال میل راهنمایی‌تان می‌کنیم.
-            </p>
-            <div class="schools_intro_actions">
-                <a href="{% url 'appointment' %}?about=universities" class="btn_1 schools_consult_btn">نیاز به مشاوره دارم</a>
-                <button type="button" class="btn_2 schools_filter_toggle_btn" id="schoolsFilterToggle" aria-expanded="{% if filter_q or filter_country or filter_type %}true{% else %}false{% endif %}">
-                    <span class="ti-filter"></span> <span class="schools_filter_toggle_label">{% if filter_q or filter_country or filter_type %}بستن فیلتر{% else %}فیلتر کردن{% endif %}</span>
-                </button>
-            </div>
+<div id="schoolsCountryModal" class="schools-country-modal" dir="rtl" hidden aria-hidden="true">
+    <div class="schools-country-modal__backdrop" data-school-country-close tabindex="-1"></div>
+    <div class="schools-country-modal__box" role="dialog" aria-modal="true" aria-labelledby="schoolsCountryModalTitle">
+        <button type="button" class="schools-country-modal__close" data-school-country-close aria-label="بستن">&times;</button>
+        <h4 class="schools-country-modal__title" id="schoolsCountryModalTitle">انتخاب کشور</h4>
+        <p class="schools-country-modal__lead">نام کشور را جستجو کنید یا از لیست انتخاب کنید.</p>
+        <label class="faq-page__sr-only" for="schoolsCountrySearch">جستجوی کشور</label>
+        <div class="faq-page__search-field schools-country-modal__search">
+            <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+            <input type="search"
+                   id="schoolsCountrySearch"
+                   class="faq-page__search-input"
+                   placeholder="جستجو… نام کشور"
+                   autocomplete="off"
+                   enterkeyhint="search">
         </div>
-
-        <div class="schools_filter_wrap {% if filter_q or filter_country or filter_type %}is_open{% endif %}" id="schoolsFilterWrap">
-                <form method="get" class="filter-card p-3 p-md-4 schools_filter_form">
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="q">نام دانشگاه / شهر</label>
-                            <input type="text" id="q" name="q" value="{{ filter_q }}" class="form-control schools-filter-input" placeholder="مثلاً پکن، تورنتو، شانگهای">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="country">کشور</label>
-                            <select id="country" name="country" class="form-control schools-filter-select">
-                                <option value="">همه کشورها</option>
-                                {% for code, label in countries %}
-                                    <option value="{{ code }}" {% if code == filter_country %}selected{% endif %}>
-                                        {{ label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="type">نوع موسسه</label>
-                            <select id="type" name="type" class="form-control schools-filter-select">
-                                <option value="">همه انواع</option>
-                                {% for code, label in types %}
-                                    <option value="{{ code }}" {% if code == filter_type %}selected{% endif %}>
-                                        {{ label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn_1 mt-2 mt-md-3 schools_btn_minwidth">جستجو</button>
-                </form>
-        </div>
-
-        <div class="schools_list">
-            {% if universities %}
-                {% for uni in universities %}
-                <article class="uni-card">
-                    <a href="{% url 'school_detail' uni.slug %}" class="uni-card__image">
-                        {% if uni.image %}
-                            <img src="{{ uni.image.url }}" alt="{{ uni.name_fa }} - دانشگاه خارج" loading="lazy">
-                        {% else %}
-                            <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ uni.name_fa }} - دانشگاه خارج" loading="lazy">
-                        {% endif %}
-                        <span class="uni-card__country">
-                            {% if uni.country == "china" %}چین{% elif uni.country == "canada" %}کانادا{% elif uni.country == "spain" %}اسپانیا{% else %}سایر{% endif %}
-                        </span>
-                    </a>
-                    <div class="uni-card__body">
-                        <div class="uni-card__meta">
-                            <span class="uni-card__location"><i class="ti-location-pin"></i> {{ uni.city }}</span>
-                            {% if uni.world_rank %}
-                                <span class="uni-card__rank"><i class="ti-medall-alt"></i> رتبه {{ uni.world_rank }}</span>
-                            {% endif %}
-                        </div>
-                        <h3 class="uni-card__title">
-                            <a href="{% url 'school_detail' uni.slug %}">{{ uni.name_fa }}</a>
-                        </h3>
-                        {% if uni.name_en %}
-                            <p class="uni-card__subtitle">{{ uni.name_en }}</p>
-                        {% endif %}
-                        {% if uni.short_description %}
-                            <p class="uni-card__desc">{{ uni.short_description|truncatechars:180 }}</p>
-                        {% endif %}
-                        <div class="uni-card__badges">
-                            {% if uni.is_approved_by_mo_science %}
-                                <span class="uni-card__badge uni-card__badge--science">مورد تایید وزارت علوم</span>
-                            {% endif %}
-                            {% if uni.is_approved_by_mo_health %}
-                                <span class="uni-card__badge uni-card__badge--health">مورد تایید وزارت بهداشت</span>
-                            {% endif %}
-                        </div>
-                        <div class="uni-card__actions">
-                            <a href="{% url 'school_detail' uni.slug %}" class="btn_2 uni-card__btn">مشاهده جزئیات</a>
-                            <a href="{% url 'appointment' %}?about=university&title={{ uni.name_fa|urlencode }}" class="btn_4 uni-card__btn">درخواست مشاوره</a>
-                        </div>
-                    </div>
-                </article>
-                {% endfor %}
-            {% else %}
-                <p class="schools_empty_center">در حال حاضر دانشگاهی در سیستم ثبت نشده است. لطفاً بعداً دوباره بررسی کنید.</p>
-            {% endif %}
-        </div>
-        {% if page_obj and page_obj.has_other_pages %}
-        <nav class="schools-pagination">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_country %}&country={{ filter_country|urlencode }}{% endif %}{% if filter_type %}&type={{ filter_type|urlencode }}{% endif %}" aria-label="قبلی">
-                        <i class="ti-angle-right"></i>
-                    </a>
-                </li>
-                {% endif %}
-                {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number == num %}
-                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_country %}&country={{ filter_country|urlencode }}{% endif %}{% if filter_type %}&type={{ filter_type|urlencode }}{% endif %}">{{ num }}</a>
-                    </li>
-                    {% endif %}
-                {% endfor %}
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if filter_q %}&q={{ filter_q|urlencode }}{% endif %}{% if filter_country %}&country={{ filter_country|urlencode }}{% endif %}{% if filter_type %}&type={{ filter_type|urlencode }}{% endif %}" aria-label="بعدی">
-                        <i class="ti-angle-left"></i>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
+        <div class="schools-country-modal__list" id="schoolsCountryList" role="listbox" aria-label="لیست کشورها"></div>
+        <p class="schools-country-modal__empty" id="schoolsCountryEmpty" hidden>کشوری با این نام پیدا نشد.</p>
     </div>
-</section>
+</div>
 
 <div id="consultModal" class="consult-modal" dir="rtl">
     <div class="consult-modal__box">
@@ -164,7 +309,7 @@
             <h4 class="consult-modal__title">درخواست مشاوره</h4>
             <p class="consult-modal__uni" id="consultUniName"></p>
             <p class="consult-modal__phone">
-                <i class="ti-mobile"></i>
+                <span class="ti-mobile" aria-hidden="true"></span>
                 <a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a>
             </p>
             <p class="consult-modal__hint">اطلاعات خود را وارد کنید تا با شما تماس بگیریم.</p>
@@ -184,11 +329,6 @@
 </div>
 {% endblock %}
 
-{% block extra_head %}
-<script>window.PAGE_CONFIG = window.PAGE_CONFIG || {}; window.PAGE_CONFIG.quickConsultUrl = "{% url 'quick_consultation' %}";</script>
-{% endblock %}
-
 {% block extra_js %}
-<script src="{% static 'js/app/pages/schools.js' %}"></script>
+<script src="{% static 'js/app/pages/schools.js' %}" defer></script>
 {% endblock %}
-

@@ -1,0 +1,49 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block form_top %}
+{% if evaluation_result_url %}
+<div class="eval-admin-result-link" role="note">
+    <div class="eval-admin-result-link__row">
+        <strong>صفحه نتیجه ارزیابی</strong>
+        <a href="{{ evaluation_result_url }}" class="eval-admin-result-link__btn" target="_blank" rel="noopener noreferrer">مشاهده صفحه نتیجه</a>
+        <button type="button" class="eval-admin-result-link__btn eval-admin-result-link__btn--ghost" data-copy-url="{{ evaluation_result_url }}">کپی لینک</button>
+    </div>
+    {% if evaluation_result_expires_display %}
+    <span class="eval-admin-result-link__meta">معتبر تا {{ evaluation_result_expires_display }}</span>
+    {% endif %}
+</div>
+{% endif %}
+{{ block.super }}
+<div class="eval-admin-form-hint" role="note">
+    <strong>ثبت تماس:</strong>
+    در جدول «لاگ‌های تماس» پایین همین صفحه ردیف جدید اضافه کنید، یا از
+    <a href="{% url 'admin:core_evaluationcontactlog_changelist' %}">لیست لاگ‌های تماس ارزیابی</a>
+    برای مشاهده همه تماس‌های امروز استفاده کنید.
+</div>
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+(function () {
+    var copyBtn = document.querySelector(".eval-admin-result-link__btn[data-copy-url]");
+    if (!copyBtn) return;
+    copyBtn.addEventListener("click", function () {
+        var url = copyBtn.getAttribute("data-copy-url") || "";
+        if (!url) return;
+        function done() {
+            copyBtn.textContent = "کپی شد";
+            setTimeout(function () { copyBtn.textContent = "کپی لینک"; }, 2000);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(done).catch(function () {
+                window.prompt("لینک:", url);
+            });
+        } else {
+            window.prompt("لینک:", url);
+        }
+    });
+})();
+</script>
+{% endblock %}

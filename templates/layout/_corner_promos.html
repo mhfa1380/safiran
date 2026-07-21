@@ -1,0 +1,58 @@
+{% load static %}
+{% if corner_promos_enabled %}
+<div class="corner-promos" id="cornerPromos" dir="rtl" lang="fa" aria-live="polite">
+    {% if show_eval_corner_promo %}
+    <div class="corner-promo corner-promo--eval" data-corner-promo="eval" data-corner-anchor="left" hidden>
+        <button type="button" class="corner-promo__fab corner-promo__fab--eval-text" data-corner-fab aria-label="ارزیابی هوشمند رایگان">
+            ارزیابی هوشمند رایگان
+        </button>
+        <div class="corner-promo__panel corner-promo__panel--eval" role="dialog" aria-labelledby="cornerPromoEvalTitle">
+            <button type="button" class="corner-promo__close" data-corner-close aria-label="بستن">
+                <span class="ti-close" aria-hidden="true"></span>
+            </button>
+            <div class="corner-promo__head corner-promo__head--eval">
+                <span class="corner-promo__panel-icon corner-promo__panel-icon--eval" aria-hidden="true">
+                    <span class="ti-stats-up"></span>
+                </span>
+                <div class="corner-promo__head-text">
+                    <p class="corner-promo__eyebrow">رایگان · آنلاین</p>
+                    <h2 class="corner-promo__title" id="cornerPromoEvalTitle">ارزیابی هوشمند</h2>
+                </div>
+            </div>
+            <p class="corner-promo__text corner-promo__text--eval">گزارش کشور، دانشگاه، بورسیه و شانس پذیرش در چند دقیقه.</p>
+            <a href="{{ corner_promo_eval_url }}" class="corner-promo__cta corner-promo__cta--eval" data-corner-cta>شروع ارزیابی</a>
+            <label class="corner-promo__dismiss">
+                <input type="checkbox" data-corner-never>
+                <span>دیگر نشان نده</span>
+            </label>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if show_bale_corner_promo %}
+    <div class="corner-promo corner-promo--bale" data-corner-promo="bale" data-corner-anchor="right" hidden>
+        <button type="button" class="corner-promo__fab" data-corner-fab aria-label="عضویت در کانال بله">
+            <img src="{% static 'img/icon/ble.ico' %}" width="28" height="28" alt="" class="corner-promo__fab-img" decoding="async">
+        </button>
+        <div class="corner-promo__panel corner-promo__panel--bale" role="dialog" aria-labelledby="cornerPromoBaleTitle">
+            <button type="button" class="corner-promo__close" data-corner-close aria-label="بستن">
+                <span class="ti-close" aria-hidden="true"></span>
+            </button>
+            <div class="corner-promo__head corner-promo__head--bale">
+                <img src="{% static 'img/icon/ble.ico' %}" width="40" height="40" alt="" class="corner-promo__panel-img" decoding="async">
+                <div class="corner-promo__head-text">
+                    <p class="corner-promo__eyebrow corner-promo__eyebrow--bale">پیام‌رسان بله</p>
+                    <h2 class="corner-promo__title" id="cornerPromoBaleTitle">کانال {{ institute.name }}</h2>
+                </div>
+            </div>
+            <p class="corner-promo__text corner-promo__text--bale">اخبار مهاجرت تحصیلی، بورسیه و فرصت‌های جدید را از دست ندهید.</p>
+            <a href="{{ bale_channel_url }}" class="corner-promo__cta corner-promo__cta--bale" data-corner-cta rel="noopener noreferrer" target="_blank">عضویت در کانال بله</a>
+            <label class="corner-promo__dismiss">
+                <input type="checkbox" data-corner-never>
+                <span>دیگر نشان نده</span>
+            </label>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}

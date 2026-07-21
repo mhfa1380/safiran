@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}دوره‌ای برگزار نشده | {{ institute.name }}{% endblock %}
+{% block meta_description %}در حال حاضر هنوز دوره‌ای برگزار نشده است. برای دریافت اطلاعات بیشتر با کارشناسان {{ institute.name }} در ارتباط باشید.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/content.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title="دوره‌ها" hero_lead="هنوز دوره‌ای برگزار نشده است." crumb2_label="دوره‌ها" %}
+
+<section class="sample-text-area error404_margin">
+    <div class="container box_1170 text-center">
+        <h3 class="text-heading">به‌زودی</h3>
+        <p class="sample-text">
+            هنوز دوره‌ای برگزار نشده است. برای اطلاع از زمان شروع دوره‌ها، می‌توانید درخواست مشاوره ثبت کنید.
+        </p>
+        <div class="mt-4 error404_links">
+            <a href="{% url 'appointment' %}?about=courses" class="btn_1">درخواست مشاوره</a>
+            <a href="{% url 'index' %}" class="btn_2 mr-3">بازگشت به صفحه اصلی</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

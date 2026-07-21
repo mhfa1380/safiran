@@ -1,0 +1,9 @@
+<div class="faq-page__answer">
+    <div class="faq-page__answer-body{% if faq.has_extended_content %} faq-page__answer-body--preview{% endif %}">
+        {{ faq.answer|safe }}
+    </div>
+    <a href="{% url 'faq_detail' faq_slug=faq.slug %}" class="faq-page__read-more">
+        مشاهده بیشتر
+        <span class="ti-arrow-left" aria-hidden="true"></span>
+    </a>
+</div>

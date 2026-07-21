@@ -1,0 +1,92 @@
+{% if search_q and not universities and suggestions %}
+<section class="faq-page__fallback" aria-label="پیشنهاد دانشگاه‌های مرتبط">
+    <span class="faq-page__fallback-icon ti-light-bulb" aria-hidden="true"></span>
+    <p class="faq-page__fallback-text">نتیجه‌ای برای «{{ search_q }}» پیدا نشد. شاید این دانشگاه‌ها به دردتان بخورد:</p>
+    <ul class="faq-page__fallback-list">
+        {% for uni in suggestions %}
+        <li>
+            <button type="button"
+                    class="faq-page__fallback-btn"
+                    data-uni-jump="{{ uni.slug }}">
+                {{ uni.name_fa }}{% if uni.country %} — {{ uni.get_country_display }}{% endif %}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if search_q and universities %}
+<section class="faq-page__search-hit" aria-label="نتیجه جستجو">
+    <h3 class="faq-page__section-title">{% if suggestions %}بهترین تطابق{% else %}نتیجه جستجو برای «{{ search_q }}»{% endif %}</h3>
+    <div class="schools-grid schools-grid--primary" id="schools-grid">
+        {% for uni in universities %}
+        {% include "schools/_uni_card.html" with uni=uni %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if search_q and suggestions %}
+<section class="faq-page__related" aria-label="دانشگاه‌های مرتبط">
+    <h3 class="faq-page__section-title">دانشگاه‌های مرتبط</h3>
+    <div class="schools-grid schools-grid--related">
+        {% for uni in suggestions %}
+        {% include "schools/_uni_card.html" with uni=uni %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if universities and not search_q %}
+<section class="schools-page__all" aria-label="همه دانشگاه‌ها">
+    <div class="schools-grid" id="schools-grid" data-total="{{ total_count|default:0 }}">
+        {% for uni in universities %}
+        {% include "schools/_uni_card.html" with uni=uni %}
+        {% endfor %}
+    </div>
+    <div id="schools-load-sentinel" class="schools-load-sentinel" aria-hidden="true"{% if not schools_has_more %} hidden{% endif %}></div>
+    <div id="schools-load-more" class="schools-load-more" hidden role="status" aria-live="polite">
+        <span class="schools-load-more__spinner" aria-hidden="true"></span>
+        <span class="schools-load-more__text">در حال بارگذاری دانشگاه‌های بیشتر…</span>
+    </div>
+</section>
+{% endif %}
+
+{% if scholarship_guides %}
+{% include "schools/_scholarship_guides.html" %}
+{% endif %}
+
+{% if universities or suggestions %}
+<aside class="faq-page__cta schools-page__cta{% if schools_has_more %} faq-page__cta--deferred{% endif %}" id="schools-page-cta">
+    <div class="faq-page__cta-body">
+        <h3 class="faq-page__cta-title">در انتخاب دانشگاه مردد هستید؟</h3>
+        <p class="faq-page__cta-text">مشاوران {{ institute.name }} با بررسی شرایط شما، مناسب‌ترین دانشگاه و مسیر پذیرش را پیشنهاد می‌دهند.</p>
+    </div>
+    <div class="faq-page__cta-actions">
+        {% if nav_show_scholarship_banner and nav_target_degree %}
+        <a href="{% url 'evaluation' %}?target_degree={{ nav_target_degree }}&amp;intent=scholarship" class="faq-page__btn faq-page__btn--primary">ارزیابی و بورسیه</a>
+        {% else %}
+        <a href="{% url 'appointment' %}?about=universities" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+        {% endif %}
+        <a href="{% url 'evaluation' %}" class="faq-page__btn faq-page__btn--ghost">ارزیابی هوشمند</a>
+    </div>
+</aside>
+{% endif %}
+
+{% if not universities and not suggestions %}
+<div class="faq-page__empty">
+    <span class="faq-page__empty-icon ti-book" aria-hidden="true"></span>
+    <p class="faq-page__empty-text">
+        {% if search_q %}
+            نتیجه‌ای برای «{{ search_q }}» یافت نشد. عبارت دیگری جستجو کنید یا فیلترها را تغییر دهید.
+        {% elif filter_country %}
+            در حال حاضر دانشگاهی برای کشور انتخاب‌شده ثبت نشده است.
+        {% else %}
+            در حال حاضر دانشگاهی در سیستم ثبت نشده است.
+        {% endif %}
+    </p>
+    <a href="{% url 'schools_list' %}{% if nav_degree_query %}?{{ nav_degree_query }}{% endif %}" class="faq-page__btn faq-page__btn--ghost">نمایش همه</a>
+    <a href="{% url 'appointment' %}?about=universities" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+</div>
+{% endif %}

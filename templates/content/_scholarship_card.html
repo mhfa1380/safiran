@@ -1,0 +1,73 @@
+<article class="scholar-card svc-card{% if s.is_featured %} scholar-card--featured svc-card--best{% endif %}"
+         id="scholarship-{{ s.slug }}">
+    <header class="scholar-card__head svc-card__head">
+        {% if s.is_featured %}
+        <span class="faq-page__match-badge">پیشنهاد ویژه</span>
+        {% endif %}
+        <span class="scholar-card__icon svc-card__icon ti-wallet" aria-hidden="true"></span>
+        <div class="scholar-card__titles svc-card__titles">
+            <h2 class="scholar-card__title svc-card__title">{{ s.name }}</h2>
+            {% if s.provider %}
+            <span class="scholar-card__provider svc-card__cat">{{ s.provider }}</span>
+            {% endif %}
+        </div>
+    </header>
+    <div class="scholar-card__body svc-card__body">
+        {% if s.coverage %}
+        <p class="scholar-card__coverage svc-card__lead">
+            <strong>پوشش مالی:</strong> {{ s.coverage }}
+        </p>
+        {% endif %}
+        {% if s.get_highlights_list %}
+        <ul class="scholar-card__highlights svc-card__highlights">
+            {% for h in s.get_highlights_list %}
+            <li><span class="svc-card__check ti-check" aria-hidden="true"></span>{{ h }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if s.min_gpa or s.lang_requirement or s.deadlines %}
+        <dl class="scholar-card__meta">
+            {% if s.min_gpa %}
+            <div class="scholar-card__meta-item">
+                <dt>حداقل معدل (۲۰)</dt>
+                <dd>{{ s.min_gpa }}</dd>
+            </div>
+            {% endif %}
+            {% if s.lang_requirement %}
+            <div class="scholar-card__meta-item">
+                <dt>شرط زبان</dt>
+                <dd>{{ s.lang_requirement }}</dd>
+            </div>
+            {% endif %}
+            {% if s.deadlines %}
+            <div class="scholar-card__meta-item">
+                <dt>مهلت‌ها</dt>
+                <dd>{{ s.deadlines }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+        {% endif %}
+        {% if s.eligibility %}
+        <details class="scholar-card__details">
+            <summary>شرایط واجد شرایط بودن</summary>
+            <div class="scholar-card__details-body country-page__rich ck-content">{{ s.eligibility|safe }}</div>
+        </details>
+        {% endif %}
+        {% if s.get_tags_list %}
+        <div class="scholar-card__tags">
+            {% for tag in s.get_tags_list %}
+            <span class="scholar-card__tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="scholar-card__actions svc-card__actions">
+            {% if s.official_url %}
+            <a href="{{ s.official_url }}" class="svc-card__btn svc-card__btn--primary" target="_blank" rel="noopener noreferrer">
+                صفحه رسمی بورسیه
+                <span class="ti-new-window" aria-hidden="true"></span>
+            </a>
+            {% endif %}
+            <a href="{% url 'appointment' %}?about=universities&amp;title={{ country.name|urlencode }} — {{ s.name|urlencode }}" class="svc-card__btn svc-card__btn--ghost">مشاوره این بورسیه</a>
+        </div>
+    </div>
+</article>

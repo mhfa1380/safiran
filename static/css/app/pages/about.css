@@ -1,166 +1,554 @@
 /**
- * صفحه درباره ما و صفحه تک‌عضو تیم
+ * صفحه درباره ما — مکمل faq.css (الگوی صفحه خدمات)
  */
 
-/* ========== Team Section - لیست اعضا (سایز استاندارد و ریسپانسیو) ========== */
-.about_team_section {
-    background: var(--color-bg-gray);
-    padding-top: 50px;
-    padding-bottom: 50px;
+.about-page__main {
+    min-width: 0;
 }
 
-.about_team_section .section_tittle {
-    margin-bottom: 2rem;
-}
-
-.about_team_section .section_tittle h2 {
-    font-size: 1.5rem;
-}
-
-.about_team_section .section_tittle p {
-    font-size: 0.875rem;
+.about-page__quick-text {
+    margin: 0 0 0.85rem;
+    font-size: 0.84rem;
+    line-height: 1.7;
     color: var(--color-text-muted);
-    margin-top: 0.35rem;
 }
 
-.team_card {
+.about-page__quick .faq-page__btn {
+    width: 100%;
+    margin-bottom: 0.45rem;
+    border-radius: var(--radius-pill);
+}
+
+.about-page__quick .faq-page__btn:last-child {
+    margin-bottom: 0;
+}
+
+.about-page__quick .faq-page__btn--ghost {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid rgba(12, 46, 96, 0.2);
+}
+
+.about-page__quick .faq-page__btn--ghost:hover {
+    background: rgba(12, 46, 96, 0.06);
+    color: var(--color-primary);
+}
+
+/* ─── بلوک‌های محتوا (مشابه svc-card) ─── */
+.about-block {
     background: var(--color-bg);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(15, 35, 95, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    height: 100%;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    scroll-margin-top: 100px;
 }
 
-.team_card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(15, 35, 95, 0.1);
+.about-block__eyebrow {
+    display: inline-block;
+    margin-bottom: 0.35rem;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--color-accent);
 }
 
-.team_card_link {
-    display: block;
+.about-block__title {
+    margin: 0 0 0.65rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--color-heading);
+}
+
+.about-block__lead {
+    margin: 0 0 0.9rem;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: var(--color-text);
+}
+
+.about-block__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.about-block__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.84rem;
+    font-weight: 600;
     text-decoration: none;
-    color: inherit;
-    height: 100%;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.team_card_img {
+.about-block__btn--primary {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.about-block__btn--primary:hover {
+    background: var(--color-primary-dark);
+    color: var(--color-on-primary);
+    text-decoration: none;
+}
+
+.about-block__btn--ghost {
+    border: 1px solid rgba(12, 46, 96, 0.2);
+    color: var(--color-primary);
+    background: transparent;
+}
+
+.about-block__btn--ghost:hover {
+    background: rgba(12, 46, 96, 0.06);
+    text-decoration: none;
+}
+
+/* ─── معرفی ─── */
+.about-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .about-intro {
+        grid-template-columns: minmax(220px, 38%) minmax(0, 1fr);
+    }
+}
+
+.about-intro__media {
+    background: linear-gradient(165deg, rgba(12, 46, 96, 0.06) 0%, rgba(12, 46, 96, 0.02) 100%);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.about-intro__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+    object-fit: cover;
+}
+
+@media (min-width: 768px) {
+    .about-intro__media {
+        border-bottom: none;
+        border-inline-end: 1px solid var(--color-border-light);
+    }
+
+    .about-intro__media img {
+        min-height: 100%;
+    }
+}
+
+.about-intro__body {
+    padding: 1.2rem 1.25rem 1.3rem;
+}
+
+.about-intro__highlights {
+    margin: 0 0 1rem;
+    padding: 0.75rem 0.85rem;
+    list-style: none;
+    border-radius: var(--radius-md);
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border-light);
+}
+
+.about-intro__highlights li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.86rem;
+    line-height: 1.75;
+    color: var(--color-text-dark);
+}
+
+.about-intro__highlights li:last-child {
+    margin-bottom: 0;
+}
+
+.about-intro__check {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    color: var(--color-accent);
+    font-size: 0.72rem;
+}
+
+/* ─── سکشن‌ها ─── */
+.about-page__section {
+    margin-top: 2.25rem;
+    scroll-margin-top: 100px;
+}
+
+.about-page__section-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    text-align: right;
+}
+
+.about-page__section-head--compact {
+    margin-bottom: 0.85rem;
+}
+
+.about-page__section-icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
+    font-size: 1.15rem;
+}
+
+.about-page__section-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.45;
+    color: var(--color-heading);
+}
+
+.about-page__section-desc {
+    margin: 0.3rem 0 0;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+}
+
+/* ─── داستان ─── */
+.about-story-card__body p {
+    margin: 0 0 0.85rem;
+    font-size: 0.92rem;
+    line-height: 2;
+    color: var(--color-text);
+}
+
+.about-story-card__body p:last-child {
+    margin-bottom: 0;
+}
+
+.about-story-card {
+    padding: 1.15rem 1.25rem 1.25rem;
+}
+
+.about-values {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+    margin-top: 0.85rem;
+}
+
+@media (min-width: 768px) {
+    .about-values {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.about-value {
+    padding: 0.95rem 0.9rem;
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-sm);
+    text-align: right;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.about-value:hover {
+    border-color: rgba(12, 46, 96, 0.18);
+    box-shadow: 0 8px 20px rgba(12, 46, 96, 0.07);
+}
+
+.about-value__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-sm);
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.about-value__title {
+    margin: 0 0 0.25rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-heading);
+}
+
+.about-value__text {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--color-text-muted);
+}
+
+/* ─── خط زمانی ─── */
+.about-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.about-timeline__card {
+    padding: 0.95rem 1.1rem 1.05rem;
+    border-inline-end: 3px solid rgba(12, 46, 96, 0.12);
+    transition: border-color 0.2s;
+}
+
+.about-timeline__item:nth-child(odd) .about-timeline__card {
+    border-inline-end-color: var(--color-primary);
+}
+
+.about-timeline__item:last-child .about-timeline__card {
+    border-inline-end-color: var(--color-accent);
+    background: linear-gradient(90deg, rgba(255, 102, 59, 0.04) 0%, var(--color-bg) 42%);
+}
+
+.about-timeline__year {
+    display: inline-block;
+    margin-bottom: 0.35rem;
+    padding: 0.12rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.about-timeline__title {
+    margin: 0 0 0.3rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-heading);
+}
+
+.about-timeline__text {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.8;
+    color: var(--color-text);
+}
+
+/* ─── آمار ─── */
+.about-stats {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+    .about-stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.about-stat {
+    padding: 1rem 0.85rem;
+    text-align: center;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.about-stat__value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--color-primary);
+}
+
+.about-stat__label {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+/* ─── تیم ─── */
+.about-team__filters {
+    margin-bottom: 1rem;
+}
+
+.about-team__tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.2rem;
+    height: 1.2rem;
+    padding: 0 0.3rem;
+    margin-inline-start: 0.25rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.68rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.faq-page__filter:not(.is-active) .about-team__tab-count {
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
+}
+
+.about-team__panel[hidden] {
+    display: none !important;
+}
+
+.about-team__group-label {
+    margin: 0 0 0.85rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-heading);
+    text-align: right;
+}
+
+.about-team__grid {
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 576px) {
+    .about-team__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1200px) {
+    .about-team__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.about-team-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.about-team-card:hover {
+    border-color: rgba(12, 46, 96, 0.18);
+    box-shadow: 0 12px 28px rgba(12, 46, 96, 0.08);
+    transform: translateY(-2px);
+}
+
+.about-team-card__link {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.about-team-card__media {
     position: relative;
-    padding-top: 75%;
+    padding-top: 72%;
     overflow: hidden;
     background: linear-gradient(135deg, #e8eef5 0%, #f0f4f9 100%);
 }
 
-.team_card_img img {
+.about-team-card__media img {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.35s ease;
 }
 
-.team_card:hover .team_card_img img {
+.about-team-card:hover .about-team-card__media img {
     transform: scale(1.04);
 }
 
-.team_card_body {
-    padding: 0.875rem 1rem;
+.about-team-card__body {
+    padding: 0.85rem 0.95rem 0.95rem;
     text-align: right;
 }
 
-.team_card_name {
-    font-size: 0.95rem;
+.about-team-card__name {
+    margin: 0 0 0.15rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: var(--color-heading);
-    margin-bottom: 0.2rem;
 }
 
-.team_card_position {
-    font-size: 0.8rem;
-    color: var(--color-primary);
+.about-team-card__role {
+    margin: 0 0 0.1rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    margin-bottom: 0.2rem;
+    color: var(--color-primary);
 }
 
-.team_card_title {
-    font-size: 0.75rem;
+.about-team-card__title {
+    margin: 0 0 0.35rem;
+    font-size: 0.74rem;
     color: var(--color-text-muted);
-    margin-bottom: 0.35rem;
 }
 
-.team_card_desc {
+.about-team-card__desc {
+    margin: 0 0 0.5rem;
     font-size: 0.8rem;
+    line-height: 1.65;
     color: var(--color-text);
-    line-height: 1.5;
-    margin-bottom: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-/* ریسپانسیو کارت‌های تیم */
-@media (max-width: 991px) {
-    .about_team_section {
-        padding-top: 40px;
-        padding-bottom: 40px;
-    }
-
-    .team_card_img {
-        padding-top: 70%;
-    }
-
-    .team_card_body {
-        padding: 0.75rem 1rem;
-    }
-
-    .team_card_name {
-        font-size: 0.9rem;
-    }
-
-    .team_card_position {
-        font-size: 0.75rem;
-    }
+.about-team-card__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--color-primary);
 }
 
-@media (max-width: 767px) {
-    .about_team_section {
-        padding-top: 32px;
-        padding-bottom: 32px;
-    }
-
-    .about_team_section .section_tittle h2 {
-        font-size: 1.25rem;
-    }
-
-    .team_card_img {
-        padding-top: 65%;
-    }
-
-    .team_card_body {
-        padding: 0.65rem 0.875rem;
-    }
-
-    .team_card_name {
-        font-size: 0.875rem;
-    }
-
-    .team_card_position,
-    .team_card_title {
-        font-size: 0.7rem;
-    }
-
-    .team_card_desc {
-        font-size: 0.75rem;
-        -webkit-line-clamp: 2;
-    }
+.about-team-card__more .ti-arrow-left {
+    font-size: 0.65rem;
 }
 
-@media (max-width: 576px) {
-    .team_card_img {
-        padding-top: 60%;
+.about-page .faq-page__nav-link.is-active {
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+@media (max-width: 767.98px) {
+    .about-intro__body {
+        padding: 1rem;
+    }
+
+    .about-block__actions {
+        flex-direction: column;
+    }
+
+    .about-block__btn {
+        width: 100%;
     }
 }
 
@@ -298,7 +686,6 @@
     margin-bottom: 0;
 }
 
-/* Responsive - صفحه تک‌عضو تیم */
 @media (max-width: 991px) {
     .team_detail_card {
         position: static;

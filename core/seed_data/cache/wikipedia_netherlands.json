@@ -1,0 +1,342 @@
+[
+  {
+    "name_en": "Leiden University Medical Center",
+    "city": ""
+  },
+  {
+    "name_en": "Leiden University",
+    "city": ""
+  },
+  {
+    "name_en": "Maastricht University",
+    "city": ""
+  },
+  {
+    "name_en": "Tilburg University",
+    "city": ""
+  },
+  {
+    "name_en": "Utrecht University",
+    "city": ""
+  },
+  {
+    "name_en": "Delft University",
+    "city": ""
+  },
+  {
+    "name_en": "Eindhoven University",
+    "city": ""
+  },
+  {
+    "name_en": "Wageningen University",
+    "city": ""
+  },
+  {
+    "name_en": "Nyenrode Business University",
+    "city": ""
+  },
+  {
+    "name_en": "Protestant Theological University",
+    "city": ""
+  },
+  {
+    "name_en": "Theological University",
+    "city": ""
+  },
+  {
+    "name_en": "Catholic University",
+    "city": ""
+  },
+  {
+    "name_en": "Radboud University",
+    "city": ""
+  },
+  {
+    "name_en": "Amsterdam University",
+    "city": ""
+  },
+  {
+    "name_en": "ArtEZ University",
+    "city": ""
+  },
+  {
+    "name_en": "Avans University",
+    "city": ""
+  },
+  {
+    "name_en": "Breda University",
+    "city": ""
+  },
+  {
+    "name_en": "Driestar Christian University",
+    "city": ""
+  },
+  {
+    "name_en": "Ede Christian University",
+    "city": ""
+  },
+  {
+    "name_en": "Fontys University",
+    "city": ""
+  },
+  {
+    "name_en": "HAN University",
+    "city": ""
+  },
+  {
+    "name_en": "Hanze University",
+    "city": ""
+  },
+  {
+    "name_en": "HAS University",
+    "city": ""
+  },
+  {
+    "name_en": "HU University",
+    "city": ""
+  },
+  {
+    "name_en": "HZ University",
+    "city": ""
+  },
+  {
+    "name_en": "Inholland University",
+    "city": ""
+  },
+  {
+    "name_en": "NHL Stenden University",
+    "city": ""
+  },
+  {
+    "name_en": "Rotterdam University",
+    "city": ""
+  },
+  {
+    "name_en": "Saxion University",
+    "city": ""
+  },
+  {
+    "name_en": "The Hague University",
+    "city": ""
+  },
+  {
+    "name_en": "Van Hall Larenstein University",
+    "city": ""
+  },
+  {
+    "name_en": "Viaa Christian University",
+    "city": ""
+  },
+  {
+    "name_en": "Windesheim University",
+    "city": ""
+  },
+  {
+    "name_en": "Zuyd University",
+    "city": ""
+  },
+  {
+    "name_en": "Saba University",
+    "city": ""
+  },
+  {
+    "name_en": "American University",
+    "city": ""
+  },
+  {
+    "name_en": "Euler-Franeker Memorial University",
+    "city": ""
+  },
+  {
+    "name_en": "Islamic University",
+    "city": ""
+  },
+  {
+    "name_en": "Wittenborg University",
+    "city": ""
+  },
+  {
+    "name_en": "Webster University",
+    "city": ""
+  },
+  {
+    "name_en": "Open University",
+    "city": ""
+  },
+  {
+    "name_en": "A History of the University in Europe",
+    "city": ""
+  },
+  {
+    "name_en": "Amsterdam University College",
+    "city": ""
+  },
+  {
+    "name_en": "VU University Medical Center",
+    "city": ""
+  },
+  {
+    "name_en": "Leiden University College The Hague",
+    "city": ""
+  },
+  {
+    "name_en": "Radboud University Medical Center",
+    "city": ""
+  },
+  {
+    "name_en": "Erasmus University Rotterdam",
+    "city": ""
+  },
+  {
+    "name_en": "Erasmus University College",
+    "city": ""
+  },
+  {
+    "name_en": "Delft University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Eindhoven University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Wageningen University & Research",
+    "city": ""
+  },
+  {
+    "name_en": "Open University in the Netherlands",
+    "city": ""
+  },
+  {
+    "name_en": "Theological University of the Reformed Churches",
+    "city": ""
+  },
+  {
+    "name_en": "Theological University of Apeldoorn",
+    "city": ""
+  },
+  {
+    "name_en": "Catholic University of Utrecht",
+    "city": ""
+  },
+  {
+    "name_en": "Amsterdam University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Amsterdam University of the Arts",
+    "city": ""
+  },
+  {
+    "name_en": "ArtEZ University of Arts",
+    "city": ""
+  },
+  {
+    "name_en": "Avans University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Breda University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Ede Christian University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Fontys University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "HAN University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Hanze University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "HU University of Applied Sciences Utrecht",
+    "city": ""
+  },
+  {
+    "name_en": "HZ University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Inholland University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "NHL Stenden University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Rotterdam University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Saxion University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "The Hague University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Van Hall Larenstein University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Viaa Christian University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Windesheim University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Zuyd University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Aureus University School of Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Xavier University School of Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Avalon University School of Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "St. Martinus University Faculty of Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Saba University School of Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "American University of Integrative Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "American University of the Caribbean School of Medicine",
+    "city": ""
+  },
+  {
+    "name_en": "Islamic University of Rotterdam",
+    "city": ""
+  },
+  {
+    "name_en": "Wittenborg University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "VU University Amsterdam",
+    "city": ""
+  }
+]

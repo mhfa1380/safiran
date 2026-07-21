@@ -1,2 +1,15 @@
+# وب‌سایت Django — سفیران آینده روشن
 Django>=4.2,<5.0
 Pillow>=10.0.0
+python-dotenv>=1.0.0
+requests>=2.32.0
+whitenoise>=6.6.0
+django-compressor>=4.6.0
+django-import-export>=4.0.0
+openpyxl>=3.1.0
+xhtml2pdf>=0.2.16
+
+# production (در .env سرور فعال کنید):
+# psycopg[binary]>=3.1.0    # DB_ENGINE=django.db.backends.postgresql
+redis>=5.0.0
+celery>=5.3.0

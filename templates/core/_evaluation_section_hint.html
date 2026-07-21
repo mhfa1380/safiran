@@ -1,0 +1,28 @@
+{% if eval_section_feedback %}
+<div class="evalr-hint{% if hint_compact %} evalr-hint--compact{% endif %}"
+     data-eval-hint
+     data-section="{{ hint_section }}"
+     {% if hint_item_key %}data-item-key="{{ hint_item_key }}"{% endif %}
+     aria-label="بازخورد این پیشنهاد">
+    <span class="evalr-hint__label">{% if hint_compact %}مفید بود؟{% else %}این بخش مفید بود؟{% endif %}</span>
+    <div class="evalr-hint__actions" role="group" aria-label="لایک یا دیسلایک">
+        <button type="button"
+                class="evalr-hint__btn evalr-hint__btn--up"
+                data-vote="1"
+                aria-pressed="false"
+                aria-label="مفید بود"
+                title="مفید بود">
+            <span class="ti-thumb-up" aria-hidden="true"></span>
+        </button>
+        <button type="button"
+                class="evalr-hint__btn evalr-hint__btn--down"
+                data-vote="-1"
+                aria-pressed="false"
+                aria-label="مفید نبود"
+                title="مفید نبود">
+            <span class="ti-thumb-down" aria-hidden="true"></span>
+        </button>
+    </div>
+    <span class="evalr-hint__thanks" hidden>ممنون — با بازخورد شما پیشنهادها دقیق‌تر می‌شوند.</span>
+</div>
+{% endif %}

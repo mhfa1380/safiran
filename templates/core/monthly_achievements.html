@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+
+{% block title %}{{ achievements_meta_title }} | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}{{ achievements_meta_description }}{% endblock %}
+
+{% block meta_keywords %}{{ achievements_meta_keywords }}{% endblock %}
+
+{% block canonical_url %}{{ achievements_page_url }}{% endblock %}
+
+{% block og_title %}{{ achievements_og_title }}{% endblock %}
+
+{% block og_description %}{{ achievements_meta_description }}{% endblock %}
+
+{% block twitter_title %}{{ achievements_og_title }}{% endblock %}
+
+{% block twitter_description %}{{ achievements_meta_description }}{% endblock %}
+
+
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/app/pages/achievements.css' %}">
+
+{% endblock %}
+
+
+
+{% block extra_head %}
+
+<script>
+
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+
+window.PAGE_CONFIG.achievementSearchUrl = "{% url 'achievement_search' %}";
+
+window.PAGE_CONFIG.achievementSuggestUrl = "{% url 'achievement_suggest' %}";
+
+</script>
+
+<script type="application/ld+json">{{ achievements_schema_json|safe }}</script>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+{% include "layout/page_hero.html" with hero_title="دستاوردهای ما" hero_lead="جستجو کنید و تجربه دانشجویانی را بخوانید که مسیر مشابه شما را طی کرده‌اند." crumb2_label="دستاوردهای ما" %}
+
+
+
+<section class="faq-page achievements-page section_padding" dir="rtl" lang="fa">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <aside class="col-lg-4 col-xl-3 faq-page__aside" aria-label="فیلتر و دسته‌بندی">
+
+                {% if month_labels %}
+
+                <div class="faq-page__panel faq-page__panel--sticky">
+
+                    <h2 class="faq-page__panel-title">
+
+                        <span class="ti-calendar" aria-hidden="true"></span>
+
+                        بر اساس ماه
+
+                    </h2>
+
+                    <nav class="faq-page__nav" role="tablist" aria-label="فیلتر بر اساس ماه">
+
+                        <button type="button" class="faq-page__nav-link is-active" data-month="all" role="tab" aria-selected="true">
+
+                            همه دستاوردها
+
+                        </button>
+
+                        {% for label in month_labels %}
+
+                        <button type="button" class="faq-page__nav-link" data-month="{{ label|escape }}" role="tab" aria-selected="false">
+
+                            {{ label }}
+
+                        </button>
+
+                        {% endfor %}
+
+                    </nav>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if featured_achievements %}
+
+                <div class="faq-page__panel faq-page__panel--featured">
+
+                    <h2 class="faq-page__panel-title">
+
+                        <span class="ti-star" aria-hidden="true"></span>
+
+                        برجسته‌ها
+
+                    </h2>
+
+                    <ul class="faq-page__popular">
+
+                        {% for item in featured_achievements %}
+
+                        <li>
+
+                            <a href="{% url 'achievement_detail' achievement_slug=item.slug %}" class="faq-page__popular-btn">
+
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+
+                                <span>
+
+                                    <strong>{{ item.person_name }}</strong>
+
+                                    {% if item.person_role or item.title %}
+
+                                    <small>{{ item.person_role|default:item.title|truncatechars:38 }}</small>
+
+                                    {% endif %}
+
+                                </span>
+
+                            </a>
+
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
+                {% endif %}
+
+            </aside>
+
+
+
+            <div class="col-lg-8 col-xl-9 faq-page__main">
+
+                {% if featured_achievements %}
+
+                <div class="faq-page__chips" aria-label="دستاوردهای برجسته">
+
+                    <span class="faq-page__chips-label">برجسته:</span>
+
+                    <div class="faq-page__chips-scroll">
+
+                        {% for item in featured_achievements %}
+
+                        <a href="{% url 'achievement_detail' achievement_slug=item.slug %}" class="faq-page__chip">
+
+                            {{ item.person_name }}
+
+                        </a>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+
+                <div class="ach-finder" aria-label="جستجوی سریع دستاوردها">
+
+                    <div class="ach-finder__head">
+
+                        <h2 class="ach-finder__title">
+
+                            <span class="ti-medall" aria-hidden="true"></span>
+
+                            دنبال چه تجربه‌ای هستید؟
+
+                        </h2>
+
+                        <p class="ach-finder__lead">کشور، مقطع، رشته یا واژه‌ای مثل «ویزا کانادا» را جستجو کنید.</p>
+
+                    </div>
+
+                    <div class="ach-quick-tags" role="group" aria-label="جستجوی سریع">
+
+                        <span class="ach-quick-tags__label">پرجستجو:</span>
+
+                        <button type="button" class="ach-quick-tag" data-ach-quick="کانادا">کانادا</button>
+
+                        <button type="button" class="ach-quick-tag" data-ach-quick="بورسیه">بورسیه</button>
+
+                        <button type="button" class="ach-quick-tag" data-ach-quick="ارشد">ارشد</button>
+
+                        <button type="button" class="ach-quick-tag" data-ach-quick="ویزا">ویزا</button>
+
+                        {% if achievements_with_video %}
+
+                        <button type="button" class="ach-quick-tag" data-ach-quick="ویدیو">ویدیو</button>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="faq-page__search">
+
+                    <label class="faq-page__sr-only" for="achievement-search-input">جستجو در دستاوردها</label>
+
+                    <div class="faq-page__search-field">
+
+                        <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+
+                        <input type="search"
+
+                               id="achievement-search-input"
+
+                               class="faq-page__search-input"
+
+                               placeholder="جستجو… مثلاً کانادا، ارشد، بورسیه، MBA"
+
+                               autocomplete="off"
+
+                               enterkeyhint="search"
+
+                               aria-controls="achievements-content-wrapper">
+
+                        <div id="achievement-suggest-panel" class="faq-page__suggest" hidden role="listbox" aria-label="پیشنهاد دستاوردها"></div>
+
+                    </div>
+
+                    <p class="faq-page__search-note">جستجوی هوشمند بر اساس کشور، مقطع، رشته و عنوان تجربه</p>
+
+                </div>
+
+
+
+                {% if month_labels %}
+
+                <div class="faq-page__filters ach-month-filters" role="toolbar" aria-label="فیلتر ماه">
+
+                    <button type="button" class="faq-page__filter is-active" data-month="all">همه</button>
+
+                    {% for label in month_labels %}
+
+                    <button type="button" class="faq-page__filter" data-month="{{ label|escape }}">{{ label }}</button>
+
+                    {% endfor %}
+
+                </div>
+
+                {% endif %}
+
+
+
+                <div id="achievements-content-wrapper" class="faq-page__content achievements-page__content" role="region" aria-label="لیست دستاوردها" aria-live="polite">
+
+                    {% include "core/_achievements_grid.html" with achievements=achievements suggestions=None search_q="" best_achievement_slug="" %}
+
+                </div>
+
+
+
+                <aside class="ach-page-cta" aria-label="شروع مسیر">
+
+                    <div class="ach-page-cta__inner">
+
+                        <span class="ach-page-cta__icon ti-comments" aria-hidden="true"></span>
+
+                        <h2>مسیر خود را شروع کنید</h2>
+
+                        <p>با مشاوره تخصصی، نزدیک‌ترین گزینه به شرایط شما را پیدا کنید.</p>
+
+                        <div class="ach-page-cta__actions">
+
+                            <a href="{% url 'appointment' %}" class="btn_1">رزرو مشاوره</a>
+
+                            <a href="{% url 'contact' %}" class="btn_2 ach-page-cta__btn-ghost">تماس با ما</a>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<div class="achievements-modal" id="achievements-video-modal" hidden role="dialog" aria-modal="true" aria-labelledby="achievements-modal-title">
+
+    <div class="achievements-modal__backdrop" data-modal-close></div>
+
+    <div class="achievements-modal__panel">
+
+        <button type="button" class="achievements-modal__close" data-modal-close aria-label="بستن">
+
+            <span class="ti-close" aria-hidden="true"></span>
+
+        </button>
+
+        <h2 class="achievements-modal__title" id="achievements-modal-title"></h2>
+
+        <div class="achievements-modal__player" id="achievements-modal-player"></div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script src="{% static 'js/app/pages/achievements.js' %}" defer></script>
+
+{% endblock %}
+

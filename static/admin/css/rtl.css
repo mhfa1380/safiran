@@ -44,7 +44,6 @@ tfoot td:first-child {
 
 div.breadcrumbs {
     text-align: right;
-    display: none;
 }
 
 #content-main {
@@ -152,9 +151,8 @@ form ul.inline li {
 
 form .aligned p.help,
 form .aligned div.help {
-    margin-right: 0px;
-    padding-right: 3px;
-    margin-top: 2px;
+    margin-right: 160px;
+    padding-right: 10px;
 }
 
 form div.help ul,
@@ -181,11 +179,6 @@ form .wide input + div.help {
 
 .submit-row {
     text-align: right;
-    position: sticky;
-    bottom: 7px;
-    width: 93%;
-    display: flex;
-    margin: auto;
 }
 
 fieldset .fieldBox {
@@ -288,12 +281,8 @@ form .form-row p.datetime {
 /* MISC */
 
 .inline-related h2, .inline-group h2 {
-    font-size: 0.8rem;
-    text-align: center;
-    font-family: 'Tanha';
-    font-weight: 600;
+    text-align: right
 }
-
 
 .inline-related h3 span.delete {
     padding-right: 20px;

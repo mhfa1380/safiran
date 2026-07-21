@@ -1,71 +1,170 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static jalali_filters %}
 
-{% block title %}{{ post.title }} | {{ institute.name }}{% endblock %}
-{% block meta_description %}{{ post.excerpt|default:post.content|striptags|truncatechars:160 }}{% endblock %}
-{% block og_title %}{{ post.title }} | {{ institute.name }}{% endblock %}
-{% block og_description %}{{ post.excerpt|default:post.content|striptags|truncatechars:160 }}{% endblock %}
-{% block og_image %}{% if post.image %}{% if "http" in post.image %}{{ post.image }}{% else %}{{ site_url }}{{ post.image }}{% endif %}{% else %}{{ site_url }}{% static 'img/blog/single_blog_1.png' %}{% endif %}{% endblock %}
-{% block twitter_image %}{% if post.image %}{% if "http" in post.image %}{{ post.image }}{% else %}{{ site_url }}{{ post.image }}{% endif %}{% else %}{{ site_url }}{% static 'img/blog/single_blog_1.png' %}{% endif %}{% endblock %}
+{% block title %}{{ post.meta_title|default:post.title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ post.meta_description|default:post.excerpt|default:post.content|striptags|truncatechars:160 }}{% endblock %}
+{% block meta_keywords %}{{ post.meta_keywords|default:"مهاجرت تحصیلی, اعزام دانشجو, اخبار مهاجرت, وبلاگ مهاجرت" }}{% endblock %}
+{% block canonical_url %}{{ post.canonical_url|default:canonical_url }}{% endblock %}
+{% block og_title %}{{ post.meta_title|default:post.title }} | {{ institute.name }}{% endblock %}
+{% block twitter_title %}{{ post.meta_title|default:post.title }} | {{ institute.name }}{% endblock %}
+{% block og_description %}{{ post.meta_description|default:post.excerpt|default:post.content|striptags|truncatechars:160 }}{% endblock %}
+{% block twitter_description %}{{ post.meta_description|default:post.excerpt|default:post.content|striptags|truncatechars:160 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_image %}{% if post.image %}{{ site_url }}{{ post.image.url }}{% else %}{{ site_url }}{% static 'img/blog/single_blog_1.png' %}{% endif %}{% endblock %}
+{% block twitter_image %}{% if post.image %}{{ site_url }}{{ post.image.url }}{% else %}{{ site_url }}{% static 'img/blog/single_blog_1.png' %}{% endif %}{% endblock %}
 
 {% block extra_head %}
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه اصلی","item":"{{ site_url }}/"},{"@type":"ListItem","position":2,"name":"وبلاگ","item":"{{ site_url }}{% url 'blog' %}"},{"@type":"ListItem","position":3,"name":"{{ post.title|escapejs }}","item":"{{ canonical_url }}"}]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","headline":"{{ post.title|escapejs }}","description":"{{ post.excerpt|default:post.content|striptags|truncatechars:200|escapejs }}","url":"{{ canonical_url }}","datePublished":"{{ post.created_at|date:'c' }}","dateModified":"{{ post.updated_at|date:'c' }}","author":{"@type":"Organization","name":"{{ institute.name|escapejs }}"},"publisher":{"@type":"Organization","name":"{{ institute.name|escapejs }}"}}
-</script>
+<script type="application/ld+json">{{ blog_schema_json|safe }}</script>
 {% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
 <link rel="stylesheet" href="{% static 'css/app/pages/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/discovery-hub.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/ai-qa-section.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>وبلاگ</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span><a href="{% url 'blog' %}">وبلاگ</a><span>/</span>{{ post.title }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% url 'blog' as blog_url %}
+{% include "layout/page_hero.html" with hero_title=post.title crumb2_label="وبلاگ" crumb2_url=blog_url crumb3_label=post.title|truncatechars:80 %}
 
-<section class="blog_area single-post-area section_padding blog_single_margin">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 posts-list">
-                <div class="single-post">
-                    <div class="feature-img blog_single_feature_center">
-                        {% if post.image %}
-                            <img class="img-fluid" src="{{ post.image }}" alt="{{ post.title }}">
-                        {% else %}
-                            <img class="img-fluid" src="{% static 'img/blog/single_blog_1.png' %}" alt="{{ post.title }}">
-                        {% endif %}
-                    </div>
-                    <div class="blog_details blog_single_details_justify">
-                        <h1 class="blog_single_title">{{ post.title }}</h1>
+{% include "layout/_answer_summary_banner.html" with answer_text=blog_answer_summary answer_class="blog-detail__answer-summary ai-qa-section__answer" answer_id="blog-summary" %}
+
+<section class="blog-detail section_padding" dir="rtl" lang="fa" itemscope itemtype="https://schema.org/BlogPosting">
+    <div class="container blog-detail__container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="blog-detail__shell">
+                    {% include "layout/_ai_qa_section.html" with ai_qa_blocks=blog_ai_qa_blocks ai_qa_title=blog_ai_qa_title ai_qa_lead=blog_ai_qa_lead ai_qa_section_id="blog-qa" %}
+
+                    <div class="blog-detail__meta">
                         {% if post.country_tag %}
-                        <span class="btn_4 titlkhabr">{{ post.country_tag }}</span>
+                        <a href="{% url 'blog' %}?tag={{ post.country_tag|urlencode }}" class="blog-detail__category">
+                            <span class="ti-bookmark" aria-hidden="true"></span>
+                            <span>{{ post.country_tag }}</span>
+                        </a>
                         {% endif %}
-                        <p class="excert">{{ post.excerpt|default:"" }}</p>
-                        <div class="ck-content">{{ post.content|safe }}</div>
+                        <time class="blog-detail__date" datetime="{{ post.created_at|date:'c' }}" itemprop="datePublished">
+                            <span class="ti-calendar" aria-hidden="true"></span>
+                            {{ post.created_at|jalali|persian_numbers }}
+                        </time>
                     </div>
-                </div>
-                <div class="blog-author">
-                    <div class="media align-items-center">
-                        <img src="{% static 'img/blog/author.png' %}" alt="{{ institute.name }}" loading="lazy">
-                        <div class="media-body blog_author_body">
-                            <a href="{% url 'about' %}"><h4>{{ institute.name }}</h4></a>
-                            <p>موسسه اعزام دانشجو به خارج - {{ institute.city }}، {{ institute.province }}</p>
+
+                    <div class="blog-detail__lead-panel">
+                        <div class="blog-detail__lead-grid">
+                            <figure class="blog-detail__figure">
+                                {% if post.image %}
+                                <img src="{{ post.image.url }}"
+                                     alt="{{ post.title }}"
+                                     class="blog-detail__img"
+                                     itemprop="image"
+                                     width="640"
+                                     height="480"
+                                     loading="eager">
+                                {% else %}
+                                <img src="{% static 'img/blog/single_blog_1.png' %}"
+                                     alt="{{ post.title }}"
+                                     class="blog-detail__img"
+                                     itemprop="image"
+                                     width="640"
+                                     height="480"
+                                     loading="eager">
+                                {% endif %}
+                            </figure>
+                            <div class="blog-detail__intro">
+                                {% if post.excerpt %}
+                                <p class="blog-detail__lead-text" itemprop="description">{{ post.excerpt }}</p>
+                                {% elif post.meta_description %}
+                                <p class="blog-detail__lead-text blog-detail__lead-text--muted" itemprop="description">{{ post.meta_description }}</p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
+
+                    <article class="blog-detail__article ck-content">
+                        <div itemprop="articleBody">
+                            {{ post.content|safe }}
+                        </div>
+                    </article>
+
+                    <aside class="blog-author-card" aria-label="درباره نویسنده">
+                        <div class="blog-author-card__inner">
+                            <div class="blog-author-card__avatar">
+                                {% if post.author.has_photo %}
+                                <img src="{{ post.author.photo.url }}"
+                                     alt="{{ post.author.name }}"
+                                     class="blog-author-card__img"
+                                     width="56"
+                                     height="56"
+                                     loading="lazy"
+                                     decoding="async">
+                                {% else %}
+                                <img src="{% static 'img/blog/default-author.svg' %}"
+                                     alt=""
+                                     class="blog-author-card__img blog-author-card__img--default"
+                                     width="56"
+                                     height="56"
+                                     loading="lazy"
+                                     aria-hidden="true">
+                                {% endif %}
+                            </div>
+                            <div class="blog-author-card__body">
+                                <span class="blog-author-card__eyebrow">نویسنده</span>
+                                <p class="blog-author-card__name" itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                    <span itemprop="name">{{ post.author.name }}</span>
+                                </p>
+                                {% if post.author.role %}
+                                <p class="blog-author-card__role">{{ post.author.role }}</p>
+                                {% endif %}
+                                <p class="blog-author-card__bio">{{ post.author.bio }}</p>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {% if blog_resource_groups %}
+                    {% include "layout/_discovery_hub.html" with discovery_groups=blog_resource_groups discovery_title="صفحات مرتبط با این مطلب" discovery_lead="برای ادامه مسیر پذیرش، این صفحات تخصصی را ببینید." discovery_modifier="discovery-hub--inline discovery-hub--compact" %}
+                    {% endif %}
+
+                    {% if related_posts %}
+                    <aside class="faq-detail__related blog-detail__related" aria-label="مطالب مرتبط">
+                        <h2 class="faq-detail__related-title">مطالب مرتبط</h2>
+                        <ul class="faq-detail__related-list">
+                            {% for item in related_posts %}
+                            <li>
+                                <a href="{% url 'blog_detail' slug=item.slug %}" class="faq-detail__related-link">
+                                    <span class="faq-detail__related-icon" aria-hidden="true">م</span>
+                                    <span class="faq-detail__related-text">{{ item.title }}</span>
+                                    <span class="ti-angle-left faq-detail__related-arrow" aria-hidden="true"></span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </aside>
+                    {% endif %}
+
+                    <nav class="blog-detail__actions" aria-label="بازگشت به وبلاگ">
+                        <a href="{% url 'blog' %}" class="blog-detail__back">
+                            <span class="ti-angle-right" aria-hidden="true"></span>
+                            همه مطالب وبلاگ
+                        </a>
+                        {% if post.country_tag %}
+                        <a href="{% url 'blog' %}?tag={{ post.country_tag|urlencode }}" class="blog-detail__back blog-detail__back--muted">
+                            <span class="ti-angle-right" aria-hidden="true"></span>
+                            مطالب {{ post.country_tag }}
+                        </a>
+                        {% endif %}
+                    </nav>
+
+                    <aside class="faq-page__cta blog-detail__cta">
+                        <div class="faq-page__cta-body">
+                            <h3 class="faq-page__cta-title">نیاز به راهنمایی بیشتر دارید؟</h3>
+                            <p class="faq-page__cta-text">کارشناسان ما آماده پاسخ به سوالات تخصصی شما هستند.</p>
+                        </div>
+                        <div class="faq-page__cta-actions">
+                            <a href="{% url 'appointment' %}" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+                            <a href="{% url 'contact' %}" class="faq-page__btn faq-page__btn--ghost">تماس با ما</a>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>

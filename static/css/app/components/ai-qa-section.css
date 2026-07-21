@@ -1,0 +1,64 @@
+/* بخش سوال + پاسخ کوتاه — استخراج Google AI Overviews */
+.ai-qa-section {
+  margin: 1.5rem 0 2rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f8faff 0%, #fff 100%);
+  border: 1px solid rgba(12, 46, 96, 0.08);
+}
+
+.ai-qa-section__head {
+  margin-bottom: 1.25rem;
+}
+
+.ai-qa-section__title {
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  margin: 0 0 0.4rem;
+}
+
+.ai-qa-section__lead {
+  margin: 0;
+  color: rgba(12, 46, 96, 0.72);
+  line-height: 1.65;
+}
+
+.ai-qa-section__list {
+  display: grid;
+  gap: 1rem;
+}
+
+.ai-qa-section__item {
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(12, 46, 96, 0.07);
+  box-shadow: 0 4px 16px rgba(12, 46, 96, 0.04);
+}
+
+.ai-qa-section__question {
+  font-size: 1.02rem;
+  margin: 0 0 0.45rem;
+  line-height: 1.5;
+}
+
+.ai-qa-section__answer {
+  margin: 0;
+  line-height: 1.7;
+  color: rgba(12, 46, 96, 0.84);
+}
+
+.ai-qa-section__more {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--primary-color, #2e65a5);
+  text-decoration: none;
+}
+
+.ai-qa-section__more:hover {
+  text-decoration: underline;
+}
+
+.faq-page .ai-qa-section {
+  margin-bottom: 1.75rem;
+}

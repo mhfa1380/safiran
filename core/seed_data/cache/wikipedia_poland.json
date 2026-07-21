@@ -1,0 +1,358 @@
+[
+  {
+    "name_en": "Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Jagiellonian University",
+    "city": ""
+  },
+  {
+    "name_en": "Faculty of Law and Administration of the Jagiellonian University",
+    "city": ""
+  },
+  {
+    "name_en": "John Paul II Catholic University",
+    "city": ""
+  },
+  {
+    "name_en": "Maria Curie-Skłodowska University",
+    "city": ""
+  },
+  {
+    "name_en": "Faculty of Management University",
+    "city": ""
+  },
+  {
+    "name_en": "Faculty of International and Political Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Faculty of Geodesy and Land Management of the University",
+    "city": ""
+  },
+  {
+    "name_en": "Opole University",
+    "city": ""
+  },
+  {
+    "name_en": "Jan Kochanowski University",
+    "city": ""
+  },
+  {
+    "name_en": "Warsaw University",
+    "city": ""
+  },
+  {
+    "name_en": "AGH University",
+    "city": ""
+  },
+  {
+    "name_en": "Białystok Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Częstochowa University",
+    "city": ""
+  },
+  {
+    "name_en": "Gdańsk University",
+    "city": ""
+  },
+  {
+    "name_en": "Silesian University",
+    "city": ""
+  },
+  {
+    "name_en": "Kielce University",
+    "city": ""
+  },
+  {
+    "name_en": "Koszalin University",
+    "city": ""
+  },
+  {
+    "name_en": "Lublin University",
+    "city": ""
+  },
+  {
+    "name_en": "Łódź University",
+    "city": ""
+  },
+  {
+    "name_en": "Poznań University",
+    "city": ""
+  },
+  {
+    "name_en": "Rzeszów University",
+    "city": ""
+  },
+  {
+    "name_en": "Tadeusz Kościuszko University",
+    "city": ""
+  },
+  {
+    "name_en": "West Pomeranian University",
+    "city": ""
+  },
+  {
+    "name_en": "Wrocław University",
+    "city": ""
+  },
+  {
+    "name_en": "Cracow University",
+    "city": ""
+  },
+  {
+    "name_en": "Jan Długosz University",
+    "city": ""
+  },
+  {
+    "name_en": "Pedagogical University",
+    "city": ""
+  },
+  {
+    "name_en": "Agricultural University",
+    "city": ""
+  },
+  {
+    "name_en": "Wroclaw University",
+    "city": ""
+  },
+  {
+    "name_en": "Józef Piłsudski University",
+    "city": ""
+  },
+  {
+    "name_en": "Pomeranian Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Nicolaus Copernicus University",
+    "city": ""
+  },
+  {
+    "name_en": "Wrocław Medical University",
+    "city": ""
+  },
+  {
+    "name_en": "Fryderyk Chopin University",
+    "city": ""
+  },
+  {
+    "name_en": "Karol Lipiński University",
+    "city": ""
+  },
+  {
+    "name_en": "Pontifical University",
+    "city": ""
+  },
+  {
+    "name_en": "Gdynia Maritime University",
+    "city": ""
+  },
+  {
+    "name_en": "Maritime University",
+    "city": ""
+  },
+  {
+    "name_en": "War Studies University",
+    "city": ""
+  },
+  {
+    "name_en": "Military University",
+    "city": ""
+  },
+  {
+    "name_en": "Kozminski University",
+    "city": ""
+  },
+  {
+    "name_en": "SWPS University",
+    "city": ""
+  },
+  {
+    "name_en": "VIZJA University",
+    "city": ""
+  },
+  {
+    "name_en": "Independent University",
+    "city": ""
+  },
+  {
+    "name_en": "WSB University",
+    "city": ""
+  },
+  {
+    "name_en": "Wilno University",
+    "city": ""
+  },
+  {
+    "name_en": "Lwów University",
+    "city": ""
+  },
+  {
+    "name_en": "Szczecin University",
+    "city": ""
+  },
+  {
+    "name_en": "Medical University of Gdańsk",
+    "city": ""
+  },
+  {
+    "name_en": "Casimir the Great University in Bydgoszcz",
+    "city": ""
+  },
+  {
+    "name_en": "AGH University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Częstochowa University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Gdańsk University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Silesian University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Kielce University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Koszalin University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Lublin University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Łódź University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Opole University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Poznań University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Rzeszów University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Tadeusz Kościuszko University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "West Pomeranian University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Warsaw University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Wrocław University of Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Cracow University of Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Poznań University of Economics and Business",
+    "city": ""
+  },
+  {
+    "name_en": "Wrocław University of Economics",
+    "city": ""
+  },
+  {
+    "name_en": "Pedagogical University of Cracow",
+    "city": ""
+  },
+  {
+    "name_en": "Agricultural University of Kraków",
+    "city": ""
+  },
+  {
+    "name_en": "Warsaw University of Life Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Wroclaw University of Environmental and Life Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Józef Piłsudski University of Physical Education in Warsaw",
+    "city": ""
+  },
+  {
+    "name_en": "Gdańsk University of Physical Education and Sport",
+    "city": ""
+  },
+  {
+    "name_en": "Jagiellonian University Medical College",
+    "city": ""
+  },
+  {
+    "name_en": "Medical University of Białystok",
+    "city": ""
+  },
+  {
+    "name_en": "Medical University of Lublin",
+    "city": ""
+  },
+  {
+    "name_en": "Medical University of Łódź",
+    "city": ""
+  },
+  {
+    "name_en": "Poznań University of Medical Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Medical University of Warsaw",
+    "city": ""
+  },
+  {
+    "name_en": "Fryderyk Chopin University of Music in Warsaw",
+    "city": ""
+  },
+  {
+    "name_en": "Karol Lipiński University of Music",
+    "city": ""
+  },
+  {
+    "name_en": "Pontifical University of John Paul II",
+    "city": ""
+  },
+  {
+    "name_en": "John Paul II Catholic University of Lublin",
+    "city": ""
+  },
+  {
+    "name_en": "Maritime University of Szczecin",
+    "city": ""
+  },
+  {
+    "name_en": "Military University of Technology in Warsaw",
+    "city": ""
+  },
+  {
+    "name_en": "Agricultural University of Szczecin",
+    "city": ""
+  },
+  {
+    "name_en": "Szczecin University of Technology",
+    "city": ""
+  }
+]

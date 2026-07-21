@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}تماس با موسسه مهاجرت تحصیلی {{ institute.name }} | بابل مازندران{% endblock %}
+
+{% block meta_description %}اطلاعات تماس موسسه مهاجرت تحصیلی {{ institute.name }} در بابل، مازندران؛ آدرس، شماره تلفن، ایمیل و فرم ارسال پیام برای مشاوره مهاجرت تحصیلی و اعزام دانشجو به خارج.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title="تماس با ما" hero_lead="برای مشاوره مهاجرت تحصیلی، انتخاب کشور و دانشگاه، یا پیگیری پرونده با کارشناسان ما در ارتباط باشید." crumb2_label="تماس با ما" %}
+
+<section class="contact-page section_padding" dir="rtl">
+    <div class="container">
+        <div class="row contact-page__row">
+            <aside class="col-lg-4 col-xl-3 contact-page__aside" aria-label="اطلاعات تماس">
+                <div class="contact-page__panel">
+                    <h2 class="contact-page__panel-title">
+                        <span class="ti-comment-alt" aria-hidden="true"></span>
+                        پیام به مشاوران
+                    </h2>
+                    <p class="contact-page__intro-text">
+                        اگر درباره مهاجرت تحصیلی، ویزا، بورسیه یا انتخاب مسیر تحصیلی سوال دارید، فرم را پر کنید یا از راه‌های تماس مستقیم استفاده کنید.
+                    </p>
+                </div>
+
+                <div class="contact-page__panel contact-page__panel--info">
+                    <h2 class="contact-page__panel-title">
+                        <span class="ti-headphone-alt" aria-hidden="true"></span>
+                        راه‌های تماس
+                    </h2>
+                    <ul class="contact-page__info-list">
+                        <li class="contact-page__info-item">
+                            <span class="contact-page__info-icon ti-location-pin" aria-hidden="true"></span>
+                            <div class="contact-page__info-body">
+                                <span class="contact-page__info-label">آدرس</span>
+                                <p>{{ institute.city }}، {{ institute.province }}<br>{{ institute.address }}</p>
+                            </div>
+                        </li>
+                        <li class="contact-page__info-item">
+                            <span class="contact-page__info-icon ti-mobile" aria-hidden="true"></span>
+                            <div class="contact-page__info-body">
+                                <span class="contact-page__info-label">تلفن</span>
+                                <p><a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
+                                <p class="contact-page__info-hint">شنبه تا جمعه، ۹ تا ۱۸</p>
+                            </div>
+                        </li>
+                        <li class="contact-page__info-item">
+                            <span class="contact-page__info-icon ti-email" aria-hidden="true"></span>
+                            <div class="contact-page__info-body">
+                                <span class="contact-page__info-label">ایمیل</span>
+                                <p><a href="mailto:{{ institute.email }}">{{ institute.email }}</a></p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="{% url 'appointment' %}" class="contact-page__info-cta">رزرو وقت مشاوره</a>
+                </div>
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 contact-page__main">
+                <div class="contact-page__card">
+                    <div class="contact-page__card-head">
+                        <h2 class="contact-page__card-title">
+                            <span class="ti-pencil-alt" aria-hidden="true"></span>
+                            ارسال پیام
+                        </h2>
+                        <p class="contact-page__card-lead">پاسخ کارشناسان {{ institute.name }} در اولین فرصت کاری ارسال می‌شود.</p>
+                    </div>
+
+                    {% if success %}
+                    <div class="contact-page__success" role="status">
+                        <span class="ti-check contact-page__success-icon" aria-hidden="true"></span>
+                        <div>
+                            <strong>پیام شما ثبت شد</strong>
+                            <p>کارشناسان {{ institute.name }} در اسرع وقت با شما تماس خواهند گرفت.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <form method="post" class="contact-page__form" novalidate>
+                        {% csrf_token %}
+                        <div class="row contact-page__form-row">
+                            <div class="col-12 col-md-6 contact-page__form-col">
+                                <div class="contact-page__field">
+                                    <label class="contact-page__label" for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی</label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.errors %}<span class="contact-page__error">{{ form.full_name.errors|striptags }}</span>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 contact-page__form-col">
+                                <div class="contact-page__field">
+                                    <label class="contact-page__label" for="{{ form.email.id_for_label }}">ایمیل</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}<span class="contact-page__error">{{ form.email.errors|striptags }}</span>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-page__field">
+                            <label class="contact-page__label" for="{{ form.subject.id_for_label }}">موضوع</label>
+                            {{ form.subject }}
+                            {% if form.subject.errors %}<span class="contact-page__error">{{ form.subject.errors|striptags }}</span>{% endif %}
+                        </div>
+                        <div class="contact-page__field">
+                            <label class="contact-page__label" for="{{ form.message.id_for_label }}">متن پیام</label>
+                            {{ form.message }}
+                            {% if form.message.errors %}<span class="contact-page__error">{{ form.message.errors|striptags }}</span>{% endif %}
+                        </div>
+                        {% include "layout/_form_captcha.html" with captcha_class="contact-page__captcha-block" captcha_form_key="contact" %}
+                        <div class="contact-page__actions">
+                            <button type="submit" class="contact-page__submit btn_1">ارسال پیام</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

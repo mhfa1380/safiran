@@ -6,20 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>Elements</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>Elements</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% include "layout/page_hero.html" with hero_title="Elements" crumb2_label="Elements" %}
 
 <section class="sample-text-area">
     <div class="container box_1170">

@@ -6,20 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>صفحه یافت نشد</h2>
-                        <p>صفحه مورد نظر وجود ندارد یا حذف شده است.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% include "layout/page_hero.html" with hero_title="صفحه یافت نشد" hero_lead="صفحه مورد نظر وجود ندارد یا حذف شده است." crumb2_label="صفحه یافت نشد" %}
 
 <section class="sample-text-area error404_margin">
     <div class="container box_1170 text-center">

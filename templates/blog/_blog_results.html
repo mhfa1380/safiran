@@ -1,0 +1,70 @@
+{% load static jalali_filters %}
+
+{% if filter_q or filter_tag or total_count %}
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="blog_results_bar" aria-live="polite">
+            {% if filter_q or filter_tag %}
+                <span class="blog_results_count">
+                    {% if total_count %}
+                        <strong>{{ total_count|persian_numbers }}</strong> مطلب یافت شد
+                    {% else %}
+                        مطلبی یافت نشد
+                    {% endif %}
+                </span>
+                {% if filter_q %}
+                    <span class="blog_results_query">برای «{{ filter_q }}»</span>
+                {% endif %}
+                {% if filter_tag %}
+                    <span class="blog_results_tag">در دسته «{{ filter_tag }}»</span>
+                {% endif %}
+            {% else %}
+                <span class="blog_results_count"><strong>{{ total_count|persian_numbers }}</strong> مطلب</span>
+            {% endif %}
+
+            {% if did_you_mean and not search_corrected %}
+                <span class="blog_did_you_mean faq-page__did-you-mean">
+                    شاید منظورتان
+                    <button type="button" class="blog_did_you_mean__btn" data-blog-correct="{{ did_you_mean }}">{{ did_you_mean }}</button>
+                    بوده است؟
+                </span>
+            {% elif search_corrected and did_you_mean %}
+                <span class="blog_did_you_mean blog_did_you_mean--applied">
+                    نتایج برای «{{ did_you_mean }}» نمایش داده می‌شود.
+                </span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row blog_results_grid" id="blog-grid">
+    {% if posts %}
+        {% include "blog/_blog_cards.html" %}
+    {% else %}
+        <div class="col-12">
+            <div class="blog_empty">
+                <h4 class="mb-3">مطلبی یافت نشد</h4>
+                <p>
+                    {% if filter_q or filter_tag %}
+                        عبارت یا دسته را تغییر دهید؛ جستجو در همه بخش‌های مطلب (عنوان، متن، کلمات کلیدی) انجام می‌شود.
+                        {% if did_you_mean %}
+                            می‌توانید «{{ did_you_mean }}» را امتحان کنید.
+                        {% endif %}
+                    {% else %}
+                        هنوز پستی در وبلاگ منتشر نشده است.
+                    {% endif %}
+                </p>
+                <button type="button" class="btn_1" data-blog-clear>مشاهده همه مطالب</button>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% if posts and not filter_q and blog_has_more %}
+<div id="blog-load-sentinel" class="blog-load-sentinel" aria-hidden="true"></div>
+<div id="blog-load-more" class="blog-load-more" hidden role="status" aria-live="polite">
+    <span class="blog-load-more__spinner" aria-hidden="true"></span>
+    <span class="blog-load-more__text">در حال بارگذاری مطالب بیشتر…</span>
+</div>
+{% endif %}

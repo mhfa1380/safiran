@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}چاپ نتیجه ارزیابی | {{ institute.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/eval-results.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="evalr-page section_padding" dir="rtl">
+    <div class="container">
+        {% include "core/_evaluation_results.html" %}
+    </div>
+</section>
+{% if auto_print %}
+<script>window.addEventListener("load", function () { window.print(); });</script>
+{% endif %}
+{% endblock %}

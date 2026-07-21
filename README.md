@@ -1,109 +1,130 @@
-# safiran
+# سفیران آینده روشن — safiran_site
 
-وب‌سایت «سفیران آینده روشن» – پروژه Django
-# موسسه اعزام دانشجوی سفیران آینده روشن
+وب‌سایت رسمی موسسه اعزام دانشجو (Django) — مشاوره مهاجرت تحصیلی، ارزیابی هوشمند، وبلاگ، دانشگاه‌ها و خدمات.
 
-وب‌سایت رسمی موسسه اعزام دانشجو به خارج - بابل، مازندران
+## پیش‌نیاز
 
-## نصب و اجرا
+- Python 3.11+ (تست‌شده با 3.13)
+- `pip` و ترجیحاً `venv`
+
+## نصب سریع
 
 ```bash
-# ایجاد محیط مجازی
 python -m venv venv
+venv\Scripts\activate          # Windows
+# source venv/bin/activate   # Linux/macOS
 
-# فعال‌سازی مجازی (Windows)
-venv\Scripts\activate
-
-# نصب وابستگی‌ها
 pip install -r requirements.txt
+copy .env.example .env         # Windows — سپس مقادیر را ویرایش کنید
+# cp .env.example .env         # Linux/macOS
 
-# اجرای migrations
 python manage.py migrate
-
-# ایجاد ادمین (اولین بار)
 python manage.py createsuperuser
-
-# اجرای سرور
 python manage.py runserver
 ```
 
-سایت در آدرس http://127.0.0.1:8000 در دسترس است.
+سایت: [http://127.0.0.1:8000/](http://127.0.0.1:8000/) — پنل: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+
+## فایل `.env`
+
+تنظیمات از `safiran_site/settings.py` با `python-dotenv` از `.env` در ریشه پروژه خوانده می‌شود.
+
+| متغیر | توضیح |
+|--------|--------|
+| `DJANGO_DEBUG` | `1` توسعه، `0` production |
+| `DJANGO_SECRET_KEY` | کلید امنیتی جنگو |
+| `DJANGO_ALLOWED_HOSTS` | دامنه‌ها با ویرگول |
+| `DJANGO_CSRF_TRUSTED_ORIGINS` | مبدأهای CSRF (با پورت لوکال) |
+| `SITE_URL` | آدرس پایه canonical و سئو — لوکال: `http://127.0.0.1:8000` |
+| `BALE_*` | اعلان بله (اختیاری) |
+| `MHFA_*` | پنل live.mhfa.ir و فوتر متمرکز (اختیاری) |
+
+نمونه کامل: `.env.example` (بدون توکن واقعی — قابل commit).
+
+```bash
+# بررسی بارگذاری تنظیمات
+python manage.py check
+```
+
+## داده نمونه (اختیاری)
+
+```bash
+python manage.py seed_fixture_data
+python manage.py seed_blog_posts --force
+python manage.py seed_study_countries
+python manage.py seed_universities_majors
+```
+
+## دستورات نگهداری
+
+```bash
+python manage.py maintain_database
+python manage.py collectstatic --noinput   # قبل از deploy
+```
+
+## صفحات مهم (URL فارسی)
+
+| مسیر | صفحه |
+|------|------|
+| `/` | صفحه اصلی |
+| `/درباره-ما/` | درباره ما |
+| `/تماس-با-ما/` | تماس |
+| `/ارزیابی-مهاجرت/` | ارزیابی رایگان آنلاین |
+| `/رزرو-مشاوره/` | رزرو مشاوره |
+| `/تعرفه-خدمات/` | تعرفه و ماشین‌حساب |
+| `/سوالات-متداول/` | FAQ |
+| `/blog/` | وبلاگ |
+| `/دانشگاه-های-خارج/` | دانشگاه‌ها |
+| `/رشته-های-تحصیلی/` | رشته‌ها |
+| `/خدمات-با-ما/` | خدمات |
+
+آدرس‌های قدیمی انگلیسی با ریدایرکت ۳۰۱ به مسیر فارسی هدایت می‌شوند.
 
 ## ساختار پروژه
 
 ```
 safiran_site/
-├── core/                 # اپلیکیشن اصلی
-│   ├── admin.py          # ثبت مدل‌ها در پنل ادمین
-│   ├── context_processors.py
-│   ├── forms.py
-│   ├── models.py
-│   ├── urls.py
-│   └── views.py
-├── safiran_site/         # تنظیمات پروژه Django
+├── core/                 # اپ اصلی (مدل‌ها، ویوها، سئو، ارزیابی)
+├── safiran_site/         # settings، urls
 ├── templates/
-│   ├── base.html
-│   ├── 404.html
-│   ├── layout/           # header, footer
-│   ├── core/             # index, about, contact, appointment, evaluation, faq
-│   ├── blog/             # list, single
-│   ├── content/          # services, majors, courses_list, course_details
-│   └── schools/          # list, detail
 ├── static/
-│   ├── css/
-│   ├── js/
-│   └── img/
-├── media/                # فایل‌های آپلودشده (در صورت استفاده)
+├── media/
+├── scripts/              # deploy و mhfa-agent
+├── docs/                 # ASSETS.md، SEO.md
 ├── manage.py
 ├── requirements.txt
-└── .gitignore
+├── requirements-agent.txt
+├── .env.example
+└── .env                  # محلی — در git نیست
 ```
 
-## صفحات و مسیرها
+## عامل سرور MHFA (اختیاری)
 
-| مسیر | توضیح |
-|------|-------|
-| `/` | صفحه اصلی |
-| `/about/` | درباره ما |
-| `/contact/` | تماس با ما (فرم داینامیک) |
-| `/blog/` | لیست وبلاگ |
-| `/blog/<slug>/` | جزئیات پست وبلاگ |
-| `/schools/` | لیست دانشگاه‌ها |
-| `/schools/<slug>/` | جزئیات دانشگاه |
-| `/services/` | خدمات موسسه |
-| `/majors/` | رشته‌های تحصیلی |
-| `/courses/` | لیست دوره‌ها |
-| `/course/<slug>/` | جزئیات دوره |
-| `/appointment/` | رزرو مشاوره |
-| `/evaluation/` | فرم ارزیابی |
-| `/faq/` | سوالات متداول |
-| `/admin/` | پنل مدیریت |
+```bash
+pip install -r requirements-agent.txt
+# نمونه env: scripts/mhfa-agent.env.example
+python scripts/mhfa_agent.py
+```
 
-## تغییرات اخیر (UI)
+## Production
 
-- بهبود آیکون باز/بسته شدن سوالات متداول در صفحه FAQ (چورون مینیمال و هماهنگ با هویت بصری سایت)
+- `DJANGO_DEBUG=0`
+- `DJANGO_SECRET_KEY` تصادفی و قوی
+- `SITE_URL=https://www.saroshan.ir`
+- PostgreSQL یا SQLite با پشتیبان‌گیری
+- `collectstatic` + Gunicorn/uWSGI + Nginx
+- Redis برای کش در ترافیک بالا (`DJANGO_CACHE_BACKEND=redis`)
+- Celery برای کارهای سنگین (`CELERY_ENABLED=1` + worker)
+- بررسی: `python manage.py check_runtime`
+- سرویس‌های نمونه: `scripts/systemd/safiran.service` و `safiran-celery.service`
 
-## مدل‌های دیتابیس
+## مستندات بیشتر
 
-- **ContactMessage** – پیام‌های تماس با ما
-- **BlogPost** – پست‌های وبلاگ
-- **Service** – خدمات موسسه
-- **Major** – رشته‌های تحصیلی
-- **Course** – دوره‌ها
-- **University** – دانشگاه‌ها و موسسات
-- **ConsultationRequest** – درخواست‌های رزرو مشاوره
-- **EvaluationRequest** – درخواست‌های ارزیابی
+- [docs/ASSETS.md](docs/ASSETS.md) — تصاویر
+- [docs/SEO.md](docs/SEO.md) — سئو و sitemap
 
-## اطلاعات موسسه
+## موسسه
 
-- **نام:** سفیران آینده روشن
-- **استان:** مازندران
-- **شهر:** بابل
-- **تلفن:** 011-32350320
-- **ایمیل:** saroshanbbl@gmail.com
-- **آدرس:** کمربند امیر کلا، جنب موسسه آموزش عالی علوم و فناوری آریان، مجتمع ایرانیکا، طبقه اول
-- **وب‌سایت:** www.saroshan.ir
-
-## تصاویر مورد نیاز
-
-فهرست کامل تصاویر در فایل `docs/ASSETS.md` درج شده است.
+- **نام:** سفیران آینده روشن  
+- **شهر:** بابل، مازندران  
+- **وب‌سایت:** [www.saroshan.ir](https://www.saroshan.ir)

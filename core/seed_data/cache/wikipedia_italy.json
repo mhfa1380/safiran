@@ -1,0 +1,362 @@
+[
+  {
+    "name_en": "University of Aosta Valley",
+    "city": ""
+  },
+  {
+    "name_en": "University of Bari",
+    "city": ""
+  },
+  {
+    "name_en": "Polytechnic University of Bari",
+    "city": ""
+  },
+  {
+    "name_en": "University of Sannio",
+    "city": ""
+  },
+  {
+    "name_en": "University of Bergamo",
+    "city": ""
+  },
+  {
+    "name_en": "University of Bologna",
+    "city": ""
+  },
+  {
+    "name_en": "Free University of Bozen-Bolzano",
+    "city": ""
+  },
+  {
+    "name_en": "University of Gastronomic Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "University of Brescia",
+    "city": ""
+  },
+  {
+    "name_en": "University of Cagliari",
+    "city": ""
+  },
+  {
+    "name_en": "University of Camerino",
+    "city": ""
+  },
+  {
+    "name_en": "University of Molise",
+    "city": ""
+  },
+  {
+    "name_en": "University of Cassino",
+    "city": ""
+  },
+  {
+    "name_en": "University Carlo Cattaneo",
+    "city": ""
+  },
+  {
+    "name_en": "University of Catania",
+    "city": ""
+  },
+  {
+    "name_en": "D'Annunzio University of Chieti–Pescara",
+    "city": ""
+  },
+  {
+    "name_en": "Kore University of Enna",
+    "city": ""
+  },
+  {
+    "name_en": "University of Ferrara",
+    "city": ""
+  },
+  {
+    "name_en": "University of Florence",
+    "city": ""
+  },
+  {
+    "name_en": "University of Foggia",
+    "city": ""
+  },
+  {
+    "name_en": "University of Genoa",
+    "city": ""
+  },
+  {
+    "name_en": "University of L'Aquila",
+    "city": ""
+  },
+  {
+    "name_en": "University of Salento",
+    "city": ""
+  },
+  {
+    "name_en": "University of Macerata",
+    "city": ""
+  },
+  {
+    "name_en": "University of Messina",
+    "city": ""
+  },
+  {
+    "name_en": "University of Milan",
+    "city": ""
+  },
+  {
+    "name_en": "University of Milan - Bicocca",
+    "city": ""
+  },
+  {
+    "name_en": "Polytechnic University of Milan",
+    "city": ""
+  },
+  {
+    "name_en": "Bocconi University",
+    "city": ""
+  },
+  {
+    "name_en": "IULM University of Milan",
+    "city": ""
+  },
+  {
+    "name_en": "Vita-Salute San Raffaele University",
+    "city": ""
+  },
+  {
+    "name_en": "Humanitas University",
+    "city": ""
+  },
+  {
+    "name_en": "University of Modena and Reggio Emilia",
+    "city": ""
+  },
+  {
+    "name_en": "University of Naples Federico II",
+    "city": ""
+  },
+  {
+    "name_en": "Parthenope University of Naples",
+    "city": ""
+  },
+  {
+    "name_en": "Suor Orsola Benincasa University of Naples",
+    "city": ""
+  },
+  {
+    "name_en": "University of Padua",
+    "city": ""
+  },
+  {
+    "name_en": "University of Palermo",
+    "city": ""
+  },
+  {
+    "name_en": "University of Parma",
+    "city": ""
+  },
+  {
+    "name_en": "University of Pavia",
+    "city": ""
+  },
+  {
+    "name_en": "University of Perugia",
+    "city": ""
+  },
+  {
+    "name_en": "University for Foreigners Perugia",
+    "city": ""
+  },
+  {
+    "name_en": "University of Pisa",
+    "city": ""
+  },
+  {
+    "name_en": "Basilicata University",
+    "city": ""
+  },
+  {
+    "name_en": "University of Reggio Calabria",
+    "city": ""
+  },
+  {
+    "name_en": "University of Calabria",
+    "city": ""
+  },
+  {
+    "name_en": "Sapienza University of Rome",
+    "city": ""
+  },
+  {
+    "name_en": "LUISS University of Rome",
+    "city": ""
+  },
+  {
+    "name_en": "Biomedical University of Rome",
+    "city": ""
+  },
+  {
+    "name_en": "European University of Rome",
+    "city": ""
+  },
+  {
+    "name_en": "University of International Studies of Rome",
+    "city": ""
+  },
+  {
+    "name_en": "Link Campus University",
+    "city": ""
+  },
+  {
+    "name_en": "Guglielmo Marconi University",
+    "city": ""
+  },
+  {
+    "name_en": "University of Salerno",
+    "city": ""
+  },
+  {
+    "name_en": "University of Sassari",
+    "city": ""
+  },
+  {
+    "name_en": "University of Siena",
+    "city": ""
+  },
+  {
+    "name_en": "Foreigners University of Siena",
+    "city": ""
+  },
+  {
+    "name_en": "University of Teramo",
+    "city": ""
+  },
+  {
+    "name_en": "University of Trento",
+    "city": ""
+  },
+  {
+    "name_en": "University of Trieste",
+    "city": ""
+  },
+  {
+    "name_en": "University of Turin",
+    "city": ""
+  },
+  {
+    "name_en": "Politecnico di Torino",
+    "city": ""
+  },
+  {
+    "name_en": "International University College of Turin",
+    "city": ""
+  },
+  {
+    "name_en": "University of Udine",
+    "city": ""
+  },
+  {
+    "name_en": "University of Urbino",
+    "city": ""
+  },
+  {
+    "name_en": "University of Insubria",
+    "city": ""
+  },
+  {
+    "name_en": "Ca' Foscari University of Venice",
+    "city": ""
+  },
+  {
+    "name_en": "University of Eastern Piedmont",
+    "city": ""
+  },
+  {
+    "name_en": "University of Verona",
+    "city": ""
+  },
+  {
+    "name_en": "Tuscia University",
+    "city": ""
+  },
+  {
+    "name_en": "Marche Polytechnic University",
+    "city": ""
+  },
+  {
+    "name_en": "Polytechnic University",
+    "city": ""
+  },
+  {
+    "name_en": "Free University",
+    "city": ""
+  },
+  {
+    "name_en": "Magna Graecia University",
+    "city": ""
+  },
+  {
+    "name_en": "D'Annunzio University",
+    "city": ""
+  },
+  {
+    "name_en": "Kore University",
+    "city": ""
+  },
+  {
+    "name_en": "IULM University",
+    "city": ""
+  },
+  {
+    "name_en": "Parthenope University",
+    "city": ""
+  },
+  {
+    "name_en": "Suor Orsola Benincasa University",
+    "city": ""
+  },
+  {
+    "name_en": "Sapienza University",
+    "city": ""
+  },
+  {
+    "name_en": "Roma Tre University",
+    "city": ""
+  },
+  {
+    "name_en": "LUISS University",
+    "city": ""
+  },
+  {
+    "name_en": "Biomedical University",
+    "city": ""
+  },
+  {
+    "name_en": "European University",
+    "city": ""
+  },
+  {
+    "name_en": "Saint Camillus International University",
+    "city": ""
+  },
+  {
+    "name_en": "Foreigners University",
+    "city": ""
+  },
+  {
+    "name_en": "Ca' Foscari University",
+    "city": ""
+  },
+  {
+    "name_en": "Mediterranea University",
+    "city": ""
+  },
+  {
+    "name_en": "Mediterranea University of Reggio Calabria",
+    "city": ""
+  },
+  {
+    "name_en": "Polytechnic University of Turin",
+    "city": ""
+  }
+]

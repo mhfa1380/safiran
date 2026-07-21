@@ -5,13 +5,20 @@
 (function($) {
   'use strict';
 
-  // منوی ثابت هنگام اسکرول
-  $(window).scroll(function() {
-    var window_top = $(window).scrollTop() + 1;
-    if (window_top > 50) {
-      $('.main_menu').addClass('menu_fixed animated fadeInDown');
-    } else {
-      $('.main_menu').removeClass('menu_fixed animated fadeInDown');
+  // صفحه اول: menu_fixed با اسکرول — صفحات داخلی: CSS با :has(.page-hero)
+  if (!document.querySelector('.page-hero')) {
+    var $menu = $('.main_menu');
+    function syncScrollMenuFixed() {
+      var window_top = $(window).scrollTop() + 1;
+      var menuOpen = document.body.classList.contains('site-header-menu-open');
+      if (window_top > 50 || menuOpen) {
+        $menu.addClass('menu_fixed animated fadeInDown');
+      } else {
+        $menu.removeClass('menu_fixed animated fadeInDown');
+      }
     }
-  });
+
+    $(window).on('scroll', syncScrollMenuFixed);
+    syncScrollMenuFixed();
+  }
 })(jQuery);

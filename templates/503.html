@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}سرویس موقتاً در دسترس نیست{% endblock %}
+
+{% block content %}
+<section class="section_padding" dir="rtl" lang="fa">
+    <div class="container text-center" style="max-width: 32rem; margin: 3rem auto;">
+        <h1 style="font-size: 1.5rem; color: #0c2e60; margin-bottom: 0.75rem;">سرویس موقتاً در دسترس نیست</h1>
+        <p style="color: #64748b; line-height: 1.7;">
+            سرور در حال پردازش درخواست‌های زیاد است. لطفاً
+            {% if retry_after %}{{ retry_after }} ثانیه{% else %}چند لحظه{% endif %}
+            بعد دوباره تلاش کنید.
+        </p>
+        <p style="margin-top: 1.5rem;">
+            <a href="/" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

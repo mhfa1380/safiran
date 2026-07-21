@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ pricing_meta_title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ pricing_meta_description }}{% endblock %}
+{% block meta_keywords %}{{ pricing_meta_keywords }}{% endblock %}
+{% block canonical_url %}{{ pricing_page_url }}{% endblock %}
+{% block og_title %}{{ pricing_og_title }}{% endblock %}
+{% block og_description %}{{ pricing_meta_description }}{% endblock %}
+{% block twitter_title %}{{ pricing_og_title }}{% endblock %}
+{% block twitter_description %}{{ pricing_meta_description }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/pricing.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/ai-qa-section.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script>
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+window.PAGE_CONFIG.pricingCalculateUrl = "{% url 'pricing_calculate' %}";
+window.PAGE_CONFIG.pricingAppointmentUrl = "{% url 'appointment' %}";
+</script>
+{{ countries_json|json_script:"pricing-countries-data" }}
+{{ study_pricing_json|json_script:"pricing-study-countries-data" }}
+<script type="application/ld+json">{{ pricing_schema_json|safe }}</script>
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title="تعرفه خدمات و ماشین‌حساب هوشمند" hero_lead="خدمات موسسه را با توضیحات کامل ببینید و با چند سؤال کوتاه، تعرفه پیشنهادی پرونده خود را محاسبه کنید." crumb2_label="تعرفه خدمات" %}
+
+{% include "layout/_answer_summary_banner.html" with answer_text=pricing_answer_summary answer_class="pricing-page__hero-answer ai-qa-section__answer" %}
+
+<section class="faq-page pricing-page section_padding" dir="rtl" lang="fa">
+    <div class="container">
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 faq-page__aside pricing-page__aside" aria-label="ناوبری بخش‌های تعرفه">
+                <div class="pricing-page__aside-stack">
+                    <div class="faq-page__panel pricing-page__panel--nav">
+                        <h2 class="faq-page__panel-title pricing-page__panel-title">
+                            <span class="ti-layout-grid2" aria-hidden="true"></span>
+                            بخش‌های صفحه
+                        </h2>
+                        <div class="pricing-page__nav-scroll">
+                            <nav class="faq-page__nav pricing-page__nav" aria-label="پرش به بخش">
+                                <a href="#pricing-calculator" class="faq-page__nav-link is-active" data-pricing-section="pricing-calculator">
+                                    <span class="ti-calculator" aria-hidden="true"></span>
+                                    <span>ماشین‌حساب</span>
+                                </a>
+                                {% for category in categories %}
+                                <a href="#cat-{{ category.slug }}" class="faq-page__nav-link" data-pricing-section="cat-{{ category.slug }}">
+                                    {% if category.icon %}<span class="{{ category.icon }}" aria-hidden="true"></span>{% endif %}
+                                    <span>{{ category.name }}</span>
+                                </a>
+                                {% endfor %}
+                                <a href="#pricing-allowance" class="faq-page__nav-link" data-pricing-section="pricing-allowance">
+                                    <span class="ti-world" aria-hidden="true"></span>
+                                    <span>مقرری کشورها</span>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="faq-page__panel faq-page__panel--featured pricing-page__panel--cta">
+                        <h2 class="faq-page__panel-title pricing-page__panel-title">
+                            <span class="ti-headphone-alt" aria-hidden="true"></span>
+                            مشاوره
+                        </h2>
+                        <p class="pricing-page__panel-text">برای برآورد دقیق‌تر پرونده، وقت مشاوره رزرو کنید.</p>
+                        <a href="{% url 'appointment' %}" class="faq-page__btn faq-page__btn--primary pricing-page__aside-cta">رزرو مشاوره</a>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 faq-page__main">
+                {% include "layout/_ai_qa_section.html" with ai_qa_blocks=pricing_ai_qa_blocks ai_qa_title=pricing_ai_qa_title ai_qa_lead=pricing_ai_qa_lead ai_qa_section_id="pricing-qa" %}
+
+                <div class="faq-page__chips" aria-label="پرش سریع به بخش‌ها">
+                    <span class="faq-page__chips-label">بخش:</span>
+                    <div class="faq-page__chips-scroll">
+                        <a href="#pricing-calculator" class="faq-page__chip is-active" data-pricing-section="pricing-calculator">ماشین‌حساب</a>
+                        {% for category in categories %}
+                        <a href="#cat-{{ category.slug }}" class="faq-page__chip" data-pricing-section="cat-{{ category.slug }}">{{ category.name }}</a>
+                        {% endfor %}
+                        <a href="#pricing-allowance" class="faq-page__chip" data-pricing-section="pricing-allowance">مقرری</a>
+                    </div>
+                </div>
+
+                <header class="faq-page__hero">
+                    <p class="faq-page__eyebrow">تعرفه شفاف خدمات</p>
+                    <h2 class="faq-page__title">هزینه خدمات و برآورد پرونده شما</h2>
+                    <p class="faq-page__lead">تعرفه‌ها مطابق قرارداد استاندارد موسسات اعزام و فهرست مقرری مصوب است. مبالغ با همان ارز کشور مقصد (یورو، دلار، پوند و …) نمایش داده می‌شود؛ به‌دلیل نوسان نرخ ارز، معادل ریالی در این صفحه محاسبه نمی‌شود.</p>
+                </header>
+
+                {% if study_pricing.countries %}
+                <div class="pricing-page__country-bar" id="pricing-country-bar">
+                    <div class="pricing-page__country-bar-head">
+                        <span class="ti-world" aria-hidden="true"></span>
+                        <div>
+                            <p class="pricing-page__country-bar-title">کشور مقصد</p>
+                            <p class="pricing-page__country-bar-sub">تعرفه‌های زیر بر اساس کشور انتخاب‌شده به‌روز می‌شوند</p>
+                        </div>
+                    </div>
+                    <div class="pricing-page__country-chips" role="tablist" aria-label="انتخاب کشور مقصد">
+                        {% for sc in study_pricing.countries %}
+                        <button type="button"
+                                class="pricing-page__country-chip{% if forloop.first %} is-active{% endif %}"
+                                role="tab"
+                                data-country-code="{{ sc.code }}"
+                                data-allowance-slug="{{ sc.allowance_slug }}"
+                                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                            <img src="{% static sc.flag %}" alt="" class="pricing-page__country-flag" width="28" height="20" loading="lazy">
+                            <span>{{ sc.name }}</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <section id="pricing-calculator" class="pricing-page__section scroll-margin">
+                    <div class="faq-page__panel pricing-page__panel--calc">
+                        <div class="pricing-calc__header">
+                            <h3 class="pricing-calc__title">
+                                <span class="ti-calculator" aria-hidden="true"></span>
+                                ماشین‌حساب تعرفه
+                            </h3>
+                            <p class="pricing-calc__lead">۳ تا ۴ مرحله کوتاه — پیشنهاد بر اساس هدف و وضعیت پرونده شما.</p>
+                        </div>
+
+                        <div class="pricing-calc__progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="calc-progress-wrap">
+                            <div class="pricing-calc__progress-bar" id="calc-progress-bar"></div>
+                        </div>
+
+                        <div class="pricing-calc__layout">
+                            <aside class="pricing-calc__live" id="calc-live" aria-live="polite" aria-label="برآورد لحظه‌ای">
+                                <div class="pricing-calc__live-inner" id="calc-live-inner">
+                                    <p class="pricing-calc__live-placeholder">گزینه‌ها را انتخاب کنید تا جمع لحظه‌ای نمایش داده شود.</p>
+                                </div>
+                            </aside>
+                            <div class="pricing-calc__main">
+                                <div class="pricing-calc__body" id="calc-body"></div>
+                            </div>
+                        </div>
+
+                        <div class="pricing-calc__nav">
+                            <button type="button" class="faq-page__btn faq-page__btn--ghost pricing-calc__btn-back" id="calc-btn-back" hidden>مرحله قبل</button>
+                            <button type="button" class="faq-page__btn faq-page__btn--primary pricing-calc__btn-next" id="calc-btn-next" disabled>ادامه</button>
+                        </div>
+                    </div>
+                </section>
+
+                {% for category in categories %}
+                <section id="cat-{{ category.slug }}" class="faq-page__group scroll-margin" aria-labelledby="pricing-cat-{{ category.slug }}">
+                    <header class="faq-page__group-head">
+                        {% if category.icon %}
+                        <span class="faq-page__group-icon {{ category.icon }}" aria-hidden="true"></span>
+                        {% endif %}
+                        <div>
+                            <h3 id="pricing-cat-{{ category.slug }}" class="faq-page__group-title">{{ category.name }}</h3>
+                            {% if category.description %}
+                            <p class="faq-page__group-desc">{{ category.description }}</p>
+                            {% endif %}
+                        </div>
+                    </header>
+
+                    <div class="faq-page__accordion">
+                        {% for tariff in category.tariffs.all %}
+                        <details class="faq-page__item" data-tariff-key="{{ tariff.calculator_key }}" id="tariff-{{ tariff.slug }}">
+                            <summary class="faq-page__trigger">
+                                <span class="faq-page__trigger-text">{{ tariff.title }}</span>
+                                <span class="pricing-page__price-tag">{{ tariff.price_display }}</span>
+                                <span class="faq-page__chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="faq-page__answer">
+                                {% if tariff.short_description %}
+                                <p class="pricing-page__answer-lead">{{ tariff.short_description }}</p>
+                                {% endif %}
+                                <div class="faq-page__answer-body content-pre-line">{{ tariff.description }}</div>
+                                {% if tariff.calculator_key == 'consultation' and study_pricing.compare_rows %}
+                                <div class="pricing-page__consult-table-wrap">
+                                    <p class="pricing-page__consult-table-title">مبلغ هر جلسه مشاوره — کشورهای تحت پوشش موسسه</p>
+                                    <div class="pricing-page__consult-table-scroll">
+                                        <table class="pricing-page__consult-table" id="pricing-consult-compare">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">کشور مقصد</th>
+                                                    <th scope="col">هر جلسه (ماده ۳-۱)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for row in study_pricing.compare_rows %}
+                                                <tr data-country-code="{{ row.code }}"{% if forloop.first %} class="is-active"{% endif %}>
+                                                    <td data-label="کشور">{{ row.name }}</td>
+                                                    <td data-label="هر جلسه"><strong class="pricing-page__consult-price">{{ row.consultation_display }}</strong></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </details>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% empty %}
+                <p class="faq-page__empty-text">تعرفه‌ای ثبت نشده است.</p>
+                {% endfor %}
+
+                <section id="pricing-allowance" class="faq-page__group scroll-margin" aria-labelledby="pricing-allowance-title">
+                    <header class="faq-page__group-head">
+                        <span class="faq-page__group-icon ti-money" aria-hidden="true"></span>
+                        <div>
+                            <h3 id="pricing-allowance-title" class="faq-page__group-title">میزان مقرری پیشنهادی بانکی</h3>
+                            <p class="faq-page__group-desc">بر اساس کشور و شهر مقصد — مستقل از حق‌الزحمه موسسه</p>
+                        </div>
+                    </header>
+
+                    <div class="faq-page__search">
+                        <label class="faq-page__sr-only" for="allowance-filter">جستجوی کشور</label>
+                        <div class="faq-page__search-field">
+                            <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+                            <input type="search"
+                                   id="allowance-filter"
+                                   class="faq-page__search-input"
+                                   placeholder="جستجوی کشور یا منطقه…"
+                                   autocomplete="off"
+                                   aria-controls="allowance-tbody">
+                        </div>
+                        <p class="faq-page__search-note">{{ allowance_rows|length }} کشور و منطقه — مبالغ سپرده بانکی پیشنهادی سفارت</p>
+                    </div>
+
+                    <div class="pricing-page__table-panel">
+                        <div class="pricing-page__table-wrap">
+                            <table class="pricing-page__table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ردیف</th>
+                                        <th scope="col">کشور / منطقه</th>
+                                        <th scope="col">مقرری پیشنهادی</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allowance-tbody">
+                                    {% for c in allowance_rows %}
+                                    <tr data-search="{{ c.name }} {{ c.region }}" data-allowance-slug="{{ c.slug }}">
+                                        <td data-label="ردیف">{{ forloop.counter }}</td>
+                                        <td data-label="کشور">{{ c.name }}</td>
+                                        <td data-label="مقرری"><strong>{{ c.display }}</strong></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="faq-page__cta">
+                    <div>
+                        <h3 class="faq-page__cta-title">نیاز به برآورد دقیق‌تر دارید؟</h3>
+                        <p class="faq-page__cta-text">کارشناسان {{ institute.name }} پرونده شما را بررسی می‌کنند و بهترین مسیر را پیشنهاد می‌دهند.</p>
+                    </div>
+                    <div class="faq-page__cta-actions">
+                        <a href="{% url 'appointment' %}" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+                        <a href="{% url 'evaluation' %}" class="faq-page__btn faq-page__btn--ghost">فرم ارزیابی</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/pricing.js' %}?v=4" defer></script>
+{% endblock %}

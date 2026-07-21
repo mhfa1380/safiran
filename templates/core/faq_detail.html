@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ faq_meta_title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ faq_meta_description }}{% endblock %}
+{% block meta_keywords %}{{ faq_meta_keywords }}{% endblock %}
+{% block canonical_url %}{{ faq_page_url }}{% endblock %}
+{% block og_title %}{{ faq_og_title }}{% endblock %}
+{% block og_description %}{{ faq_meta_description }}{% endblock %}
+{% block twitter_title %}{{ faq_og_title }}{% endblock %}
+{% block twitter_description %}{{ faq_meta_description }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{{ faq_schema_json|safe }}</script>
+{% endblock %}
+
+{% block content %}
+{% url 'faq' as faq_url %}
+{% if faq.category %}
+{% url 'faq_category' category_slug=faq.category.slug as faq_category_url %}
+{% include "layout/page_hero.html" with hero_title=faq.question hero_lead=faq_meta_description crumb2_label="سوالات متداول" crumb2_url=faq_url crumb3_label=faq.category.name crumb3_url=faq_category_url crumb4_label=faq.question|truncatechars:80 %}
+{% else %}
+{% include "layout/page_hero.html" with hero_title=faq.question hero_lead=faq_meta_description crumb2_label="سوالات متداول" crumb2_url=faq_url crumb3_label=faq.question|truncatechars:80 %}
+{% endif %}
+
+<section class="faq-detail section_padding" dir="rtl" lang="fa">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-9">
+                <div class="faq-detail__shell">
+                    {% if faq.category %}
+                    <div class="faq-detail__meta">
+                        <a href="{% url 'faq_category' category_slug=faq.category.slug %}" class="faq-detail__category">
+                            {% if faq.category.icon %}<span class="{{ faq.category.icon }}" aria-hidden="true"></span>{% endif %}
+                            <span>{{ faq.category.name }}</span>
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <article class="faq-detail__article ck-content" itemscope itemtype="https://schema.org/Article">
+                        <div itemprop="articleBody">
+                            {{ faq.get_detail_html|safe }}
+                        </div>
+                    </article>
+
+                    <nav class="faq-detail__actions" aria-label="بازگشت به سوالات متداول">
+                        {% if faq.category %}
+                        <a href="{% url 'faq_category' category_slug=faq.category.slug %}" class="faq-detail__back">
+                            <span class="ti-angle-right" aria-hidden="true"></span>
+                            بازگشت به {{ faq.category.name }}
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'faq' %}" class="faq-detail__back faq-detail__back--muted">
+                            <span class="ti-angle-right" aria-hidden="true"></span>
+                            همه سوالات متداول
+                        </a>
+                    </nav>
+
+                    {% if related_faqs %}
+                    <aside class="faq-detail__related" aria-label="سوالات مرتبط">
+                        <h2 class="faq-detail__related-title">سوالات مرتبط</h2>
+                        <ul class="faq-detail__related-list">
+                            {% for item in related_faqs %}
+                            <li>
+                                <a href="{% url 'faq_detail' faq_slug=item.slug %}" class="faq-detail__related-link">
+                                    <span class="faq-detail__related-icon" aria-hidden="true">؟</span>
+                                    <span class="faq-detail__related-text">{{ item.question }}</span>
+                                    <span class="ti-angle-left faq-detail__related-arrow" aria-hidden="true"></span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </aside>
+                    {% endif %}
+
+                    <aside class="faq-page__cta faq-detail__cta">
+                        <div class="faq-page__cta-body">
+                            <h3 class="faq-page__cta-title">نیاز به راهنمایی بیشتر دارید؟</h3>
+                            <p class="faq-page__cta-text">کارشناسان ما آماده پاسخ به سوالات تخصصی شما هستند.</p>
+                        </div>
+                        <div class="faq-page__cta-actions">
+                            <a href="{% url 'appointment' %}" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+                            <a href="{% url 'contact' %}" class="faq-page__btn faq-page__btn--ghost">تماس با ما</a>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<div id="content-track-config" hidden data-track-url="{% url 'faq_track' %}" data-track-id="{{ faq.id }}" data-track-field="faq_id"></div>
+<script src="{% static 'js/app/content-track.js' %}" defer></script>
+{% endblock %}

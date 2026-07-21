@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ scholarship_meta_title }}{% endblock %}
+{% block meta_description %}{{ scholarship_meta_description }}{% endblock %}
+{% block meta_keywords %}{{ scholarship_meta_keywords }}{% endblock %}
+{% block canonical_url %}{{ scholarship_page_url }}{% endblock %}
+{% block og_title %}{{ scholarship_og_title }}{% endblock %}
+{% block og_description %}{{ scholarship_meta_description }}{% endblock %}
+{% block twitter_title %}{{ scholarship_og_title }}{% endblock %}
+{% block twitter_description %}{{ scholarship_meta_description }}{% endblock %}
+{% block og_image %}{{ site_url }}{% static country.get_flag_static %}{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{{ scholarship_schema_json|safe }}</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/services.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/country-scholarships.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/ai-qa-section.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title=guide.headline hero_lead=guide.intro crumb2_label="کشورهای مقصد" crumb2_url=country.get_absolute_url crumb3_label=country.name crumb3_url=country.get_absolute_url crumb4_label="بورسیه" %}
+
+{% include "layout/_answer_summary_banner.html" with answer_text=scholarship_answer_summary answer_class="scholar-page__hero-answer ai-qa-section__answer" %}
+
+<section class="faq-page scholar-page section_padding" dir="rtl">
+    <div class="container">
+        {% include "layout/_nav_degree_banner.html" %}
+
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 faq-page__aside scholar-page__aside" aria-label="ناوبری بورسیه">
+                {% if study_countries|length > 1 %}
+                <div class="faq-page__panel faq-page__panel--sticky">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-world" aria-hidden="true"></span>
+                        کشورهای مقصد
+                    </h2>
+                    <nav class="faq-page__nav" aria-label="لیست کشورها">
+                        {% for sc in study_countries %}
+                        <a href="{% url 'country_scholarships' country_code=sc.code %}{% if nav_degree_query %}?{{ nav_degree_query }}{% endif %}"
+                           class="faq-page__nav-link{% if sc.code == country.code %} is-active{% endif %}"
+                           {% if sc.code == country.code %}aria-current="page"{% endif %}>
+                            <img src="{% static sc.get_flag_static %}" alt="" width="22" height="16" loading="lazy" style="border-radius:2px;flex-shrink:0">
+                            <span>{{ sc.name }}</span>
+                        </a>
+                        {% endfor %}
+                    </nav>
+                </div>
+                {% endif %}
+
+                <div class="faq-page__panel faq-page__panel--featured">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-wallet" aria-hidden="true"></span>
+                        راهنمای {{ country.name }}
+                    </h2>
+                    <ul class="faq-page__popular">
+                        <li>
+                            <a href="{{ country.get_absolute_url }}{% if nav_degree_query %}?{{ nav_degree_query }}{% endif %}" class="faq-page__popular-btn scholar-page__aside-link">
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+                                بازگشت به راهنمای کشور
+                            </a>
+                        </li>
+                        {% if guide.application_guide %}
+                        <li>
+                            <a href="#scholar-apply" class="faq-page__popular-btn scholar-page__aside-link">
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+                                راهنمای اپلای بورسیه
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for s in scholarships|slice:":4" %}
+                        <li>
+                            <a href="#scholarship-{{ s.slug }}" class="faq-page__popular-btn scholar-page__aside-link">
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+                                {{ s.name|truncatechars:42 }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="scholar-page__cta-panel">
+                    <p class="scholar-page__cta-lead">بر اساس معدل، زبان و مقطع هدف، بورسیه‌های متناسب پیشنهاد می‌شود.</p>
+                    <a href="{% url 'evaluation' %}?target_degree={{ nav_target_degree|default:'bachelor' }}&amp;intent=scholarship" class="svc-card__btn svc-card__btn--primary scholar-page__cta-btn">ارزیابی و پیشنهاد بورسیه</a>
+                    <a href="{% url 'appointment' %}?about=universities&amp;title={{ country.name|urlencode }}" class="svc-card__btn svc-card__btn--ghost scholar-page__cta-btn">مشاوره {{ country.name }}</a>
+                </div>
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 faq-page__main scholar-page__main">
+                {% include "layout/_ai_qa_section.html" with ai_qa_blocks=scholarship_ai_qa_blocks ai_qa_title=scholarship_ai_qa_title ai_qa_lead=scholarship_ai_qa_lead ai_qa_section_id="scholar-qa" %}
+
+                {% if degree_guides %}
+                <div class="faq-page__filters scholar-page__degree-filters" role="toolbar" aria-label="فیلتر مقطع">
+                    {% for g in degree_guides %}
+                    <a href="{% url 'country_scholarships' country_code=country.code %}{% if g.target_degree %}?target_degree={{ g.target_degree }}{% endif %}{% if nav_intent %}{% if g.target_degree %}&amp;{% else %}?{% endif %}intent={{ nav_intent }}{% endif %}"
+                       class="faq-page__filter{% if g.pk == guide.pk %} is-active{% endif %}"
+                       {% if g.pk == guide.pk %}aria-current="page"{% endif %}>
+                        {{ g.get_degree_label|default:"همه مقاطع" }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if guide.overview %}
+                <div class="scholar-page__intro faq-page__panel scroll-target" id="scholar-intro">
+                    <div class="country-page__rich ck-content">{{ guide.overview|safe }}</div>
+                </div>
+                {% else %}
+                <div class="scholar-page__intro faq-page__panel scroll-target" id="scholar-intro">
+                    <p class="scholar-page__intro-lead">{{ guide.intro }}</p>
+                </div>
+                {% endif %}
+
+                <div class="scholar-page__toolbar scroll-target" id="scholar-programs">
+                    <div class="scholar-page__toolbar-text">
+                        <h2 class="scholar-page__toolbar-title">
+                            <span class="ti-target" aria-hidden="true"></span>
+                            برنامه‌های بورسیه {{ country.name }}
+                        </h2>
+                        <p class="scholar-page__count">
+                            <strong>{{ scholarships|length }}</strong> برنامه ثبت‌شده
+                            {% if guide.get_degree_label %} — {{ guide.get_degree_label }}{% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="scholar-page__grid services-grid">
+                    {% for s in scholarships %}
+                    {% include "content/_scholarship_card.html" with s=s country=country %}
+                    {% empty %}
+                    <p class="scholar-page__empty">برنامه‌ای ثبت نشده است.</p>
+                    {% endfor %}
+                </div>
+
+                {% if guide.application_guide %}
+                <section class="scholar-page__apply faq-page__panel scroll-target" id="scholar-apply" aria-labelledby="scholar-apply-title">
+                    <h2 id="scholar-apply-title" class="scholar-page__section-title">
+                        <span class="ti-clipboard" aria-hidden="true"></span>
+                        راهنمای اپلای بورسیه
+                    </h2>
+                    <div class="country-page__rich ck-content">{{ guide.application_guide|safe }}</div>
+                </section>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

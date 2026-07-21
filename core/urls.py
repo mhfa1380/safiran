@@ -1,40 +1,137 @@
 """URL routing for core app."""
 from django.shortcuts import redirect
-from django.urls import path
+from django.urls import path, register_converter
 
 from . import views
+from .url_converters import UnicodeSlugConverter
+
+register_converter(UnicodeSlugConverter, "uslug")
 
 urlpatterns = [
     path("", views.index, name="index"),
     # آدرس‌های سئو‌فرندلی با کلمات کلیدی فارسی
     path("درباره-ما/", views.about, name="about"),
+    path("دستاوردهای-ما/", views.monthly_achievements, name="monthly_achievements"),
+    path(
+        "دستاوردهای-ما/داستان/<uslug:achievement_slug>/",
+        views.achievement_detail,
+        name="achievement_detail",
+    ),
+    path("achievements/search/", views.achievement_search, name="achievement_search"),
+    path("achievements/suggest/", views.achievement_suggest, name="achievement_suggest"),
+    path("achievements/track/", views.achievement_track_view, name="achievement_track"),
     path("team/<int:pk>/", views.team_member_detail, name="team_member_detail"),
     path("blog/", views.blog_list, name="blog"),
+    path("blog/search/", views.blog_search, name="blog_search"),
+    path("blog/suggest/", views.blog_suggest, name="blog_suggest"),
     path("blog/<slug:slug>/", views.blog_detail, name="blog_detail"),
     path("تماس-با-ما/", views.contact, name="contact"),
     path("universities/", views.universities, name="universities"),
+    path(
+        "کشور/<slug:country_code>/بورسیه/",
+        views.country_scholarships,
+        name="country_scholarships",
+    ),
+    path("کشور/<slug:country_code>/", views.country_detail, name="country_detail"),
+    path(
+        "کشور/<slug:country_code>/search/",
+        views.country_search,
+        name="country_search",
+    ),
+    path(
+        "کشور/<slug:country_code>/suggest/",
+        views.country_suggest,
+        name="country_suggest",
+    ),
     path("رشته-های-تحصیلی/", views.majors, name="majors"),
-    path("رشته/<slug:slug>/", views.major_details, name="major_details"),
-    path("خدمات-موسسه/", views.services, name="services"),
+    path("majors/search/", views.majors_search, name="majors_search"),
+    path("majors/suggest/", views.majors_suggest, name="majors_suggest"),
+    path("رشته/<uslug:slug>/", views.major_details, name="major_details"),
+    path("خدمات-با-ما/", views.services, name="services"),
+    path("خدمات-با-ما/<slug:category_slug>/", views.services_category, name="services_category"),
+    path("services/search/", views.services_search, name="services_search"),
+    path("services/suggest/", views.services_suggest, name="services_suggest"),
+    path("services/track/", views.services_track_view, name="services_track"),
+    path("تعرفه-خدمات/", views.pricing, name="pricing"),
+    path("pricing/calculate/", views.pricing_calculate, name="pricing_calculate"),
     path("elements/", views.elements, name="elements"),
     path("دوره-های-تحصیلی/", views.courses_list, name="courses_list"),
+    path("courses/search/", views.courses_search, name="courses_search"),
+    path("courses/suggest/", views.courses_suggest, name="courses_suggest"),
     path("دوره/<slug:slug>/", views.course_details, name="course_details"),
+    path("مدرس/<slug:slug>/", views.course_instructor_detail, name="course_instructor_detail"),
     path("رزرو-مشاوره/", views.appointment, name="appointment"),
     path("appointment/slots/", views.appointment_slots, name="appointment_slots"),
     path("quick-consultation/", views.quick_consultation, name="quick_consultation"),
+    path("ارزیابی/", views.redirect_evaluation_legacy),
     path("ارزیابی-مهاجرت/", views.evaluation, name="evaluation"),
+    path(
+        "ارزیابی-مهاجرت/majors/suggest/",
+        views.evaluation_majors_suggest,
+        name="evaluation_majors_suggest",
+    ),
+    path(
+        "ارزیابی-مهاجرت/countries/suggest/",
+        views.evaluation_country_suggest,
+        name="evaluation_country_suggest",
+    ),
+    path("captcha/refresh/", views.captcha_refresh, name="captcha_refresh"),
+    path("ارزیابی-مهاجرت/submit/", views.evaluation_submit, name="evaluation_submit"),
+    path("ارزیابی-مهاجرت/process/", views.evaluation_process, name="evaluation_process"),
+    path(
+        "ارزیابی-مهاجرت/نتیجه/<uuid:token>/",
+        views.evaluation_result,
+        name="evaluation_result",
+    ),
+    path(
+        "ارزیابی-مهاجرت/نتیجه/<uuid:token>/pdf/",
+        views.evaluation_result_pdf,
+        name="evaluation_result_pdf",
+    ),
+    path(
+        "ارزیابی-مهاجرت/نتیجه/<uuid:token>/feedback/",
+        views.evaluation_result_feedback,
+        name="evaluation_result_feedback",
+    ),
     path("سوالات-متداول/", views.faq, name="faq"),
+    path("سوالات-متداول/سوال/<uslug:faq_slug>/", views.faq_detail, name="faq_detail"),
+    path("سوالات-متداول/<slug:category_slug>/", views.faq_category, name="faq_category"),
     path("faq/search/", views.faq_search, name="faq_search"),
+    path("faq/suggest/", views.faq_suggest, name="faq_suggest"),
+    path("faq/track/", views.faq_track_view, name="faq_track"),
+    path("search/", views.site_search_page, name="site_search"),
+    path("search/suggest/", views.site_suggest, name="site_suggest"),
     path("دانشگاه-های-خارج/", views.schools_list, name="schools_list"),
+    path("schools/search/", views.schools_search, name="schools_search"),
+    path("schools/suggest/", views.schools_suggest, name="schools_suggest"),
     path("دانشگاه/<slug:slug>/", views.school_detail, name="school_detail"),
     # ریدایرکت ۳۰۱ برای آدرس‌های قدیمی (حفظ سئو و لینک‌ها)
     path("about/", lambda r: redirect("about", permanent=True)),
+    path("achievements/", lambda r: redirect("monthly_achievements", permanent=True)),
+    path("دستاوردهای-ماه/", lambda r: redirect("monthly_achievements", permanent=True)),
+    path(
+        "دستاوردهای-ماه/داستان/<uslug:achievement_slug>/",
+        lambda r, achievement_slug: redirect(
+            "achievement_detail", achievement_slug=achievement_slug, permanent=True
+        ),
+    ),
+    path(
+        "country/<slug:country_code>/scholarships/",
+        lambda r, country_code: redirect("country_scholarships", country_code=country_code, permanent=True),
+    ),
+    path("country/<slug:country_code>/", lambda r, country_code: redirect("country_detail", country_code=country_code, permanent=True)),
     path("contact/", lambda r: redirect("contact", permanent=True)),
     path("majors/", lambda r: redirect("majors", permanent=True)),
-    path("major/<slug:slug>/", lambda r, slug: redirect("major_details", slug=slug, permanent=True)),
+    path("major/<uslug:slug>/", lambda r, slug: redirect("major_details", slug=slug, permanent=True)),
     path("services/", lambda r: redirect("services", permanent=True)),
+    path("خدمات-موسسه/", lambda r: redirect("services", permanent=True)),
+    path("pricing/", lambda r: redirect("pricing", permanent=True)),
     path("courses/", lambda r: redirect("courses_list", permanent=True)),
     path("course/<slug:slug>/", lambda r, slug: redirect("course_details", slug=slug, permanent=True)),
+    path(
+        "instructor/<slug:slug>/",
+        lambda r, slug: redirect("course_instructor_detail", slug=slug, permanent=True),
+    ),
     path("appointment/", lambda r: redirect("appointment", permanent=True)),
     path("evaluation/", lambda r: redirect("evaluation", permanent=True)),
     path("faq/", lambda r: redirect("faq", permanent=True)),

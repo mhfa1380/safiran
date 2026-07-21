@@ -1,83 +1,134 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}سوالات متداول مهاجرت تحصیلی و اعزام دانشجو | {{ institute.name }}{% endblock %}
+{% block title %}{{ faq_meta_title }} | {{ institute.name }}{% endblock %}
 
-{% block meta_description %}پاسخ سوالات متداول درباره مهاجرت تحصیلی، اعزام دانشجو به خارج، ویزای تحصیلی، بورسیه و انتخاب کشور مقصد (کانادا، آلمان، اروپا، چین) توسط موسسه {{ institute.name }}.{% endblock %}
+{% block meta_description %}{{ faq_meta_description }}{% endblock %}
+
+{% block meta_keywords %}{{ faq_meta_keywords }}{% endblock %}
+
+{% block canonical_url %}{{ faq_page_url }}{% endblock %}
+
+{% block og_title %}{{ faq_og_title }}{% endblock %}
+{% block og_description %}{{ faq_meta_description }}{% endblock %}
+{% block twitter_title %}{{ faq_og_title }}{% endblock %}
+{% block twitter_description %}{{ faq_meta_description }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
 {% endblock %}
 
 {% block extra_head %}
-<script>window.PAGE_CONFIG = window.PAGE_CONFIG || {}; window.PAGE_CONFIG.faqSearchUrl = "{% url 'faq_search' %}";</script>
-{% if faqs %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {% for faq in faqs %}
-    {
-      "@type": "Question",
-      "name": "{{ faq.question|escapejs }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ faq.answer|striptags|escapejs }}"
-      }
-    }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-  ]
-}
+<script>
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+window.PAGE_CONFIG.faqSearchUrl = "{% url 'faq_search' %}";
+window.PAGE_CONFIG.faqSuggestUrl = "{% url 'faq_suggest' %}";
+window.PAGE_CONFIG.faqTrackUrl = "{% url 'faq_track' %}";
+window.PAGE_CONFIG.faqActiveCategory = "{{ active_category.slug|default:'' }}";
 </script>
-{% endif %}
+<script type="application/ld+json">{{ faq_schema_json|safe }}</script>
 {% endblock %}
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
+{% url 'faq' as faq_url %}
+{% if active_category %}
+{% include "layout/page_hero.html" with hero_title=active_category.name hero_lead=active_category.description|default:"" crumb2_label="سوالات متداول" crumb2_url=faq_url crumb3_label=active_category.name %}
+{% else %}
+{% include "layout/page_hero.html" with hero_title="سوالات متداول" hero_lead="پاسخ رایج‌ترین سوالات درباره مهاجرت تحصیلی، اعزام دانشجو، ویزای تحصیلی و بورسیه را در همین صفحه بخوانید." crumb2_label="سوالات متداول" %}
+{% endif %}
+
+<section class="faq-page section_padding" dir="rtl">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h1 class="breadcrumb_iner_title">سوالات متداول</h1>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>سوالات متداول</p>
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 faq-page__aside" aria-label="دسته‌بندی سوالات">
+                <div class="faq-page__panel faq-page__panel--sticky">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-layout-grid2" aria-hidden="true"></span>
+                        دسته‌بندی
+                    </h2>
+                    <nav class="faq-page__nav" aria-label="ناوبری دسته‌های سوالات متداول">
+                        <a href="{% url 'faq' %}"
+                           class="faq-page__nav-link{% if not active_category %} is-active{% endif %}"
+                           data-faq-category=""
+                           {% if not active_category %}aria-current="page"{% endif %}>
+                            همه سوالات
+                        </a>
+                        {% for cat in categories %}
+                        <a href="{% url 'faq_category' category_slug=cat.slug %}"
+                           class="faq-page__nav-link{% if active_category and active_category.slug == cat.slug %} is-active{% endif %}"
+                           data-faq-category="{{ cat.slug }}"
+                           {% if active_category and active_category.slug == cat.slug %}aria-current="page"{% endif %}>
+                            {% if cat.icon %}<span class="{{ cat.icon }}" aria-hidden="true"></span>{% endif %}
+                            <span>{{ cat.name }}</span>
+                        </a>
+                        {% endfor %}
+                    </nav>
+                </div>
+
+                {% if featured_faqs %}
+                <div class="faq-page__panel faq-page__panel--featured">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-star" aria-hidden="true"></span>
+                        سوالات پرتکرار
+                    </h2>
+                    <ul class="faq-page__popular">
+                        {% for faq in featured_faqs %}
+                        <li>
+                            <button type="button"
+                                    class="faq-page__popular-btn"
+                                    data-faq-jump="{{ faq.slug }}"
+                                    data-faq-id="{{ faq.id }}">
+                                <span class="faq-page__popular-dot" aria-hidden="true"></span>
+                                {{ faq.question }}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 faq-page__main">
+                {% if featured_faqs %}
+                <div class="faq-page__chips" aria-label="سوالات پرتکرار">
+                    <span class="faq-page__chips-label">پرتکرار:</span>
+                    <div class="faq-page__chips-scroll">
+                        {% for faq in featured_faqs %}
+                        <button type="button"
+                                class="faq-page__chip"
+                                data-faq-jump="{{ faq.slug }}"
+                                data-faq-id="{{ faq.id }}">
+                            {{ faq.question }}
+                        </button>
+                        {% endfor %}
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
+                {% endif %}
 
-<section class="faq_area section_padding" dir="rtl">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-10 mx-auto">
-                <div class="faq_intro">
-                    <h3>سوالات متداول درباره مهاجرت تحصیلی و اعزام دانشجو</h3>
-                    <p>
-                        در این صفحه پاسخ رایج‌ترین سوالات شما درباره <strong>مهاجرت تحصیلی، اعزام دانشجو، ویزای تحصیلی و بورسیه</strong> را می‌خوانید.
-                        اگر پاسخ سوال خود را پیدا نکردید، می‌توانید از طریق صفحه
-                        <a href="{% url 'contact' %}">ارتباط با ما</a>
-                        یا رزرو <a href="{% url 'appointment' %}">وقت مشاوره مهاجرت تحصیلی</a>
-                        با مشاوران {{ institute.name }} در تماس باشید.
-                    </p>
+                <div class="faq-page__search">
+                    <label class="faq-page__sr-only" for="faq-search-input">جستجو در سوالات متداول</label>
+                    <div class="faq-page__search-field">
+                        <span class="faq-page__search-icon ti-search" aria-hidden="true"></span>
+                        <input type="search"
+                               id="faq-search-input"
+                               class="faq-page__search-input"
+                               placeholder="جستجو در سوالات…"
+                               autocomplete="off"
+                               enterkeyhint="search"
+                               aria-controls="faq-content-wrapper">
+                        <div id="faq-suggest-panel" class="faq-page__suggest" hidden role="listbox" aria-label="پیشنهاد سوالات"></div>
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <input type="text" id="faq-search-input" class="faq_search-input" placeholder="جستجو در سوالات و پاسخ‌ها ..." autocomplete="off">
-                </div>
-
-                <div id="faq-content-wrapper">
-                    {% include "core/_faq_content.html" with faqs=faqs search_q="" %}
+                <div id="faq-content-wrapper" class="faq-page__content" role="region" aria-label="لیست سوالات متداول">
+                    {% include "core/_faq_content.html" with faqs=faqs search_q="" suggestions=None active_category_slug=active_category.slug|default:"" %}
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/app/pages/faq.js' %}"></script>
+<script src="{% static 'js/app/pages/faq.js' %}" defer></script>
 {% endblock %}

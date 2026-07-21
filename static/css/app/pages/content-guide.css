@@ -1,0 +1,273 @@
+/**
+ * راهنمای محتوای سئو — بلوک‌های دسته‌بندی‌شده در صفحات رشته و دانشگاه
+ */
+.guide-content {
+  --guide-accent: var(--color-primary, #0c2e60);
+  --guide-accent-soft: rgba(12, 46, 96, 0.08);
+  --guide-card-bg: var(--color-bg, #fff);
+  direction: rtl;
+  text-align: right;
+}
+
+.guide-toc {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--guide-accent-soft) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border: 1px solid rgba(12, 46, 96, 0.12);
+}
+
+.guide-toc__title {
+  margin: 0 0 0.65rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--guide-accent);
+}
+
+.guide-toc ul {
+  margin: 0;
+  padding: 0 1.1rem 0 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+}
+
+.guide-toc li {
+  margin: 0;
+}
+
+.guide-toc a {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(12, 46, 96, 0.25);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.guide-toc a:hover {
+  color: var(--guide-accent);
+  border-bottom-color: var(--guide-accent);
+}
+
+.guide-block {
+  margin-bottom: 1.75rem;
+}
+
+.guide-block__title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--guide-accent-soft);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.2vw, 1.22rem);
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.45;
+}
+
+.guide-block__title::before {
+  content: "";
+  width: 4px;
+  height: 1.1em;
+  border-radius: 2px;
+  background: var(--guide-accent);
+  flex-shrink: 0;
+}
+
+.guide-lead {
+  margin: 0 0 1rem;
+  font-size: 1.02rem;
+  line-height: 2.05;
+  color: var(--color-text-dark);
+  text-align: justify;
+}
+
+.guide-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 0.85rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.guide-card {
+  margin: 0;
+  padding: 1rem 1.05rem;
+  border-radius: var(--radius-md);
+  background: var(--guide-card-bg);
+  border: 1px solid rgba(12, 46, 96, 0.1);
+  box-shadow: 0 4px 14px rgba(12, 46, 96, 0.06);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.guide-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(12, 46, 96, 0.1);
+}
+
+.guide-card--accent {
+  border-color: rgba(12, 46, 96, 0.22);
+  background: linear-gradient(160deg, rgba(12, 46, 96, 0.06) 0%, var(--guide-card-bg) 55%);
+}
+
+.guide-card__label {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-pill);
+  background: var(--guide-accent-soft);
+  color: var(--guide-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.guide-card__title {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.5;
+}
+
+.guide-card p,
+.guide-card ul {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: var(--color-text-muted);
+  text-align: justify;
+}
+
+.guide-card ul {
+  padding-right: 1rem;
+  padding-left: 0;
+}
+
+.guide-steps {
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: guide-step;
+}
+
+.guide-steps li {
+  position: relative;
+  margin: 0 0 0.75rem;
+  padding: 0.85rem 1rem 0.85rem 0.5rem;
+  padding-right: 3rem;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-light, #f6f8fb);
+  border: 1px solid rgba(12, 46, 96, 0.08);
+  font-size: 0.9rem;
+  line-height: 1.85;
+  text-align: justify;
+  counter-increment: guide-step;
+}
+
+.guide-steps li::before {
+  content: counter(guide-step);
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.65rem;
+  height: 1.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--guide-accent);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.guide-steps strong {
+  color: var(--color-heading);
+}
+
+.guide-tip {
+  margin: 1.25rem 0;
+  padding: 0.95rem 1.1rem;
+  border-radius: var(--radius-md);
+  border-right: 4px solid #2e7d57;
+  background: rgba(46, 125, 87, 0.08);
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: var(--color-text-dark);
+  text-align: justify;
+}
+
+.guide-tip strong {
+  color: #1f5c3f;
+}
+
+.guide-table-wrap {
+  overflow-x: auto;
+  margin: 1rem 0 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(12, 46, 96, 0.1);
+}
+
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  min-width: 280px;
+}
+
+.guide-table th,
+.guide-table td {
+  padding: 0.65rem 0.85rem;
+  text-align: right;
+  border-bottom: 1px solid rgba(12, 46, 96, 0.08);
+  line-height: 1.65;
+}
+
+.guide-table th {
+  background: var(--guide-accent-soft);
+  color: var(--guide-accent);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.guide-table tr:last-child td {
+  border-bottom: none;
+}
+
+.guide-content p {
+  margin-bottom: 0.95rem;
+  line-height: 2;
+  text-align: justify;
+}
+
+.guide-content ul:not(.guide-toc ul) {
+  margin: 0.5rem 0 1rem;
+  padding-right: 1.25rem;
+  line-height: 1.95;
+}
+
+.guide-content a {
+  color: var(--guide-accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.guide-content a:hover {
+  color: var(--color-primary-dark, #081f42);
+}
+
+@media (max-width: 575.98px) {
+  .guide-toc ul {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .guide-cards {
+    grid-template-columns: 1fr;
+  }
+}

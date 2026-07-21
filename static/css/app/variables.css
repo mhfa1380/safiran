@@ -52,6 +52,12 @@
   /* === سایه‌ها === */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.05);
+
+  /* ارتفاع نوبار ثابت در صفحات داخلی */
+  --site-header-height: 57px;
+  /* منوی همبرگری زیر این عرض؛ دسکتاپ از 1200px */
+  --site-header-nav-max-mobile: 1199.98px;
+  --site-header-nav-min-desktop: 1200px;
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
   --shadow-accent: 0 10px 30px 0 rgba(var(--color-accent-rgb), 0.2);
 
@@ -70,15 +76,18 @@
   --radius-pill: 50px;
 
   /* === تایپوگرافی (دو فونت لوکال) === */
-  /* فونت ساده: نوبار، متن، دکمه‌ها */
+  /* IRANSans: متن، فرم، منو، دکمه، پاراگراف */
   --font-sans: IRANSans, Tahoma, Arial, sans-serif;
-  /* فونت نمایشی: عناوین (h1-h6)، بنر */
-  --font-display: Lalezar, IRANSans, sans-serif;
+  /* Vazirmatn (وزیر): عناوین، بنر، تیتر صفحات */
+  --font-display: Vazirmatn, IRANSans, Tahoma, sans-serif;
   --font-size-base: 14px;
   --font-size-sm: 13px;
   --font-size-lg: 15px;
   --line-height-base: 1.929;
   --line-height-tight: 1.5;
+
+  /* ارتفاع یکسان کنترل‌های فرم (select و input متنی) */
+  --control-height: 2.275rem;
 
   /* === Transition === */
   --transition-fast: 0.2s ease;

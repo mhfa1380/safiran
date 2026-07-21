@@ -9,20 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>خدمات مهاجرت تحصیلی موسسه {{ institute.name }}</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span><a href="{% url 'services' %}">خدمات موسسه</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% include "layout/page_hero.html" with hero_title="خدمات مهاجرت تحصیلی موسسه "|add:institute.name crumb2_label="خدمات موسسه" crumb2_url_name="services" %}
 
 <section class="advance_feature learning_part services_margin services_page">
     <div class="container">

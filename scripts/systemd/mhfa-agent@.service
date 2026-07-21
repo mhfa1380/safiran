@@ -1,0 +1,13 @@
+[Unit]
+Description=MHFA Live Agent for %i
+After=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/mhfa-agent/%i.env
+ExecStart=/usr/bin/python3 /opt/mhfa/mhfa_agent.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

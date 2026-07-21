@@ -1,0 +1,142 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/referral_stats.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+    &rsaquo; آمار منبع آشنایی
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="referral-stats" dir="rtl" lang="fa">
+    <header class="referral-stats__header">
+        <div>
+            <h1>از کجا با سفیران آینده روشن آشنا شدید؟</h1>
+            <p class="referral-stats__lead">یک گزینه را انتخاب کنید تا بدانیم مخاطبان بیشتر از کدام مسیر به ما می‌رسند.</p>
+        </div>
+        <form class="referral-stats__filter" method="get" action="">
+            <label>
+                <span>از تاریخ</span>
+                <input type="date" name="from" value="{{ filter_from }}">
+            </label>
+            <label>
+                <span>تا تاریخ</span>
+                <input type="date" name="to" value="{{ filter_to }}">
+            </label>
+            <button type="submit" class="button">اعمال فیلتر</button>
+            {% if filter_from or filter_to %}
+            <a href="{% url 'admin:referral_stats' %}" class="button cancel-link">حذف فیلتر</a>
+            {% endif %}
+        </form>
+    </header>
+
+    <div class="referral-stats__summary">
+        <div class="referral-stats__chip">
+            <span class="referral-stats__chip-label">مجموع ثبت‌ها</span>
+            <strong>{{ stats.total }}</strong>
+        </div>
+        <div class="referral-stats__chip">
+            <span class="referral-stats__chip-label">ارزیابی هوشمند</span>
+            <strong>{{ stats.eval_total }}</strong>
+        </div>
+        <div class="referral-stats__chip">
+            <span class="referral-stats__chip-label">درخواست مشاوره</span>
+            <strong>{{ stats.consult_total }}</strong>
+        </div>
+        <div class="referral-stats__chip">
+            <span class="referral-stats__chip-label">با پاسخ منبع</span>
+            <strong>{{ stats.with_source }}</strong>
+        </div>
+        {% if stats.no_source %}
+        <div class="referral-stats__chip referral-stats__chip--muted">
+            <span class="referral-stats__chip-label">بدون پاسخ</span>
+            <strong>{{ stats.no_source }}</strong>
+        </div>
+        {% endif %}
+    </div>
+
+    <section class="referral-stats__section">
+        <h2>منبع اصلی</h2>
+        {% if not stats.total %}
+        <p class="referral-stats__empty">هنوز داده‌ای ثبت نشده است.</p>
+        {% else %}
+        <table class="referral-stats__table">
+            <thead>
+                <tr>
+                    <th scope="col">مسیر</th>
+                    <th scope="col">تعداد</th>
+                    <th scope="col">درصد</th>
+                    <th scope="col" class="referral-stats__bar-col">نمودار</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in stats.sources %}
+                {% if row.count %}
+                <tr>
+                    <td>{{ row.label }}</td>
+                    <td>
+                        <span class="referral-stats__count">{{ row.count }}</span>
+                        <span class="referral-stats__sub">ارزیابی {{ row.eval_count }} · مشاوره {{ row.consult_count }}</span>
+                    </td>
+                    <td>{{ row.pct }}٪</td>
+                    <td class="referral-stats__bar-col">
+                        <div class="referral-stats__bar" style="width: {{ row.pct }}%;" title="{{ row.pct }}٪"></div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </section>
+
+    {% if stats.social_total %}
+    <section class="referral-stats__section referral-stats__section--social">
+        <h2>شبکه اجتماعی — کدام پلتفرم؟</h2>
+        <p class="referral-stats__lead referral-stats__lead--small">
+            بین {{ stats.social_total }} نفری که «شبکه اجتماعی» را انتخاب کرده‌اند:
+        </p>
+        <table class="referral-stats__table">
+            <thead>
+                <tr>
+                    <th scope="col">پلتفرم</th>
+                    <th scope="col">تعداد</th>
+                    <th scope="col">سهم از شبکه اجتماعی</th>
+                    <th scope="col" class="referral-stats__bar-col">نمودار</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in stats.social %}
+                {% if row.count %}
+                <tr>
+                    <td>{{ row.label }}</td>
+                    <td>
+                        <span class="referral-stats__count">{{ row.count }}</span>
+                        <span class="referral-stats__sub">ارزیابی {{ row.eval_count }} · مشاوره {{ row.consult_count }}</span>
+                    </td>
+                    <td>{{ row.pct }}٪</td>
+                    <td class="referral-stats__bar-col">
+                        <div class="referral-stats__bar referral-stats__bar--social" style="width: {{ row.pct }}%;"></div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% if stats.social_unspecified %}
+                <tr>
+                    <td>نامشخص</td>
+                    <td>{{ stats.social_unspecified }}</td>
+                    <td>—</td>
+                    <td></td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

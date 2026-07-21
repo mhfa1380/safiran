@@ -1,31 +1,112 @@
 /**
  * استایل خروجی محتوای غنی CKEditor
- * برای نمایش متن و تصویر تو در تو در وبلاگ و صفحات دانشگاه
+ * در سایت و داخل خود ویرایشگر (contentsCss)
  */
-.ck-content {
+.ck-content,
+.cke_editable.ck-content,
+.country-page__rich {
   line-height: 1.8;
   text-align: justify;
 }
 
-.ck-content img {
+.ck-content img,
+.cke_editable.ck-content img,
+.country-page__rich img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
   margin: 0.75rem 0;
+}
+
+/* اندازه‌های از پیش‌تعریف‌شده */
+.ck-img {
+  height: auto !important;
+  border-radius: 8px;
+}
+
+.ck-img--xs {
+  width: 250px;
+  max-width: 100%;
+}
+
+.ck-img--sm {
+  width: 400px;
+  max-width: 100%;
+}
+
+.ck-img--md {
+  width: 600px;
+  max-width: 100%;
+}
+
+.ck-img--lg {
+  width: 800px;
+  max-width: 100%;
+}
+
+.ck-img--full {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* چیدمان — RTL: start=راست، end=چپ */
+.ck-img--center {
   display: block;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  float: none !important;
+  clear: both;
+}
+
+.ck-img--float-start {
+  float: right;
+  margin: 0.25rem 0 1rem 1.25rem !important;
+  clear: right;
+}
+
+.ck-img--float-end {
+  float: left;
+  margin: 0.25rem 1.25rem 1rem 0 !important;
+  clear: left;
+}
+
+/* پشتیبانی از align قدیمی و width دستی در دیالوگ تصویر */
+.ck-content img[align="middle"],
+.ck-content img[align="center"],
+.cke_editable img[align="middle"],
+.cke_editable img[align="center"] {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  float: none;
+}
+
+.ck-content img[align="right"],
+.cke_editable img[align="right"] {
+  float: right;
+  margin-left: 1rem;
+}
+
+.ck-content img[align="left"],
+.cke_editable img[align="left"] {
+  float: left;
+  margin-right: 1rem;
 }
 
 .ck-content p {
   margin-bottom: 1rem;
 }
 
-.ck-content h2, .ck-content h3, .ck-content h4 {
+.ck-content h2,
+.ck-content h3,
+.ck-content h4 {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   font-weight: 600;
 }
 
-.ck-content ul, .ck-content ol {
+.ck-content ul,
+.ck-content ol {
   margin: 0.75rem 0;
   padding-right: 1.5rem;
 }
@@ -47,4 +128,31 @@
   padding-right: 1rem;
   margin: 1rem 0;
   color: #495057;
+}
+
+/* داخل ادیتور — کمی فاصله برای انتخاب راحت‌تر تصویر */
+.cke_editable.ck-content img.ck-img {
+  outline: 1px dashed rgba(12, 46, 96, 0.2);
+  outline-offset: 3px;
+  cursor: pointer;
+}
+
+.cke_editable.ck-content img.ck-img:hover {
+  outline-color: rgba(12, 46, 96, 0.45);
+}
+
+@media (max-width: 576px) {
+  .ck-img--xs,
+  .ck-img--sm,
+  .ck-img--md,
+  .ck-img--lg {
+    width: 100% !important;
+  }
+
+  .ck-img--float-start,
+  .ck-img--float-end {
+    float: none;
+    display: block;
+    margin: 0.75rem auto !important;
+  }
 }

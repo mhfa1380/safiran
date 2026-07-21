@@ -2,122 +2,264 @@
 {% load static %}
 
 {% block title %}درباره موسسه مهاجرت تحصیلی {{ institute.name }} | اعزام دانشجو از بابل مازندران{% endblock %}
-{% block meta_description %}آشنایی با موسسه مهاجرت تحصیلی {{ institute.name }} در بابل، مازندران؛ موسسه اعزام دانشجو به خارج، متخصص در مشاوره مهاجرت تحصیلی به کانادا، آلمان، اروپا و چین با مجوز رسمی وزارت علوم.{% endblock %}
+{% block meta_description %}آشنایی با موسسه مهاجرت تحصیلی {{ institute.name }} در بابل، مازندران؛ داستان برند، خط زمانی فعالیت، تیم مشاوران و اعزام دانشجو به کانادا، آلمان، اروپا و چین با مجوز رسمی وزارت علوم.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/app/pages/content.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
 <link rel="stylesheet" href="{% static 'css/app/pages/about.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/ai-qa-section.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{{ about_schema_json|safe }}</script>
 {% endblock %}
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
+{% include "layout/page_hero.html" with hero_title="درباره موسسه "|add:institute.name hero_lead="از یک دفتر مشاوره در بابل تا همراهی دانشجویان در مسیر پذیرش، ویزا و استقرار در کشور مقصد — با مجوز رسمی وزارت علوم و تیمی متخصص." crumb2_label="درباره ما" %}
+
+{% include "layout/_answer_summary_banner.html" with answer_text=about_answer_summary answer_class="about-page__hero-answer ai-qa-section__answer" %}
+
+<section class="faq-page about-page section_padding" dir="rtl" lang="fa">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>درباره موسسه {{ institute.name }}</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>درباره ما</p>
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 faq-page__aside" aria-label="ناوبری صفحه درباره ما">
+                <div class="faq-page__panel faq-page__panel--sticky">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-menu" aria-hidden="true"></span>
+                        در این صفحه
+                    </h2>
+                    <nav class="faq-page__nav" aria-label="بخش‌های صفحه">
+                        <a href="#about-intro" class="faq-page__nav-link is-active">معرفی موسسه</a>
+                        {% if brand_story %}
+                        <a href="#about-story" class="faq-page__nav-link">داستان ما</a>
+                        {% endif %}
+                        {% if brand_timeline %}
+                        <a href="#about-timeline" class="faq-page__nav-link">خط زمانی</a>
+                        {% endif %}
+                        <a href="#about-stats" class="faq-page__nav-link">آمار و دستاورد</a>
+                        {% if team_groups %}
+                        <a href="#about-team" class="faq-page__nav-link">تیم و مشاوران</a>
+                        {% endif %}
+                    </nav>
+                </div>
+
+                <div class="faq-page__panel about-page__quick">
+                    <h2 class="faq-page__panel-title">
+                        <span class="ti-headphone-alt" aria-hidden="true"></span>
+                        شروع مسیر
+                    </h2>
+                    <p class="about-page__quick-text">برای انتخاب کشور، دانشگاه و برنامه تحصیلی مناسب، همین حالا وقت مشاوره رزرو کنید.</p>
+                    <a href="{% url 'appointment' %}?about=about" class="faq-page__btn faq-page__btn--primary about-page__quick-btn">رزرو مشاوره</a>
+                    <a href="{% url 'services' %}" class="faq-page__btn faq-page__btn--ghost about-page__quick-btn">خدمات با ما</a>
+                </div>
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 faq-page__main about-page__main">
+                {% include "layout/_ai_qa_section.html" with ai_qa_blocks=about_ai_qa_blocks ai_qa_title=about_ai_qa_title ai_qa_lead=about_ai_qa_lead ai_qa_section_id="about-qa" %}
+
+                <article id="about-intro" class="about-block about-intro" aria-labelledby="about-intro-title">
+                    <div class="about-intro__media">
+                        <img src="{% static 'img/learning_img.png' %}"
+                             alt="درباره موسسه {{ institute.name }} — اعزام دانشجو"
+                             loading="lazy"
+                             width="640"
+                             height="480">
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="learning_part index_learning">
-    <div class="container">
-        <div class="row align-items-sm-center align-items-lg-stretch">
-            <div class="col-md-7 col-lg-7">
-                <div class="learning_img">
-                    <img src="{% static 'img/learning_img.png' %}" alt="درباره موسسه {{ institute.name }} - اعزام دانشجو" loading="lazy">
-                </div>
-            </div>
-            <div class="col-md-5 col-lg-5">
-                <div class="learning_member_text">
-                    <h5>موسسه مهاجرت تحصیلی در بابل</h5>
-                    <h2>آینده تحصیلی‌تان را<br>با راهنمایی ما بسازید</h2>
-                    <p>
-                        {{ institute.name }} یک موسسه تخصصی <strong>مهاجرت تحصیلی و اعزام دانشجو به خارج از کشور</strong> در شهر بابل، استان مازندران است
-                        که با تکیه بر تجربه، دقت و همراهی قدم‌به‌قدم، مسیر پذیرش دانشگاه و دریافت ویزای تحصیلی را برای شما شفاف، امن و قابل‌اعتماد می‌کند.
-                    </p>
-                    <ul>
-                        <li><span class="ti-id-badge"></span> موسسه {{ institute.name }} با مجوز رسمی وزارت علوم (تاریخ صدور: {{ institute.license_issue_date }}) در حوزه اعزام دانشجو</li>
-                        <li><span class="ti-world"></span> تیم متخصص در پرونده‌های مهاجرت تحصیلی به کانادا، آلمان، اروپا، چین و سایر کشورها</li>
-                    </ul>
-                    <a href="{% url 'appointment' %}?about=about" class="btn_1">رزرو مشاوره مهاجرت تحصیلی</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="member_counter">
-    <div class="container">
-        <div class="row">
-            <div class="col-6 col-lg-3">
-                <div class="single_member_counter">
-                    <span class="counter counter-persian" data-value="{{ university_count|default:0 }}">۰</span>
-                    <h4>دانشگاه</h4>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="single_member_counter">
-                    <span class="counter counter-persian" data-value="{{ consultation_hours|default:0 }}">۰</span>
-                    <h4>ساعت مشاوره</h4>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="single_member_counter">
-                    <span class="counter counter-persian" data-value="{{ countries_count|default:0 }}">۰</span>
-                    <h4>کشور مقصد</h4>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="single_member_counter">
-                    <span class="counter counter-persian" data-value="{{ students_sent|default:0 }}">۰</span>
-                    <h4>دانشجو اعزام‌شده</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{% if team_members %}
-<section class="about_team_section section_padding">
-    <div class="container">
-        <div class="section_tittle text-center">
-            <h2>اعضای تیم ما</h2>
-            <p>تیم ما با تجربه و تخصص، آماده همراهی شما هست</p>
-        </div>
-        <div class="row justify-content-center">
-            {% for member in team_members %}
-            <div class="col-sm-6 col-xl-4 col-lg-4 mb-4">
-                <div class="team_card">
-                    <a href="{% url 'team_member_detail' member.pk %}" class="team_card_link">
-                        <div class="team_card_img">
-                            {% if member.image %}
-                                <img src="{{ member.image.url }}" alt="{{ member.name }}">
-                            {% else %}
-                                <img src="{% static 'img/blog/blog_1.png' %}" alt="{{ member.name }}">
-                            {% endif %}
+                    <div class="about-intro__body">
+                        <span class="about-block__eyebrow">موسسه مهاجرت تحصیلی در بابل</span>
+                        <h2 id="about-intro-title" class="about-block__title">آینده تحصیلی‌تان را با راهنمایی ما بسازید</h2>
+                        <p class="about-block__lead">
+                            {{ institute.name }} یک موسسه تخصصی <strong>مهاجرت تحصیلی و اعزام دانشجو</strong> در بابل، مازندران است
+                            که با تکیه بر تجربه، دقت و همراهی قدم‌به‌قدم، مسیر پذیرش دانشگاه و ویزای تحصیلی را شفاف و قابل‌اعتماد می‌کند.
+                        </p>
+                        <ul class="about-intro__highlights">
+                            <li>
+                                <span class="about-intro__check ti-check" aria-hidden="true"></span>
+                                مجوز رسمی وزارت علوم (صدور: {{ institute.license_issue_date }}) در حوزه اعزام دانشجو
+                            </li>
+                            <li>
+                                <span class="about-intro__check ti-check" aria-hidden="true"></span>
+                                تیم متخصص در پرونده‌های کانادا، آلمان، اروپا، چین و سایر مقاصد
+                            </li>
+                        </ul>
+                        <div class="about-block__actions">
+                            <a href="{% url 'appointment' %}?about=about" class="about-block__btn about-block__btn--primary">رزرو مشاوره مهاجرت تحصیلی</a>
+                            <a href="{% url 'contact' %}" class="about-block__btn about-block__btn--ghost">تماس با ما</a>
                         </div>
-                        <div class="team_card_body">
-                            <h4 class="team_card_name">{{ member.name }}</h4>
-                            <p class="team_card_position">{{ member.position }}</p>
-                            {% if member.title %}
-                                <p class="team_card_title">{{ member.title }}</p>
-                            {% endif %}
-                            {% if member.description %}
-                                <p class="team_card_desc">{{ member.description|truncatewords:20 }}</p>
-                            {% endif %}
+                    </div>
+                </article>
+
+                {% if brand_story %}
+                <section id="about-story" class="about-page__section" aria-labelledby="about-story-title">
+                    <header class="about-page__section-head">
+                        <span class="about-page__section-icon ti-book" aria-hidden="true"></span>
+                        <div>
+                            <span class="about-block__eyebrow">{{ brand_story.eyebrow }}</span>
+                            <h2 id="about-story-title" class="about-page__section-title">{{ brand_story.title }}</h2>
+                            <p class="about-page__section-desc">{{ brand_story.lead }}</p>
                         </div>
-                    </a>
-                </div>
+                    </header>
+
+                    <article class="about-block about-story-card">
+                        <div class="about-story-card__body content-pre-line">
+                            {% for paragraph in brand_story.paragraphs %}
+                            <p>{{ paragraph }}</p>
+                            {% endfor %}
+                        </div>
+                    </article>
+
+                    {% if brand_story.values %}
+                    <div class="about-values">
+                        {% for value in brand_story.values %}
+                        <article class="about-value">
+                            <span class="about-value__icon {{ value.icon }}" aria-hidden="true"></span>
+                            <h3 class="about-value__title">{{ value.title }}</h3>
+                            <p class="about-value__text">{{ value.text }}</p>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </section>
+                {% endif %}
+
+                {% if brand_timeline %}
+                <section id="about-timeline" class="about-page__section" aria-labelledby="about-timeline-title">
+                    <header class="about-page__section-head">
+                        <span class="about-page__section-icon ti-time" aria-hidden="true"></span>
+                        <div>
+                            <h2 id="about-timeline-title" class="about-page__section-title">خط زمانی {{ institute.name }}</h2>
+                            <p class="about-page__section-desc">مسیر رشد ما از آغاز تا امروز</p>
+                        </div>
+                    </header>
+
+                    <ol class="about-timeline">
+                        {% for item in brand_timeline %}
+                        <li class="about-timeline__item">
+                            <article class="about-block about-timeline__card">
+                                <time class="about-timeline__year" datetime="{{ item.year }}">{{ item.year }}</time>
+                                <h3 class="about-timeline__title">{{ item.title }}</h3>
+                                <p class="about-timeline__text">{{ item.text }}</p>
+                            </article>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </section>
+                {% endif %}
+
+                <section id="about-stats" class="about-page__section" aria-labelledby="about-stats-title">
+                    <header class="about-page__section-head about-page__section-head--compact">
+                        <span class="about-page__section-icon ti-bar-chart" aria-hidden="true"></span>
+                        <div>
+                            <h2 id="about-stats-title" class="about-page__section-title">آمار و دستاورد</h2>
+                            <p class="about-page__section-desc">نگاهی کوتاه به مقیاس همراهی ما با دانشجویان</p>
+                        </div>
+                    </header>
+
+                    <div class="about-stats">
+                        <article class="about-stat">
+                            <span class="about-stat__value counter counter-persian" data-value="{{ university_count|default:0 }}">۰</span>
+                            <span class="about-stat__label">دانشگاه</span>
+                        </article>
+                        <article class="about-stat">
+                            <span class="about-stat__value counter counter-persian" data-value="{{ consultation_hours|default:0 }}">۰</span>
+                            <span class="about-stat__label">ساعت مشاوره</span>
+                        </article>
+                        <article class="about-stat">
+                            <span class="about-stat__value counter counter-persian" data-value="{{ countries_count|default:0 }}">۰</span>
+                            <span class="about-stat__label">کشور مقصد</span>
+                        </article>
+                        <article class="about-stat">
+                            <span class="about-stat__value counter counter-persian" data-value="{{ students_sent|default:0 }}">۰</span>
+                            <span class="about-stat__label">دانشجو اعزام‌شده</span>
+                        </article>
+                    </div>
+                </section>
+
+                {% if team_groups %}
+                <section id="about-team" class="about-page__section" aria-labelledby="about-team-title">
+                    <header class="about-page__section-head">
+                        <span class="about-page__section-icon ti-user" aria-hidden="true"></span>
+                        <div>
+                            <h2 id="about-team-title" class="about-page__section-title">تیم و مشاوران ما</h2>
+                            <p class="about-page__section-desc">اعضای تیم در گروه‌های تخصصی؛ برای آشنایی بیشتر روی هر نفر کلیک کنید</p>
+                        </div>
+                    </header>
+
+                    {% if team_groups|length > 1 %}
+                    <div class="faq-page__filters about-team__filters" role="tablist" aria-label="گروه‌های تیم">
+                        {% for group in team_groups %}
+                        <button type="button"
+                                class="faq-page__filter about-team__tab{% if forloop.first %} is-active{% endif %}"
+                                role="tab"
+                                id="team-tab-{{ group.code }}"
+                                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                                aria-controls="team-panel-{{ group.code }}"
+                                data-team-group="{{ group.code }}">
+                            {{ group.label }}
+                            <span class="about-team__tab-count">{{ group.members|length }}</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% for group in team_groups %}
+                    <div class="about-team__panel{% if forloop.first %} is-active{% endif %}"
+                         id="team-panel-{{ group.code }}"
+                         role="tabpanel"
+                         aria-labelledby="team-tab-{{ group.code }}"
+                         data-team-panel="{{ group.code }}"
+                         {% if not forloop.first %}hidden{% endif %}>
+                        {% if team_groups|length == 1 %}
+                        <h3 class="about-team__group-label">{{ group.label }}</h3>
+                        {% endif %}
+                        <div class="about-team__grid">
+                            {% for member in group.members %}
+                            <article class="about-team-card">
+                                <a href="{% url 'team_member_detail' member.pk %}" class="about-team-card__link">
+                                    <div class="about-team-card__media">
+                                        {% if member.image %}
+                                        <img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy">
+                                        {% else %}
+                                        <img src="{% static 'img/blog/blog_1.png' %}" alt="{{ member.name }}" loading="lazy">
+                                        {% endif %}
+                                    </div>
+                                    <div class="about-team-card__body">
+                                        <h4 class="about-team-card__name">{{ member.name }}</h4>
+                                        <p class="about-team-card__role">{{ member.position }}</p>
+                                        {% if member.title %}
+                                        <p class="about-team-card__title">{{ member.title }}</p>
+                                        {% endif %}
+                                        {% if member.description %}
+                                        <p class="about-team-card__desc">{{ member.description|truncatewords:18 }}</p>
+                                        {% endif %}
+                                        <span class="about-team-card__more">مشاهده پروفایل <span class="ti-arrow-left" aria-hidden="true"></span></span>
+                                    </div>
+                                </a>
+                            </article>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
+
+                <aside class="faq-page__cta">
+                    <div class="faq-page__cta-body">
+                        <h3 class="faq-page__cta-title">آماده شروع مسیر مهاجرت تحصیلی هستید؟</h3>
+                        <p class="faq-page__cta-text">کارشناسان {{ institute.name }} برای مشاوره رایگان اولیه و معرفی مسیر مناسب پرونده شما آماده‌اند.</p>
+                    </div>
+                    <div class="faq-page__cta-actions">
+                        <a href="{% url 'appointment' %}?about=about" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+                        <a href="{% url 'evaluation' %}" class="faq-page__btn faq-page__btn--ghost">ارزیابی پرونده</a>
+                        <a href="{% url 'services' %}" class="faq-page__btn faq-page__btn--ghost">خدمات با ما</a>
+                    </div>
+                </aside>
             </div>
-            {% endfor %}
         </div>
     </div>
 </section>
-{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/about.js' %}" defer></script>
 {% endblock %}

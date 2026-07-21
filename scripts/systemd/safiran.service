@@ -1,0 +1,16 @@
+[Unit]
+Description=Gunicorn for safiran_site (saroshan.ir)
+After=network.target redis-server.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/ezam_daneshjoo/safiran_site
+EnvironmentFile=/root/ezam_daneshjoo/safiran_site/.env
+ExecStart=/root/envs/safiran/bin/gunicorn safiran_site.wsgi:application \
+  --bind 127.0.0.1:8243 --workers 2 --timeout 120
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

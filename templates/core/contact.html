@@ -10,102 +10,111 @@
 {% endblock %}
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>تماس با ما</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span>تماس با ما</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% include "layout/page_hero.html" with hero_title="تماس با ما" hero_lead="برای مشاوره مهاجرت تحصیلی، انتخاب کشور و دانشگاه، یا پیگیری پرونده با کارشناسان ما در ارتباط باشید." crumb2_label="تماس با ما" %}
 
-<section class="contact_area section_padding" dir="rtl">
+<section class="contact-page section_padding" dir="rtl">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-4 mb-4 mb-lg-0">
-                <div class="contact_intro">
-                    <h3>با مشاوران مهاجرت تحصیلی در ارتباط باشید</h3>
-                    <p>اگر درباره مهاجرت تحصیلی، انتخاب کشور، دانشگاه یا ویزای تحصیلی سوال دارید، از طریق فرم زیر یا اطلاعات تماس، با کارشناسان {{ institute.name }} صحبت کنید.</p>
+        <div class="row contact-page__row">
+            <aside class="col-lg-4 col-xl-3 contact-page__aside" aria-label="اطلاعات تماس">
+                <div class="contact-page__panel">
+                    <h2 class="contact-page__panel-title">
+                        <span class="ti-comment-alt" aria-hidden="true"></span>
+                        پیام به مشاوران
+                    </h2>
+                    <p class="contact-page__intro-text">
+                        اگر درباره مهاجرت تحصیلی، ویزا، بورسیه یا انتخاب مسیر تحصیلی سوال دارید، فرم را پر کنید یا از راه‌های تماس مستقیم استفاده کنید.
+                    </p>
                 </div>
-                <div class="contact_info-card">
-                    <div class="contact_info-item">
-                        <div class="contact_info-icon"><i class="ti-home"></i></div>
-                        <div class="contact_info-body">
-                            <h4>آدرس</h4>
-                            <p>{{ institute.city }}، {{ institute.province }}<br>{{ institute.address }}</p>
-                        </div>
-                    </div>
-                    <div class="contact_info-item">
-                        <div class="contact_info-icon"><i class="ti-tablet"></i></div>
-                        <div class="contact_info-body">
-                            <h4>تلفن</h4>
-                            <p><a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
-                            <p class="contact_hours_hint">شنبه تا جمعه، ۹ تا ۱۸</p>
-                        </div>
-                    </div>
-                    <div class="contact_info-item">
-                        <div class="contact_info-icon"><i class="ti-email"></i></div>
-                        <div class="contact_info-body">
-                            <h4>ایمیل</h4>
-                            <p><a href="mailto:{{ institute.email }}">{{ institute.email }}</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-lg-8">
-                <div class="contact_form-card">
+                <div class="contact-page__panel contact-page__panel--info">
+                    <h2 class="contact-page__panel-title">
+                        <span class="ti-headphone-alt" aria-hidden="true"></span>
+                        راه‌های تماس
+                    </h2>
+                    <ul class="contact-page__info-list">
+                        <li class="contact-page__info-item">
+                            <span class="contact-page__info-icon ti-location-pin" aria-hidden="true"></span>
+                            <div class="contact-page__info-body">
+                                <span class="contact-page__info-label">آدرس</span>
+                                <p>{{ institute.city }}، {{ institute.province }}<br>{{ institute.address }}</p>
+                            </div>
+                        </li>
+                        <li class="contact-page__info-item">
+                            <span class="contact-page__info-icon ti-mobile" aria-hidden="true"></span>
+                            <div class="contact-page__info-body">
+                                <span class="contact-page__info-label">تلفن ثابت</span>
+                                <p><a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a></p>
+                                {% if institute.mobile %}
+                                <span class="contact-page__info-label" style="margin-top:0.75rem;display:block">موبایل (مشاوره)</span>
+                                <p><a href="tel:{{ institute.mobile }}" class="tel-ltr">{{ institute.mobile_formatted }}</a></p>
+                                {% endif %}
+                                <p class="contact-page__info-hint">شنبه تا جمعه، ۹ تا ۱۸</p>
+                            </div>
+                        </li>
+                        <li class="contact-page__info-item">
+                            <span class="contact-page__info-icon ti-email" aria-hidden="true"></span>
+                            <div class="contact-page__info-body">
+                                <span class="contact-page__info-label">ایمیل</span>
+                                <p><a href="mailto:{{ institute.email }}">{{ institute.email }}</a></p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="{% url 'appointment' %}" class="contact-page__info-cta">رزرو وقت مشاوره</a>
+                </div>
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 contact-page__main">
+                <div class="contact-page__card">
+                    <div class="contact-page__card-head">
+                        <h2 class="contact-page__card-title">
+                            <span class="ti-pencil-alt" aria-hidden="true"></span>
+                            ارسال پیام
+                        </h2>
+                        <p class="contact-page__card-lead">پاسخ کارشناسان {{ institute.name }} در اولین فرصت کاری ارسال می‌شود.</p>
+                    </div>
+
                     {% if success %}
-                        <div class="contact_success">
-                            پیام شما با موفقیت ارسال شد. کارشناسان {{ institute.name }} در اسرع وقت با شما تماس خواهند گرفت.
+                    <div class="contact-page__success" role="status">
+                        <span class="ti-check contact-page__success-icon" aria-hidden="true"></span>
+                        <div>
+                            <strong>پیام شما ثبت شد</strong>
+                            <p>کارشناسان {{ institute.name }} در اسرع وقت با شما تماس خواهند گرفت.</p>
                         </div>
+                    </div>
                     {% endif %}
 
-                    <form method="post" class="contact_form" novalidate>
+                    <form method="post" class="contact-page__form" novalidate>
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی</label>
+                        <div class="row contact-page__form-row">
+                            <div class="col-12 col-md-6 contact-page__form-col">
+                                <div class="contact-page__field">
+                                    <label class="contact-page__label" for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی</label>
                                     {{ form.full_name }}
-                                    {% if form.full_name.errors %}<small class="text-danger d-block">{{ form.full_name.errors|striptags }}</small>{% endif %}
+                                    {% if form.full_name.errors %}<span class="contact-page__error">{{ form.full_name.errors|striptags }}</span>{% endif %}
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.email.id_for_label }}">ایمیل</label>
+                            <div class="col-12 col-md-6 contact-page__form-col">
+                                <div class="contact-page__field">
+                                    <label class="contact-page__label" for="{{ form.email.id_for_label }}">ایمیل</label>
                                     {{ form.email }}
-                                    {% if form.email.errors %}<small class="text-danger d-block">{{ form.email.errors|striptags }}</small>{% endif %}
+                                    {% if form.email.errors %}<span class="contact-page__error">{{ form.email.errors|striptags }}</span>{% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="{{ form.subject.id_for_label }}">موضوع</label>
+                        <div class="contact-page__field">
+                            <label class="contact-page__label" for="{{ form.subject.id_for_label }}">موضوع</label>
                             {{ form.subject }}
-                            {% if form.subject.errors %}<small class="text-danger d-block">{{ form.subject.errors|striptags }}</small>{% endif %}
+                            {% if form.subject.errors %}<span class="contact-page__error">{{ form.subject.errors|striptags }}</span>{% endif %}
                         </div>
-                        <div class="form-group">
-                            <label for="{{ form.message.id_for_label }}">متن پیام</label>
+                        <div class="contact-page__field">
+                            <label class="contact-page__label" for="{{ form.message.id_for_label }}">متن پیام</label>
                             {{ form.message }}
-                            {% if form.message.errors %}<small class="text-danger d-block">{{ form.message.errors|striptags }}</small>{% endif %}
+                            {% if form.message.errors %}<span class="contact-page__error">{{ form.message.errors|striptags }}</span>{% endif %}
                         </div>
-                        <div class="form-group">
-                            <label>کد امنیتی</label>
-                            <div class="contact_captcha-wrap">
-                                <span class="contact_captcha-question">{{ captcha_question }}</span>
-                                <div class="contact_captcha-input">
-                                    {{ form.captcha_answer }}
-                                    {% if form.captcha_answer.errors %}<small class="text-danger d-block mt-1">{{ form.captcha_answer.errors|striptags }}</small>{% endif %}
-                                </div>
-                            </div>
+                        {% include "layout/_form_captcha.html" with captcha_class="contact-page__captcha-block" captcha_form_key="contact" %}
+                        <div class="contact-page__actions">
+                            <button type="submit" class="contact-page__submit btn_1">ارسال پیام</button>
                         </div>
-                        <button type="submit" class="btn_1 contact_btn-submit">ارسال پیام</button>
                     </form>
                 </div>
             </div>

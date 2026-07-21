@@ -1,0 +1,37 @@
+{% comment %}
+لینک‌سازی داخلی — گروه‌های InternalLinkGroup با فیلدهای title و links (label, url, kind).
+{% endcomment %}
+{% if discovery_groups %}
+<section class="discovery-hub{% if discovery_modifier %} {{ discovery_modifier }}{% endif %}" dir="rtl" lang="fa" aria-labelledby="discovery-hub-title">
+    <div class="container">
+        <header class="discovery-hub__head">
+            <p class="discovery-hub__eyebrow">شروع سریع مسیر پذیرش</p>
+            <h2 id="discovery-hub-title" class="discovery-hub__title">{{ discovery_title|default:"مسیرهای پرجستجو" }}</h2>
+            {% if discovery_lead %}
+            <p class="discovery-hub__lead">{{ discovery_lead }}</p>
+            {% else %}
+            <p class="discovery-hub__lead">صفحات پربازدید برای شروع سریع‌تر — پذیرش، بورسیه و ویزای تحصیلی.</p>
+            {% endif %}
+        </header>
+        <div class="discovery-hub__grid">
+            {% for group in discovery_groups %}
+            {% if group.links %}
+            <article class="discovery-hub__group" aria-labelledby="discovery-group-{{ forloop.counter }}">
+                <h3 class="discovery-hub__group-title" id="discovery-group-{{ forloop.counter }}">{{ group.title }}</h3>
+                <ul class="discovery-hub__list" role="list">
+                    {% for link in group.links %}
+                    <li>
+                        <a href="{{ link.url }}" class="discovery-hub__link discovery-hub__link--{{ link.kind }}">
+                            <span class="discovery-hub__link-text">{{ link.label }}</span>
+                            <span class="ti-angle-left discovery-hub__link-arrow" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </article>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

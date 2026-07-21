@@ -10,6 +10,7 @@
 
 .main_menu .navbar-brand {
   padding: 0 !important;
+  text-align: right;  
 }
 
 .logohead {
@@ -65,17 +66,17 @@
     width: 100px;
     max-height: 40px;
   }
-  .main_menu .navbar {
+  .main_menu:not(.site-header) .navbar {
     padding: 10px 0;
   }
-  /* فاصله استاندارد آیتم‌های منوی موبایل */
-  .main_menu .main-menu-item .nav-item {
+  /* فاصله استاندارد آیتم‌های منوی موبایل (قالب قدیمی) */
+  .main_menu:not(.site-header) .main-menu-item .nav-item {
     padding: 10px 20px !important;
   }
-  .main_menu .main-menu-item .nav-item a {
+  .main_menu:not(.site-header) .main-menu-item .nav-item a {
     padding: 10px 20px !important;
   }
-  .main_menu .dropdown-menu .dropdown-item {
+  .main_menu:not(.site-header) .dropdown-menu .dropdown-item {
     padding: 10px 24px !important;
   }
 }
@@ -88,7 +89,7 @@
 }
 
 /* RTL: منوی موبایل راست‌چین */
-[dir="rtl"] .main_menu .main-menu-item {
+[dir="rtl"] .main_menu:not(.site-header) .main-menu-item {
   text-align: right !important;
 }
 
@@ -105,7 +106,7 @@
 
 /* ========== Banner - بنر اصلی ========== */
 .banner_part {
-  height: 580px;
+  height: 678px;
   position: relative;
 }
 
@@ -281,7 +282,7 @@
   .banner_part::after {
     width: 45% !important;
     max-width: 180px !important;
-    top: 20px !important;
+    top: 57px !important;
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
@@ -292,6 +293,7 @@
 /* ========== Section Titles - عناوین بخش‌ها ========== */
 .section_tittle {
   margin-bottom: 50px;
+  margin-top: 6rem;
 }
 
 .section_tittle h2 {
@@ -428,6 +430,120 @@
   }
 }
 
+@media (max-width: 991px) {
+  .learning_part {
+    overflow-x: clip;
+    padding: 3rem 0 !important;
+  }
+
+  .learning_part .container {
+    overflow: hidden;
+  }
+
+  .learning_part .row {
+    row-gap: 0.5rem;
+  }
+
+  .learning_part .learning_img {
+    position: relative !important;
+    right: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: min(100%, 320px);
+    max-width: 100%;
+    margin: 0 auto 1.25rem;
+    background-size: 88% auto;
+    background-position: center top;
+  }
+
+  .learning_part .learning_img img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 0 !important;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+
+  .learning_part .learning_member_text {
+    text-align: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+
+  .learning_part .learning_member_text h2,
+  .learning_part .learning_member_text h3 {
+    text-align: center;
+  }
+
+  .learning_part .learning_member_text h3 {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    margin-bottom: 0.75rem;
+    color: #555;
+    font-weight: 500;
+  }
+
+  .learning_part .learning_member_text p {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .learning_part .learning_member_text ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+    padding: 0;
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+
+  .learning_part .learning_member_text ul li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #666;
+  }
+
+  .learning_part .learning_member_text ul li span {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 1.15rem;
+    color: var(--color-primary, #ff663b);
+  }
+
+  .learning_part .learning_member_text .btn_1 {
+    display: inline-block;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .learning_part .learning_img {
+    width: min(100%, 280px);
+    margin-bottom: 1rem;
+  }
+
+  .learning_part .learning_member_text h2 {
+    font-size: 1.2rem;
+  }
+}
+
 /* ========== Member Counter - شمارنده‌ها ========== */
 .member_counter .single_member_counter {
   display: flex;
@@ -456,6 +572,7 @@
 
 .member_counter {
   padding: 36px 0;
+  margin-bottom: 9rem;
 }
 
 @media (max-width: 991px) {
@@ -544,6 +661,8 @@
   padding: 10px 24px;
   font-size: 13px;
 }
+
+/* ========== Footer — legacy copyright block removed; see components/footer.css ========== */
 
 /* ========== Footer Logo ========== */
 .footer-logo,

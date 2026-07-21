@@ -1,0 +1,36 @@
+<div class="site-header__search" id="site-header-search">
+    <button type="button"
+            class="site-header__search-open d-none d-xl-inline-flex"
+            id="site-header-search-open"
+            aria-label="جستجو در سایت (Ctrl+K)"
+            aria-expanded="false"
+            aria-controls="site-search-input">
+        <span class="ti-search" aria-hidden="true"></span>
+    </button>
+    <form class="site-header__search-form" action="{% url 'site_search' %}" method="get" role="search">
+        <label class="site-header__sr-only" for="site-search-input">جستجو در سایت</label>
+        <div class="site-header__search-field">
+            <span class="site-header__search-icon ti-search" aria-hidden="true"></span>
+            <input type="search"
+                   id="site-search-input"
+                   name="q"
+                   class="site-header__search-input"
+                   placeholder=""
+                   autocomplete="off"
+                   enterkeyhint="search"
+                   maxlength="120"
+                   aria-label="جستجو در سایت"
+                   aria-autocomplete="list"
+                   aria-controls="site-search-dropdown"
+                   aria-expanded="false">
+            <button type="button" class="site-header__search-clear" id="site-search-clear" hidden aria-label="پاک کردن">×</button>
+        </div>
+    </form>
+    <div class="site-header__search-dropdown"
+         id="site-search-dropdown"
+         role="listbox"
+         aria-label="پیشنهادهای جستجو"
+         hidden>
+        <div class="site-header__search-dropdown-inner" id="site-search-results" aria-live="polite" aria-busy="false"></div>
+    </div>
+</div>

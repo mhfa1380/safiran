@@ -1,0 +1,25 @@
+{% if search_q and not primary_hits and not related_hits %}
+<div class="country-page__empty">
+    <span class="country-page__empty-icon ti-search" aria-hidden="true"></span>
+    <p>نتیجه‌ای برای «{{ search_q }}» در محتوای {{ country.name }} پیدا نشد. عبارت دیگری امتحان کنید یا با مشاوران ما تماس بگیرید.</p>
+    <a href="{% url 'appointment' %}?about=universities&title={{ country.name|urlencode }}" class="country-page__btn country-page__btn--primary">مشاوره {{ country.name }}</a>
+</div>
+{% endif %}
+
+{% if primary_hits %}
+<section class="country-page__hits country-page__hits--primary" aria-label="بهترین نتیجه">
+    <h3 class="country-page__hits-title">بهترین پیشنهاد برای «{{ search_q }}»</h3>
+    {% for hit in primary_hits %}
+    {% include "content/_country_search_hit.html" with hit=hit is_best=True %}
+    {% endfor %}
+</section>
+{% endif %}
+
+{% if related_hits %}
+<section class="country-page__hits country-page__hits--related" aria-label="نتایج مرتبط">
+    <h3 class="country-page__hits-title">پیشنهادهای مرتبط</h3>
+    {% for hit in related_hits %}
+    {% include "content/_country_search_hit.html" with hit=hit is_best=False %}
+    {% endfor %}
+</section>
+{% endif %}

@@ -1,0 +1,2959 @@
+import io
+import os
+import uuid
+
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.db import models
+from PIL import Image, ImageOps
+
+from core.evaluation_form_countries import EVAL_MODEL_TARGET_COUNTRY_CHOICES
+from core.referral_source import REFERRAL_SOCIAL_CHOICES, REFERRAL_SOURCE_CHOICES
+from core.study_destinations import CONSULTATION_COUNTRY_CHOICES, UNIVERSITY_COUNTRY_CHOICES
+
+
+class Institute(models.Model):
+    """اطلاعات موسسه اعزام دانشجو؛ تنها یک رکورد. از پنل ادمین قابل ویرایش است."""
+
+    name = models.CharField("نام موسسه", max_length=150)
+    province = models.CharField("استان", max_length=100)
+    city = models.CharField("شهر", max_length=100)
+    type_title = models.CharField("عنوان نوع مجوز", max_length=200)
+    phone = models.CharField("تلفن", max_length=20)
+    email = models.EmailField("ایمیل")
+    address = models.TextField("آدرس")
+    website = models.CharField("وب‌سایت", max_length=200, blank=True)
+    license_issue_date = models.CharField("تاریخ صدور مجوز", max_length=20)
+    license_expiry_date = models.CharField("تاریخ انقضای مجوز", max_length=20, blank=True)
+    students_sent = models.PositiveIntegerField("تعداد دانشجویان اعزام‌شده", default=0)
+    countries_count = models.PositiveIntegerField("کشور مقصد", default=0)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_institute"
+        verbose_name = "اطلاعات موسسه"
+        verbose_name_plural = "اطلاعات موسسه"
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def phone_formatted(self):
+        """شماره تلفن با فرمت نمایشی (مثلاً 011-32350320)."""
+        if not self.phone:
+            return ""
+        if len(self.phone) == 11 and self.phone.startswith("0"):
+            return f"{self.phone[:3]}-{self.phone[3:]}"
+        return self.phone
+
+    @property
+    def website_url(self):
+        """آدرس وب‌سایت با پروتکل برای استفاده در لینک."""
+        if not self.website:
+            return ""
+        url = self.website.strip()
+        if url and not url.startswith(("http://", "https://")):
+            return f"https://{url}"
+        return url
+
+
+class ConsultationRequest(models.Model):
+    """ثبت درخواست رزرو وقت مشاوره برای موسسه سفیران آینده روشن."""
+
+    IN_PERSON = "in_person"
+    ONLINE = "online"
+    CONSULTATION_TYPE_CHOICES = [
+        (IN_PERSON, "حضوری (۳۰ دقیقه)"),
+        (ONLINE, "غیرحضوری / آنلاین (۳۰ دقیقه)"),
+    ]
+
+    COUNTRY_CHINA = "china"
+    COUNTRY_CANADA = "canada"
+    COUNTRY_SPAIN = "spain"
+    COUNTRY_OTHER = "other"
+
+    COUNTRY_CHOICES = CONSULTATION_COUNTRY_CHOICES
+
+    STATUS_NEW = "new"
+    STATUS_CONTACTED = "contacted"
+    STATUS_DONE = "done"
+    STATUS_CHOICES = [
+        (STATUS_NEW, "ثبت شده"),
+        (STATUS_CONTACTED, "تماس گرفته شده"),
+        (STATUS_DONE, "انجام شده"),
+    ]
+
+    full_name = models.CharField("نام و نام خانوادگی", max_length=150)
+    phone = models.CharField("شماره تماس", max_length=20)
+    email = models.EmailField("ایمیل", blank=True)
+    consultation_type = models.CharField(
+        "نوع مشاوره",
+        max_length=20,
+        choices=CONSULTATION_TYPE_CHOICES,
+        default=ONLINE,
+    )
+    country = models.CharField(
+        "کشور مقصد", max_length=20, choices=COUNTRY_CHOICES, default=COUNTRY_CANADA
+    )
+    slot = models.ForeignKey(
+        "core.ConsultationSlot",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="consultation_requests",
+        verbose_name="زمان رزرو",
+    )
+    interest_university = models.ForeignKey(
+        "core.University",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="consultation_requests",
+        verbose_name="دانشگاه مورد علاقه",
+    )
+    description = models.TextField(
+        "توضیحات و سوالات شما",
+        blank=True,
+        help_text="به صورت خلاصه شرایط و سوالات خود را بنویسید.",
+    )
+
+    referral_source = models.CharField(
+        "از کجا با ما آشنا شدید؟",
+        max_length=24,
+        blank=True,
+        db_index=True,
+        choices=REFERRAL_SOURCE_CHOICES,
+    )
+    referral_social_platform = models.CharField(
+        "شبکه اجتماعی",
+        max_length=16,
+        blank=True,
+        choices=REFERRAL_SOCIAL_CHOICES,
+    )
+    referral_detail = models.CharField(
+        "جزئیات منبع",
+        max_length=200,
+        blank=True,
+        help_text="مثلاً عبارت جستجو در گوگل یا توضیح «سایر»",
+    )
+
+    status = models.CharField(
+        "وضعیت درخواست",
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_NEW,
+    )
+    admin_seen_at = models.DateTimeField(
+        "مشاهده توسط ادمین",
+        null=True,
+        blank=True,
+        help_text="زمانی که ادمین لیست را مشاهده کرده (برای badge پیام جدید)",
+    )
+    created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
+    updated_at = models.DateTimeField("آخرین به‌روزرسانی", auto_now=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_consultationrequest"
+        verbose_name = "درخواست مشاوره"
+        verbose_name_plural = "درخواست‌های مشاوره"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["consultation_type"], name="consult_type_idx"),
+            models.Index(fields=["country"], name="consult_country_idx"),
+            models.Index(fields=["status"], name="consult_status_idx"),
+            models.Index(fields=["created_at"], name="consult_created_idx"),
+            models.Index(fields=["admin_seen_at"], name="consult_seen_idx"),
+            models.Index(fields=["status", "updated_at"], name="consult_status_upd_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.full_name} - {self.get_consultation_type_display()}"
+
+    @property
+    def referral_display(self) -> str:
+        from .referral_source import format_referral_display
+
+        return format_referral_display(
+            self.referral_source,
+            self.referral_social_platform,
+            self.referral_detail,
+        )
+
+
+class ConsultationSlot(models.Model):
+    """زمان‌های از پیش تعیین‌شده برای رزرو مشاوره."""
+
+    date = models.DateField("تاریخ")
+    time_label = models.CharField("بازه زمانی", max_length=50)  # مثلاً "۱۰:۰۰ - ۱۰:۳۰"
+    is_booked = models.BooleanField("رزرو شده", default=False)
+    admin_seen_at = models.DateTimeField(
+        "مشاهده توسط ادمین",
+        null=True,
+        blank=True,
+        help_text="برای badge تایم‌های رزرو شده جدید",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب", default=0)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_consultationslot"
+        verbose_name = "زمان مشاوره"
+        verbose_name_plural = "زمان‌های مشاوره"
+        ordering = ["date", "order", "id"]
+        unique_together = [["date", "time_label"]]
+        indexes = [
+            models.Index(fields=["date", "is_booked"], name="slot_date_booked_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.date} — {self.time_label}"
+
+    @property
+    def time_label_display(self) -> str:
+        from .utils import format_time_label_persian
+
+        return format_time_label_persian(self.time_label)
+
+
+class EvaluationRequest(models.Model):
+    """فرم ارزیابی اولیه برای بررسی شرایط متقاضی."""
+
+    DEGREE_DIPLOMA = "diploma"
+    DEGREE_BACHELOR = "bachelor"
+    DEGREE_MASTER = "master"
+    DEGREE_PHD = "phd"
+    DEGREE_CHOICES = [
+        (DEGREE_DIPLOMA, "دیپلم"),
+        (DEGREE_BACHELOR, "کارشناسی"),
+        (DEGREE_MASTER, "کارشناسی ارشد"),
+        (DEGREE_PHD, "دکتری"),
+    ]
+
+    TARGET_CHOICES = EVAL_MODEL_TARGET_COUNTRY_CHOICES
+
+    # اطلاعات شخصی
+    full_name = models.CharField("نام و نام خانوادگی", max_length=150)
+    phone = models.CharField("شماره تماس", max_length=20)
+    email = models.EmailField("ایمیل", blank=True)
+    birth_year = models.PositiveSmallIntegerField("سال تولد", blank=True, null=True)
+
+    MARITAL_SINGLE = "single"
+    MARITAL_MARRIED = "married"
+    MARITAL_CHOICES = [
+        (MARITAL_SINGLE, "مجرد"),
+        (MARITAL_MARRIED, "متاهل"),
+    ]
+    marital_status = models.CharField(
+        "وضعیت تاهل", max_length=10, choices=MARITAL_CHOICES, blank=True
+    )
+
+    APPLY_SOON = "<1"
+    APPLY_MID = "1-2"
+    APPLY_LATE = ">2"
+    APPLY_CHOICES = [
+        (APPLY_SOON, "کمتر از ۱ سال"),
+        (APPLY_MID, "بین ۱ تا ۲ سال"),
+        (APPLY_LATE, "بیشتر از ۲ سال"),
+    ]
+    apply_timeline = models.CharField(
+        "کی قصد اپلای دارید؟", max_length=10, choices=APPLY_CHOICES, blank=True
+    )
+
+    has_financial_capacity = models.BooleanField(
+        "تمکن مالی بالای یک میلیارد تومان دارم", default=False
+    )
+
+    # سوابق تحصیلی
+    current_degree = models.CharField(
+        "آخرین مدرک تحصیلی", max_length=20, choices=DEGREE_CHOICES
+    )
+    field_of_study = models.CharField("رشته تحصیلی فعلی / قبلی", max_length=150)
+    average_grade = models.CharField(
+        "معدل (تقریبی)", max_length=20, help_text="مثلاً ۱۸.۵"
+    )
+    graduation_year = models.CharField(
+        "سال فارغ التحصیلی", max_length=10, blank=True
+    )
+
+    # کشور مقصد اصلی (برای دسته‌بندی سریع)
+    target_country = models.CharField(
+        "کشور مقصد", max_length=20, choices=TARGET_CHOICES, default=ConsultationRequest.COUNTRY_CANADA
+    )
+
+    # آزمون زبان
+    TEST_NONE = "none"
+    TEST_IELTS = "ielts"
+    TEST_TOEFL = "toefl"
+    TEST_DUOLINGO = "duolingo"
+    TEST_PTE = "pte"
+    TEST_DELF = "delf"
+    TEST_TESTDAF = "testdaf"
+    TEST_SAT = "sat"
+    TEST_YOS = "yos"
+    LANGUAGE_TEST_CHOICES = [
+        (TEST_NONE, "ندارم"),
+        (TEST_IELTS, "IELTS"),
+        (TEST_TOEFL, "TOEFL"),
+        (TEST_DUOLINGO, "Duolingo"),
+        (TEST_PTE, "PTE"),
+        (TEST_DELF, "DELF/DALF"),
+        (TEST_TESTDAF, "TestDaF"),
+        (TEST_SAT, "SAT"),
+        (TEST_YOS, "YOS"),
+    ]
+    language_test_type = models.CharField(
+        "نوع آزمون زبان",
+        max_length=20,
+        choices=LANGUAGE_TEST_CHOICES,
+        default=TEST_NONE,
+    )
+    has_ielts = models.BooleanField(
+        "مدرک زبان (آیلتس/تافل) دارم", default=False, help_text="در صورت داشتن هر نوع مدرک زبان این گزینه را فعال کنید."
+    )
+    language_score = models.CharField(
+        "نمره زبان (در صورت وجود)", max_length=50, blank=True
+    )
+
+    # دستاوردها
+    has_journal_article = models.BooleanField("مقاله ژورنالی", default=False)
+    has_conference_article = models.BooleanField("مقاله کنفرانسی", default=False)
+    has_book = models.BooleanField("چاپ یا ترجمه کتاب", default=False)
+    has_international_tests = models.BooleanField(
+        "آزمون‌های بین‌الملل (SAT, GRE, GMAT ...)", default=False
+    )
+
+    # اولویت‌ها
+    desired_countries = models.CharField(
+        "کشورهای مورد نظر",
+        max_length=200,
+        blank=True,
+        help_text="مثلاً چین، کانادا، اسپانیا یا سایر کشورها",
+    )
+    desired_major = models.CharField(
+        "رشته مورد نظر (اختیاری)", max_length=150, blank=True
+    )
+
+    SERVICE_FULL = "full"
+    SERVICE_PARTIAL = "partial"
+    SERVICE_CONSULT = "consulting"
+    SERVICE_CHOICES = [
+        (SERVICE_FULL, "تمام فرآیند پذیرش و ویزا"),
+        (SERVICE_PARTIAL, "بخشی از فرآیند پذیرش و ویزا"),
+        (SERVICE_CONSULT, "تنها مشاوره دقیق و فنی می‌خواهم"),
+    ]
+    service_scope = models.CharField(
+        "تمایل دارید چه بخشی از کار به موسسه سپرده شود؟",
+        max_length=30,
+        choices=SERVICE_CHOICES,
+        blank=True,
+    )
+
+    # سایر
+    preferred_intake = models.CharField(
+        "ترم / سال مورد نظر برای شروع",
+        max_length=50,
+        blank=True,
+    )
+    notes = models.TextField(
+        "توضیحات تکمیلی",
+        blank=True,
+        help_text="اولویت‌ها، بودجه تقریبی، کشور یا دانشگاه‌های مورد علاقه و ...",
+    )
+
+    referral_source = models.CharField(
+        "از کجا با ما آشنا شدید؟",
+        max_length=24,
+        blank=True,
+        db_index=True,
+        choices=REFERRAL_SOURCE_CHOICES,
+    )
+    referral_social_platform = models.CharField(
+        "شبکه اجتماعی",
+        max_length=16,
+        blank=True,
+        choices=REFERRAL_SOCIAL_CHOICES,
+    )
+    referral_detail = models.CharField(
+        "جزئیات منبع",
+        max_length=200,
+        blank=True,
+        help_text="مثلاً عبارت جستجو در گوگل یا توضیح «سایر»",
+    )
+
+    # ——— کال‌سنتر / پیگیری ———
+    STATUS_NEW = "new"
+    STATUS_CONTACTED = "contacted"
+    STATUS_FOLLOW_UP = "follow_up"
+    STATUS_IN_PROGRESS = "in_progress"
+    STATUS_COMPLETED = "completed"
+    STATUS_LOST = "lost"
+    STATUS_CHOICES = [
+        (STATUS_NEW, "جدید — تماس نگرفته"),
+        (STATUS_CONTACTED, "تماس گرفته شده"),
+        (STATUS_FOLLOW_UP, "نیاز به پیگیری"),
+        (STATUS_IN_PROGRESS, "در حال پیگیری"),
+        (STATUS_COMPLETED, "تکمیل / قرارداد"),
+        (STATUS_LOST, "منصرف / بسته شده"),
+    ]
+
+    PRIORITY_LOW = "low"
+    PRIORITY_NORMAL = "normal"
+    PRIORITY_HIGH = "high"
+    PRIORITY_URGENT = "urgent"
+    PRIORITY_CHOICES = [
+        (PRIORITY_LOW, "کم"),
+        (PRIORITY_NORMAL, "معمولی"),
+        (PRIORITY_HIGH, "بالا"),
+        (PRIORITY_URGENT, "فوری"),
+    ]
+
+    CONTACT_NOT_YET = "not_yet"
+    CONTACT_ANSWERED = "answered"
+    CONTACT_NO_ANSWER = "no_answer"
+    CONTACT_BUSY = "busy"
+    CONTACT_CALLBACK = "callback"
+    CONTACT_WHATSAPP = "whatsapp"
+    CONTACT_NOT_INTERESTED = "not_interested"
+    CONTACT_CONVERTED = "converted"
+    CONTACT_RESULT_CHOICES = [
+        (CONTACT_NOT_YET, "هنوز تماس گرفته نشده"),
+        (CONTACT_ANSWERED, "پاسخ داد — علاقه‌مند"),
+        (CONTACT_NO_ANSWER, "جواب نداد"),
+        (CONTACT_BUSY, "مشغول — تماس مجدد"),
+        (CONTACT_CALLBACK, "درخواست تماس مجدد"),
+        (CONTACT_WHATSAPP, "پیگیری از واتساپ/پیام"),
+        (CONTACT_NOT_INTERESTED, "تمایلی ندارد"),
+        (CONTACT_CONVERTED, "تبدیل به مشتری / قرارداد"),
+    ]
+
+    FOLLOWUP_GENERAL = "general"
+    FOLLOWUP_DOCUMENTS = "documents"
+    FOLLOWUP_LANGUAGE = "language"
+    FOLLOWUP_FINANCIAL = "financial"
+    FOLLOWUP_UNIVERSITY = "university"
+    FOLLOWUP_VISA = "visa"
+    FOLLOWUP_CONTRACT = "contract"
+    FOLLOWUP_OTHER = "other"
+    FOLLOWUP_CATEGORY_CHOICES = [
+        (FOLLOWUP_GENERAL, "عمومی"),
+        (FOLLOWUP_DOCUMENTS, "مدارک و پرونده"),
+        (FOLLOWUP_LANGUAGE, "آزمون زبان"),
+        (FOLLOWUP_FINANCIAL, "تمکن مالی / هزینه"),
+        (FOLLOWUP_UNIVERSITY, "انتخاب دانشگاه / رشته"),
+        (FOLLOWUP_VISA, "ویزا و اقامت"),
+        (FOLLOWUP_CONTRACT, "قرارداد و پرداخت"),
+        (FOLLOWUP_OTHER, "سایر"),
+    ]
+
+    status = models.CharField(
+        "وضعیت پیگیری",
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_NEW,
+        db_index=True,
+    )
+    priority = models.CharField(
+        "اولویت",
+        max_length=10,
+        choices=PRIORITY_CHOICES,
+        default=PRIORITY_NORMAL,
+        db_index=True,
+    )
+    follow_up_required = models.BooleanField(
+        "نیاز به پیگیری",
+        default=True,
+        help_text="اگر فعال باشد در فیلتر «منتظر پیگیری» نمایش داده می‌شود.",
+        db_index=True,
+    )
+    follow_up_category = models.CharField(
+        "دسته پیگیری",
+        max_length=20,
+        choices=FOLLOWUP_CATEGORY_CHOICES,
+        blank=True,
+    )
+    contact_result = models.CharField(
+        "نتیجه آخرین تماس",
+        max_length=20,
+        choices=CONTACT_RESULT_CHOICES,
+        default=CONTACT_NOT_YET,
+        db_index=True,
+    )
+    admin_notes = models.TextField(
+        "یادداشت کارشناس (داخلی)",
+        blank=True,
+        help_text="خلاصه مکالمه، تعهدات و نکات پیگیری برای تیم کال‌سنتر.",
+    )
+    recommendation_snapshot = models.JSONField(
+        "پیشنهاد هوشمند (ذخیره خودکار)",
+        blank=True,
+        null=True,
+        help_text="خروجی الگوریتم هنگام ثبت فرم؛ فقط خواندنی.",
+    )
+    contacted_at = models.DateTimeField(
+        "زمان آخرین تماس",
+        null=True,
+        blank=True,
+    )
+    next_follow_up_at = models.DateTimeField(
+        "زمان پیگیری بعدی",
+        null=True,
+        blank=True,
+        db_index=True,
+    )
+    assigned_to = models.ForeignKey(
+        "auth.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_evaluations",
+        verbose_name="کارشناس مسئول",
+    )
+
+    admin_seen_at = models.DateTimeField(
+        "مشاهده توسط ادمین",
+        null=True,
+        blank=True,
+        help_text="برای badge درخواست‌های جدید",
+    )
+    created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
+    updated_at = models.DateTimeField("آخرین به‌روزرسانی", auto_now=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_evaluationrequest"
+        verbose_name = "درخواست ارزیابی"
+        verbose_name_plural = "درخواست‌های ارزیابی"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["status", "follow_up_required"], name="eval_status_follow_idx"),
+            models.Index(fields=["next_follow_up_at"], name="eval_next_followup_idx"),
+            models.Index(fields=["priority", "created_at"], name="eval_priority_created_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.full_name} - {self.get_target_country_display()}"
+
+    @property
+    def referral_display(self) -> str:
+        from .referral_source import format_referral_display
+
+        return format_referral_display(
+            self.referral_source,
+            self.referral_social_platform,
+            self.referral_detail,
+        )
+
+    @property
+    def is_follow_up_overdue(self) -> bool:
+        if not self.follow_up_required or not self.next_follow_up_at:
+            return False
+        from django.utils import timezone
+
+        return self.next_follow_up_at <= timezone.now()
+
+    def get_recommendation_top_line(self) -> str:
+        snap = self.recommendation_snapshot or {}
+        if not snap.get("has_data"):
+            return ""
+        top = snap.get("top_pick") or {}
+        country = (top.get("country") or {}).get("name", "")
+        uni = (top.get("university") or {}).get("name_fa", "")
+        major = (top.get("major") or {}).get("title", "")
+        if uni:
+            return f"{country} — {uni} — {major}"
+        if major and country:
+            return f"{country} — {major}"
+        return country or ""
+
+
+class EvaluationContactLog(models.Model):
+    """ثبت هر تماس / پیگیری روی پرونده ارزیابی."""
+
+    evaluation = models.ForeignKey(
+        EvaluationRequest,
+        on_delete=models.CASCADE,
+        related_name="contact_logs",
+        verbose_name="درخواست ارزیابی",
+    )
+    contact_result = models.CharField(
+        "نتیجه تماس",
+        max_length=20,
+        choices=EvaluationRequest.CONTACT_RESULT_CHOICES,
+    )
+    notes = models.TextField("خلاصه مکالمه", blank=True)
+    follow_up_required = models.BooleanField("نیاز به پیگیری مجدد", default=False)
+    follow_up_category = models.CharField(
+        "دسته پیگیری",
+        max_length=20,
+        choices=EvaluationRequest.FOLLOWUP_CATEGORY_CHOICES,
+        blank=True,
+    )
+    next_follow_up_at = models.DateTimeField(
+        "پیگیری بعدی",
+        null=True,
+        blank=True,
+    )
+    created_by = models.ForeignKey(
+        "auth.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="evaluation_contact_logs",
+        verbose_name="ثبت‌کننده",
+    )
+    created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_evaluation_contact_log"
+        verbose_name = "لاگ تماس ارزیابی"
+        verbose_name_plural = "لاگ‌های تماس ارزیابی"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["evaluation", "created_at"], name="eval_log_ev_cr_idx"),
+            models.Index(fields=["created_at"], name="eval_log_created_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.evaluation_id} — {self.get_contact_result_display()}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self._sync_parent()
+
+    def _sync_parent(self) -> None:
+        ev = self.evaluation
+        ev.contact_result = self.contact_result
+        ev.contacted_at = self.created_at
+        ev.follow_up_required = self.follow_up_required
+        ev.follow_up_category = self.follow_up_category or ev.follow_up_category
+        ev.next_follow_up_at = self.next_follow_up_at
+
+        if self.contact_result == EvaluationRequest.CONTACT_CONVERTED:
+            ev.status = EvaluationRequest.STATUS_COMPLETED
+            ev.follow_up_required = False
+        elif self.contact_result == EvaluationRequest.CONTACT_NOT_INTERESTED:
+            ev.status = EvaluationRequest.STATUS_LOST
+            ev.follow_up_required = False
+        elif self.follow_up_required:
+            ev.status = EvaluationRequest.STATUS_FOLLOW_UP
+        elif self.contact_result != EvaluationRequest.CONTACT_NOT_YET:
+            ev.status = EvaluationRequest.STATUS_CONTACTED
+
+        if self.notes:
+            block = f"[{self.created_at:%Y-%m-%d %H:%M}] {self.notes.strip()}"
+            if ev.admin_notes:
+                ev.admin_notes = f"{block}\n---\n{ev.admin_notes}"
+            else:
+                ev.admin_notes = block
+
+        ev.save(
+            update_fields=[
+                "contact_result",
+                "contacted_at",
+                "follow_up_required",
+                "follow_up_category",
+                "next_follow_up_at",
+                "status",
+                "admin_notes",
+                "updated_at",
+            ]
+        )
+
+
+class EvaluationProcessingJob(models.Model):
+    """وضعیت تحلیل ارزیابی — در DB تا بین چند worker وب‌سرور مشترک باشد."""
+
+    job_id = models.UUIDField("شناسه job", primary_key=True, default=uuid.uuid4, editable=False)
+    evaluation = models.ForeignKey(
+        EvaluationRequest,
+        on_delete=models.CASCADE,
+        related_name="processing_jobs",
+        verbose_name="درخواست ارزیابی",
+    )
+    scholarship_target = models.CharField("هدف بورسیه", max_length=32, blank=True)
+    state = models.JSONField("وضعیت", default=dict)
+    processing_lock = models.BooleanField("قفل پردازش", default=False)
+    locked_at = models.DateTimeField("زمان قفل", null=True, blank=True)
+    created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
+    updated_at = models.DateTimeField("به‌روزرسانی", auto_now=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_evaluation_processing_job"
+        verbose_name = "job تحلیل ارزیابی"
+        verbose_name_plural = "jobهای تحلیل ارزیابی"
+        indexes = [
+            models.Index(fields=["updated_at"], name="eval_proc_job_upd_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"eval-job {self.job_id} (#{self.evaluation_id})"
+
+
+class EvaluationReportShare(models.Model):
+    """لینک اشتراک‌گذاری پیشنهاد ارزیابی — ۷ روز معتبر."""
+
+    SHARE_TTL_DAYS = 7
+
+    token = models.UUIDField("توکن", unique=True, editable=False, db_index=True)
+    evaluation = models.ForeignKey(
+        EvaluationRequest,
+        on_delete=models.CASCADE,
+        related_name="report_shares",
+        verbose_name="درخواست ارزیابی",
+    )
+    report = models.JSONField("گزارش پیشنهاد")
+    view_count = models.PositiveIntegerField("تعداد بازدید", default=0)
+    created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
+    expires_at = models.DateTimeField("انقضا", db_index=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_evaluation_report_share"
+        verbose_name = "لینک نتیجه ارزیابی"
+        verbose_name_plural = "لینک‌های نتیجه ارزیابی"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["expires_at"], name="eval_share_expires_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"نتیجه ارزیابی #{self.evaluation_id} — {self.token}"
+
+    @property
+    def is_expired(self) -> bool:
+        from django.utils import timezone
+
+        return timezone.now() >= self.expires_at
+
+
+class EvaluationSectionFeedback(models.Model):
+    """بازخورد لایک/دیسلایک روی بخش‌های گزارش ارزیابی."""
+
+    VOTE_LIKE = 1
+    VOTE_DISLIKE = -1
+
+    share = models.ForeignKey(
+        EvaluationReportShare,
+        on_delete=models.CASCADE,
+        related_name="section_feedback",
+        verbose_name="لینک گزارش",
+    )
+    evaluation = models.ForeignKey(
+        EvaluationRequest,
+        on_delete=models.CASCADE,
+        related_name="section_feedback",
+        verbose_name="درخواست ارزیابی",
+    )
+    section = models.CharField("بخش", max_length=32, db_index=True)
+    item_key = models.CharField(
+        "کلید آیتم",
+        max_length=120,
+        blank=True,
+        default="",
+        help_text="مثلاً country:ca یا major:computer-science",
+    )
+    vote = models.SmallIntegerField("رأی")
+    weight = models.FloatField("وزن یادگیری", default=1.0)
+    context = models.JSONField("زمینه پیشنهاد", default=dict, blank=True)
+    created_at = models.DateTimeField("ثبت", auto_now_add=True)
+    updated_at = models.DateTimeField("به‌روزرسانی", auto_now=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_evaluation_section_feedback"
+        verbose_name = "بازخورد بخش ارزیابی"
+        verbose_name_plural = "بازخورد بخش‌های ارزیابی"
+        ordering = ["-updated_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["share", "section", "item_key"],
+                name="eval_section_feedback_unique",
+            ),
+        ]
+        indexes = [
+            models.Index(fields=["evaluation", "section"], name="eval_fb_eval_section_idx"),
+            models.Index(fields=["-updated_at"], name="eval_fb_updated_idx"),
+        ]
+
+    def __str__(self) -> str:
+        label = f"{self.section}:{self.item_key}" if self.item_key else self.section
+        return f"بازخورد {label} ({self.vote:+d}) — #{self.evaluation_id}"
+
+
+class ContactMessage(models.Model):
+    """پیام‌های دریافتی از فرم تماس با ما."""
+
+    STATUS_UNREAD = "unread"
+    STATUS_READ = "read"
+    STATUS_REPLIED = "replied"
+    STATUS_CHOICES = [
+        (STATUS_UNREAD, "خوانده نشده"),
+        (STATUS_READ, "خوانده شده"),
+        (STATUS_REPLIED, "پاسخ داده شده"),
+    ]
+
+    full_name = models.CharField("نام و نام خانوادگی", max_length=150)
+    email = models.EmailField("ایمیل")
+    subject = models.CharField("موضوع", max_length=200)
+    message = models.TextField("متن پیام")
+
+    status = models.CharField(
+        "وضعیت",
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_UNREAD,
+    )
+    admin_seen_at = models.DateTimeField(
+        "مشاهده توسط ادمین",
+        null=True,
+        blank=True,
+        help_text="برای badge پیام‌های جدید",
+    )
+    created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_contactmessage"
+        verbose_name = "پیام تماس"
+        verbose_name_plural = "پیام‌های تماس"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["created_at"], name="contact_created_idx"),
+            models.Index(fields=["admin_seen_at"], name="contact_seen_idx"),
+            models.Index(fields=["status", "created_at"], name="contact_status_cr_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.full_name} - {self.subject}"
+
+
+class BlogAuthor(models.Model):
+    """نویسنده وبلاگ — مدیریت متمرکز در ادمین."""
+
+    name = models.CharField("نام", max_length=120)
+    role = models.CharField(
+        "سمت / برچسب",
+        max_length=120,
+        blank=True,
+        help_text="مثلاً کارشناس مهاجرت تحصیلی یا تیم تحریریه (اختیاری).",
+    )
+    bio = models.CharField(
+        "معرفی کوتاه",
+        max_length=400,
+        help_text="یک یا دو جمله درباره نویسنده.",
+    )
+    photo = models.ImageField(
+        "عکس",
+        upload_to="blog/authors/",
+        blank=True,
+        null=True,
+        help_text="اختیاری؛ پس از آپلود تا حداکثر ۳۰۰KB فشرده می‌شود. در صورت خالی بودن آواتار پیش‌فرض نمایش داده می‌شود.",
+    )
+    is_active = models.BooleanField("فعال", default=True)
+    order = models.PositiveIntegerField("ترتیب نمایش", default=0)
+    created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
+    updated_at = models.DateTimeField("آخرین به‌روزرسانی", auto_now=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_blogauthor"
+        verbose_name = "نویسنده وبلاگ"
+        verbose_name_plural = "نویسندگان وبلاگ"
+        ordering = ["order", "name"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    @property
+    def has_photo(self) -> bool:
+        return bool(self.photo)
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        super().clean()
+        errors = {}
+        if not (self.name or "").strip():
+            errors["name"] = "نام نویسنده الزامی است."
+        if not (self.bio or "").strip():
+            errors["bio"] = "معرفی کوتاه نویسنده الزامی است."
+        if errors:
+            raise ValidationError(errors)
+
+    def _compress_photo(self):
+        if not self.photo:
+            return
+        from .image_compression import compress_image_field_to_jpeg
+
+        compress_image_field_to_jpeg(
+            self.photo,
+            max_bytes=300 * 1024,
+            max_side=512,
+        )
+
+    def save(self, *args, **kwargs):
+        if self.photo and hasattr(self.photo, "file"):
+            self._compress_photo()
+        super().save(*args, **kwargs)
+
+
+class BlogPost(models.Model):
+    """پست وبلاگ برای اخبار و مطالب موسسه."""
+
+    title = models.CharField("عنوان", max_length=250)
+    slug = models.SlugField(
+        "شناسه آدرس",
+        max_length=250,
+        unique=True,
+        help_text="برای آدرس صفحه، فقط حروف انگلیسی و خط تیره.",
+    )
+    excerpt = models.TextField("خلاصه مطلب", blank=True)
+    content = models.TextField("متن کامل")
+
+    image = models.ImageField(
+        "تصویر شاخص",
+        upload_to="blog/",
+        blank=True,
+        null=True,
+        help_text="تصویر را آپلود کنید. فایل به‌صورت خودکار تا حداکثر ۷۰۰KB فشرده می‌شود.",
+    )
+
+    country_tag = models.CharField(
+        "برچسب کشور / دسته",
+        max_length=100,
+        blank=True,
+        help_text="مثلاً چین، کانادا، اسپانیا، خبری، خدمات موسسه",
+    )
+
+    is_published = models.BooleanField("منتشر شده", default=True)
+    meta_title = models.CharField(
+        "عنوان SEO",
+        max_length=200,
+        blank=True,
+        help_text="در صورت خالی بودن از عنوان مطلب استفاده می‌شود.",
+    )
+    meta_description = models.TextField(
+        "توضیحات SEO",
+        blank=True,
+        help_text="توضیح متا (حدود ۱۵۰ تا ۱۶۰ کاراکتر توصیه می‌شود).",
+    )
+    meta_keywords = models.CharField(
+        "کلمات کلیدی SEO",
+        max_length=300,
+        blank=True,
+        help_text="کلمات کلیدی را با ویرگول جدا کنید.",
+    )
+    canonical_url = models.URLField(
+        "Canonical URL",
+        blank=True,
+        help_text="اختیاری؛ اگر وارد شود به عنوان canonical این پست استفاده می‌شود.",
+    )
+    author = models.ForeignKey(
+        BlogAuthor,
+        on_delete=models.PROTECT,
+        related_name="posts",
+        verbose_name="نویسنده",
+        help_text="نویسنده این مطلب (اجباری).",
+    )
+    created_at = models.DateTimeField("تاریخ انتشار", auto_now_add=True)
+    updated_at = models.DateTimeField("آخرین به‌روزرسانی", auto_now=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_blogpost"
+        verbose_name = "پست وبلاگ"
+        verbose_name_plural = "پست‌های وبلاگ"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(
+                fields=["is_published", "created_at"],
+                name="blog_published_created_idx",
+            ),
+            models.Index(fields=["country_tag"], name="blog_country_tag_idx"),
+            models.Index(fields=["author"], name="blog_author_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return self.title
+
+    def get_absolute_url(self) -> str:
+        from django.urls import reverse
+
+        return reverse("blog_detail", kwargs={"slug": self.slug})
+
+    def get_public_url(self) -> str:
+        from .bale_notifier import build_site_link
+
+        canonical = (self.canonical_url or "").strip()
+        if canonical:
+            return build_site_link(canonical)
+        return build_site_link(self.get_absolute_url())
+
+    def _compress_featured_image(self):
+        """فشرده‌سازی تصویر شاخص تا سقف تقریبی ۷۰۰KB."""
+        if not self.image:
+            return
+        if not hasattr(self.image, "file"):
+            return
+
+        self.image.seek(0)
+        raw_bytes = self.image.read()
+        if not raw_bytes:
+            return
+
+        img = Image.open(io.BytesIO(raw_bytes))
+        img = ImageOps.exif_transpose(img)
+        if img.mode in ("RGBA", "LA", "P"):
+            img = img.convert("RGB")
+
+        max_side = 1920
+        if max(img.size) > max_side:
+            img.thumbnail((max_side, max_side), Image.Resampling.LANCZOS)
+
+        target_size = 700 * 1024
+        quality = 85
+        min_quality = 35
+        step = 5
+        output = io.BytesIO()
+
+        while quality >= min_quality:
+            output.seek(0)
+            output.truncate(0)
+            img.save(output, format="JPEG", optimize=True, quality=quality)
+            if output.tell() <= target_size:
+                break
+            quality -= step
+
+        name_root, _ = os.path.splitext(self.image.name or "featured")
+        compressed_name = f"{name_root}.jpg"
+        self.image.save(
+            compressed_name,
+            ContentFile(output.getvalue()),
+            save=False,
+        )
+
+    def save(self, *args, **kwargs):
+        if self.image and hasattr(self.image, "file"):
+            self._compress_featured_image()
+        super().save(*args, **kwargs)
+
+
+class ServiceCategory(models.Model):
+    """دسته‌بندی خدمات موسسه برای فیلتر و صفحات سئو."""
+
+    name = models.CharField("نام دسته", max_length=120)
+    slug = models.SlugField(
+        "شناسه آدرس",
+        max_length=150,
+        unique=True,
+        help_text="برای آدرس صفحه دسته، مثلاً moshavere یا visa",
+    )
+    description = models.TextField(
+        "توضیح کوتاه",
+        blank=True,
+        help_text="نمایش زیر عنوان دسته در صفحه خدمات",
+    )
+    icon = models.CharField(
+        "آیکون",
+        max_length=60,
+        blank=True,
+        help_text="کلاس آیکون Themify، مثلاً ti-headphone-alt",
+    )
+    meta_title = models.CharField(
+        "عنوان سئو",
+        max_length=70,
+        blank=True,
+        help_text="اگر خالی باشد از نام دسته استفاده می‌شود.",
+    )
+    meta_description = models.CharField(
+        "توضیح متا (سئو)",
+        max_length=160,
+        blank=True,
+    )
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_service_category"
+        verbose_name = "دسته خدمات"
+        verbose_name_plural = "دسته‌های خدمات"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    def get_meta_title(self) -> str:
+        return self.meta_title.strip() or self.name
+
+    def get_meta_description(self) -> str:
+        if self.meta_description.strip():
+            return self.meta_description.strip()
+        return (
+            f"خدمات {self.name} در زمینه مهاجرت تحصیلی و اعزام دانشجو — "
+            f"مشاوره، پذیرش، ویزا و همراهی تخصصی."
+        )
+
+
+class Service(models.Model):
+    """خدمات موسسه برای نمایش در صفحه خدمات."""
+
+    category = models.ForeignKey(
+        ServiceCategory,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="services",
+        verbose_name="دسته",
+    )
+    title = models.CharField("عنوان", max_length=150)
+    slug = models.SlugField(
+        "شناسه لینک",
+        max_length=200,
+        unique=True,
+        blank=True,
+        help_text="برای لینک مستقیم به خدمت؛ در صورت خالی بودن خودکار ساخته می‌شود.",
+    )
+    short_description = models.TextField(
+        "توضیح کوتاه (کارت و صفحه اول)",
+        blank=True,
+        help_text="خلاصه برای نمایش در کارت‌ها و صفحه اصلی.",
+    )
+    description = models.TextField(
+        "توضیحات کامل (صفحه خدمات)",
+        help_text="متن کامل برای صفحه خدمات موسسه.",
+    )
+    highlights = models.TextField(
+        "نکات کلیدی",
+        blank=True,
+        help_text="هر خط یک مورد (نمایش در کارت بازشده).",
+    )
+    icon = models.CharField(
+        "کلاس آیکون",
+        max_length=80,
+        blank=True,
+        help_text="مثلاً ti-comments-smiley یا ti-email",
+    )
+    search_keywords = models.TextField(
+        "کلمات کلیدی جستجو",
+        blank=True,
+        help_text="کلمات مرتبط با کاما جدا کنید تا در جستجو بهتر دیده شود.",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+    is_featured = models.BooleanField(
+        "خدمات پرطرفدار",
+        default=False,
+        help_text="در بخش «پرطرفدار» صفحه خدمات نمایش داده می‌شود.",
+    )
+    view_count = models.PositiveIntegerField("تعداد بازدید", default=0, editable=False)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_service"
+        verbose_name = "خدمت"
+        verbose_name_plural = "خدمات موسسه"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.title
+
+    def get_display_summary(self) -> str:
+        text = (self.short_description or "").strip()
+        if text:
+            return text
+        return (self.description or "").strip()
+
+    def get_highlights_list(self) -> list[str]:
+        if not self.highlights:
+            return []
+        return [line.strip() for line in self.highlights.splitlines() if line.strip()]
+
+    def get_keywords_list(self) -> list[str]:
+        if not self.search_keywords:
+            return []
+        return [k.strip() for k in self.search_keywords.replace("،", ",").split(",") if k.strip()]
+
+    def _generate_slug(self) -> str:
+        from django.utils.text import slugify
+        import uuid
+
+        base = slugify(self.title, allow_unicode=True)[:180] or f"service-{uuid.uuid4().hex[:8]}"
+        slug = base
+        n = 1
+        qs = Service.objects.all()
+        if self.pk:
+            qs = qs.exclude(pk=self.pk)
+        while qs.filter(slug=slug).exists():
+            slug = f"{base}-{n}"
+            n += 1
+        return slug
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            self.slug = self._generate_slug()
+        super().save(*args, **kwargs)
+
+
+def major_image_upload_to(instance, filename: str) -> str:
+    """مسیر منظم: majors/{country}/{slug}/cover.jpg"""
+    return f"majors/{instance.country}/{instance.slug}/cover.jpg"
+
+
+def university_image_upload_to(instance, filename: str) -> str:
+    """مسیر منظم: universities/{country}/{slug}/cover.jpg"""
+    return f"universities/{instance.country}/{instance.slug}/cover.jpg"
+
+
+def university_gallery_upload_to(instance, filename: str) -> str:
+    """مسیر منظم: universities/{country}/{slug}/gallery/{order}.jpg"""
+    uni = instance.university
+    order = instance.order or 0
+    return f"universities/{uni.country}/{uni.slug}/gallery/{order:02d}.jpg"
+
+
+class Major(models.Model):
+    """رشته‌های تحصیلی برای نمایش در صفحه رشته‌ها و جزئیات رشته."""
+
+    COUNTRY_CHOICES = UNIVERSITY_COUNTRY_CHOICES
+
+    title = models.CharField("عنوان رشته", max_length=200)
+    slug = models.SlugField(
+        "شناسه آدرس",
+        max_length=250,
+        unique=True,
+        blank=True,
+        help_text="برای آدرس صفحه؛ خالی = از عنوان ساخته می‌شود.",
+    )
+    short_description = models.TextField("خلاصه (لیست)", blank=True)
+    description = models.TextField("توضیحات کامل", blank=True)
+    image = models.ImageField(
+        "تصویر رشته",
+        upload_to=major_image_upload_to,
+        blank=True,
+        null=True,
+        help_text="تصویر شاخص رشته؛ خودکار تا ۴۰۰KB فشرده می‌شود.",
+    )
+    country = models.CharField(
+        "کشور مرتبط",
+        max_length=20,
+        choices=COUNTRY_CHOICES,
+        blank=True,
+    )
+    meta_title = models.CharField("عنوان SEO", max_length=200, blank=True)
+    meta_description = models.CharField("توضیح متا (سئو)", max_length=160, blank=True)
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_major"
+        verbose_name = "رشته تحصیلی"
+        verbose_name_plural = "رشته‌های تحصیلی"
+        ordering = ["order", "id"]
+        indexes = [
+            models.Index(fields=["is_active", "country", "order", "id"], name="major_browse_idx"),
+            models.Index(fields=["is_active", "country"]),
+            models.Index(fields=["is_active", "order"]),
+        ]
+
+    def __str__(self) -> str:
+        return self.title
+
+    def _compress_cover_image(self) -> None:
+        from .image_compression import DEFAULT_MAX_BYTES, compress_image_field_to_jpeg
+
+        if not self.image:
+            return
+        try:
+            if (self.image.name or "").lower().endswith(".jpg") and self.image.size <= DEFAULT_MAX_BYTES:
+                return
+        except (OSError, ValueError):
+            pass
+        target = major_image_upload_to(self, "cover.jpg")
+        compress_image_field_to_jpeg(self.image, target_name=target)
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            from django.utils.text import slugify
+            import uuid
+            base = slugify(self.title, allow_unicode=True) or slugify(self.title, allow_unicode=False)
+            self.slug = base if base else f"major-{uuid.uuid4().hex[:8]}"
+        if self.image and hasattr(self.image, "file"):
+            self._compress_cover_image()
+        super().save(*args, **kwargs)
+
+    def get_image_url(self) -> str:
+        if self.image:
+            return self.image.url
+        return ""
+
+    def get_meta_title(self) -> str:
+        return (self.meta_title or "").strip() or self.title
+
+    def get_meta_description(self) -> str:
+        if (self.meta_description or "").strip():
+            return self.meta_description.strip()
+        text = (self.short_description or "").strip()
+        if len(text) > 157:
+            return text[:157].rstrip() + "…"
+        return text
+
+
+class Course(models.Model):
+    """دوره‌ها و برنامه‌های تحصیلی برای نمایش در صفحه جزئیات دوره."""
+
+    COUNTRY_CHOICES = ConsultationRequest.COUNTRY_CHOICES
+
+    DELIVERY_IN_PERSON = "in_person"
+    DELIVERY_ONLINE = "online"
+    DELIVERY_BOTH = "both"
+    DELIVERY_CHOICES = [
+        (DELIVERY_IN_PERSON, "حضوری"),
+        (DELIVERY_ONLINE, "آنلاین"),
+        (DELIVERY_BOTH, "حضوری و آنلاین"),
+    ]
+
+    title = models.CharField("عنوان دوره", max_length=250)
+    slug = models.SlugField(
+        "شناسه آدرس",
+        max_length=250,
+        unique=True,
+        help_text="برای آدرس صفحه، فقط حروف انگلیسی و خط تیره.",
+    )
+    short_description = models.TextField("خلاصه", blank=True)
+    description = models.TextField("توضیحات کامل دوره", blank=True)
+    objectives = models.TextField("اهداف دوره", blank=True)
+    conditions = models.TextField("شرایط و پیش‌نیازها", blank=True)
+    features = models.TextField(
+        "ویژگی‌های دوره",
+        blank=True,
+        help_text="هر خط یک ویژگی؛ مثلاً: پشتیبانی آنلاین، گواهینامه معتبر",
+    )
+    duration_hours = models.PositiveIntegerField("مدت دوره (ساعت)", default=0, blank=True)
+    price = models.CharField("قیمت", max_length=150, blank=True, help_text="مثلاً: تماس بگیرید، رایگان، یا مبلغ")
+    phone = models.CharField(
+        "شماره تماس دوره",
+        max_length=20,
+        blank=True,
+        help_text="در صورت خالی بودن، شماره مدرس نمایش داده می‌شود.",
+    )
+    delivery_mode = models.CharField(
+        "نحوه برگزاری",
+        max_length=20,
+        choices=DELIVERY_CHOICES,
+        default=DELIVERY_BOTH,
+        blank=True,
+    )
+    sample_video = models.URLField("لینک ویدیو نمونه تدریس", blank=True)
+    external_url = models.URLField(
+        "لینک خارجی دوره",
+        max_length=500,
+        blank=True,
+        help_text="اختیاری — اگر پر شود کلیک روی دوره به این آدرس می‌رود و صفحه جزئیات داخلی نمایش داده نمی‌شود.",
+    )
+    external_link_label = models.CharField(
+        "برچسب دکمه لینک خارجی",
+        max_length=80,
+        blank=True,
+        help_text="متن دکمه اصلی — پیش‌فرض: «مشاهده دوره»",
+    )
+    image = models.URLField("آدرس تصویر", blank=True)
+    country = models.CharField(
+        "کشور مرتبط",
+        max_length=20,
+        choices=COUNTRY_CHOICES,
+        blank=True,
+    )
+    instructor = models.ForeignKey(
+        "CourseInstructor",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="courses",
+        verbose_name="مدرس دوره",
+    )
+    meta_title = models.CharField("عنوان SEO", max_length=200, blank=True)
+    meta_description = models.CharField("توضیح متا (سئو)", max_length=160, blank=True)
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_course"
+        verbose_name = "دوره"
+        verbose_name_plural = "دوره‌ها"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.title
+
+    def uses_external_link(self) -> bool:
+        return bool((self.external_url or "").strip())
+
+    def get_course_url(self) -> str:
+        from django.urls import reverse
+
+        external = (self.external_url or "").strip()
+        if external:
+            return external
+        return reverse("course_details", kwargs={"slug": self.slug})
+
+    def get_course_cta_label(self) -> str:
+        if self.uses_external_link():
+            label = (self.external_link_label or "").strip()
+            return label or "مشاهده دوره"
+        return "جزئیات دوره"
+
+    def get_contact_phone(self) -> str:
+        """شماره تماس دوره یا مدرس."""
+        phone = (self.phone or "").strip()
+        if phone:
+            return phone
+        if self.instructor_id and self.instructor:
+            return (self.instructor.phone or "").strip()
+        return ""
+
+    def get_meta_title(self) -> str:
+        return (self.meta_title or "").strip() or self.title
+
+    def get_meta_description(self) -> str:
+        if (self.meta_description or "").strip():
+            return self.meta_description.strip()
+        text = (self.short_description or "").strip()
+        if len(text) > 157:
+            return text[:157].rstrip() + "…"
+        return text
+
+    def get_features_list(self):
+        """لیست ویژگی‌ها (هر خط یک مورد)."""
+        if not self.features:
+            return []
+        return [line.strip() for line in self.features.strip().splitlines() if line.strip()]
+
+    def get_sample_video_embed_url(self):
+        """آدرس embed ویدیو برای نمایش در iframe (یوتیوب و آپارات)."""
+        if not self.sample_video:
+            return ""
+        url = self.sample_video.strip()
+        if "youtube.com/watch?v=" in url:
+            vid = url.split("v=")[-1].split("&")[0]
+            return f"https://www.youtube.com/embed/{vid}"
+        if "youtu.be/" in url:
+            vid = url.split("youtu.be/")[-1].split("?")[0]
+            return f"https://www.youtube.com/embed/{vid}"
+        if "aparat.com/v/" in url:
+            vid = url.rstrip("/").split("/")[-1]
+            return f"https://www.aparat.com/video/video/embed/videohash/{vid}/fa/video_id/{vid}"
+        return url
+
+
+class CourseFAQ(models.Model):
+    """سوالات متداول اختصاصی هر دوره برای نمایش در صفحه جزئیات دوره."""
+
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name="faqs",
+        verbose_name="دوره",
+    )
+    question = models.CharField("سوال", max_length=350)
+    answer = models.TextField("پاسخ")
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_course_faq"
+        verbose_name = "سوال متداول دوره"
+        verbose_name_plural = "سوالات متداول دوره"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.question[:60] + ("..." if len(self.question) > 60 else "")
+
+
+class MajorFAQ(models.Model):
+    """سوالات متداول اختصاصی هر رشته برای نمایش در صفحه جزئیات رشته."""
+
+    major = models.ForeignKey(
+        Major,
+        on_delete=models.CASCADE,
+        related_name="faqs",
+        verbose_name="رشته",
+    )
+    question = models.CharField("سوال", max_length=350)
+    answer = models.TextField("پاسخ")
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_major_faq"
+        verbose_name = "سوال متداول رشته"
+        verbose_name_plural = "سوالات متداول رشته"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.question[:60] + ("..." if len(self.question) > 60 else "")
+
+
+class UniversityMajorLink(models.Model):
+    """ارتباط دوطرفه دانشگاه و رشته — برای لینک‌دهی صفحات جزئیات."""
+
+    university = models.ForeignKey(
+        "core.University",
+        on_delete=models.CASCADE,
+        related_name="major_links",
+        verbose_name="دانشگاه",
+    )
+    major = models.ForeignKey(
+        Major,
+        on_delete=models.CASCADE,
+        related_name="university_links",
+        verbose_name="رشته",
+    )
+    is_featured = models.BooleanField(
+        "شاخص در لیست",
+        default=False,
+        help_text="در ابتدای لیست رشته‌های دانشگاه یا دانشگاه‌های رشته نمایش داده می‌شود.",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب", default=0)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_university_major_link"
+        verbose_name = "رشته در دانشگاه"
+        verbose_name_plural = "رشته‌های دانشگاه"
+        ordering = ["order", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["university", "major"],
+                name="core_university_major_link_unique",
+            ),
+        ]
+        indexes = [
+            models.Index(fields=["university", "order"], name="uni_major_uni_ord_idx"),
+            models.Index(fields=["major", "order"], name="uni_major_maj_ord_idx"),
+            models.Index(fields=["university", "is_featured"], name="uni_major_uni_feat_idx"),
+            models.Index(fields=["major", "is_featured"], name="uni_major_maj_feat_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.university.name_fa} — {self.major.title}"
+
+
+class CourseSyllabus(models.Model):
+    """سرفصل‌های دوره با عنوان و توضیحات."""
+
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name="syllabus_items",
+        verbose_name="دوره",
+    )
+    title = models.CharField("عنوان سرفصل", max_length=250)
+    description = models.TextField("توضیحات", blank=True)
+    order = models.PositiveSmallIntegerField("ترتیب", default=0)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_course_syllabus"
+        verbose_name = "سرفصل دوره"
+        verbose_name_plural = "سرفصل‌های دوره"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.title
+
+
+def course_instructor_image_upload_to(instance, filename: str) -> str:
+    _base, ext = os.path.splitext(filename)
+    slug = (instance.slug or "instructor").strip() or "instructor"
+    return f"instructors/{slug}/photo{(ext or '.jpg').lower()}"
+
+
+class CourseInstructor(models.Model):
+    """مدرس دوره — صفحه اختصاصی با رزومه و سئو."""
+
+    name = models.CharField("نام و نام خانوادگی", max_length=150)
+    slug = models.SlugField(
+        "شناسه آدرس",
+        max_length=150,
+        unique=True,
+        help_text="فقط حروف انگلیسی و خط تیره؛ مثلاً rasoul-montazeri",
+    )
+    position = models.CharField("سمت", max_length=200, help_text="مثلاً مدرس زبان انگلیسی")
+    title = models.CharField(
+        "عنوان / مدرک",
+        max_length=200,
+        blank=True,
+        help_text="مثلاً کارشناسی ارشد آموزش زبان انگلیسی",
+    )
+    short_bio = models.TextField(
+        "معرفی کوتاه",
+        blank=True,
+        help_text="۱–۲ جمله برای کارت دوره و متا",
+    )
+    bio = models.TextField(
+        "بیوگرافی و رزومه",
+        blank=True,
+        help_text="متن کامل معرفی و سوابق",
+    )
+    specialties = models.TextField(
+        "تخصص‌ها",
+        blank=True,
+        help_text="هر خط یک مورد؛ مثلاً IELTS، مکالمه، گرامر",
+    )
+    highlights = models.TextField(
+        "نکات برجسته",
+        blank=True,
+        help_text="هر خط یک مورد؛ برای نمایش در کارت پروفایل",
+    )
+    image = models.ImageField(
+        "عکس",
+        upload_to=course_instructor_image_upload_to,
+        blank=True,
+        null=True,
+    )
+    phone = models.CharField("شماره تماس", max_length=20, blank=True)
+    email = models.EmailField("ایمیل", blank=True)
+    telegram = models.URLField("تلگرام", blank=True)
+    whatsapp = models.CharField("واتساپ", max_length=20, blank=True)
+    instagram = models.URLField("اینستاگرام", blank=True)
+    linkedin = models.URLField("لینکدین", blank=True)
+    website = models.URLField("وب‌سایت", blank=True)
+    meta_title = models.CharField("عنوان SEO", max_length=200, blank=True)
+    meta_description = models.CharField("توضیح متا (سئو)", max_length=160, blank=True)
+    search_keywords = models.TextField("کلمات کلیدی جستجو", blank=True)
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_courseinstructor"
+        verbose_name = "مدرس دوره"
+        verbose_name_plural = "مدرسان دوره"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    def get_absolute_url(self) -> str:
+        from django.urls import reverse
+
+        return reverse("course_instructor_detail", kwargs={"slug": self.slug})
+
+    def get_meta_title(self) -> str:
+        return (self.meta_title or "").strip() or f"{self.name} | مدرس دوره"
+
+    def get_meta_description(self) -> str:
+        if (self.meta_description or "").strip():
+            return self.meta_description.strip()
+        text = (self.short_bio or "").strip()
+        if len(text) > 157:
+            return text[:157].rstrip() + "…"
+        return text or f"معرفی {self.name} — {self.position}"
+
+    def get_specialties_list(self) -> list[str]:
+        if not self.specialties:
+            return []
+        return [line.strip() for line in self.specialties.strip().splitlines() if line.strip()]
+
+    def get_highlights_list(self) -> list[str]:
+        if not self.highlights:
+            return []
+        return [line.strip() for line in self.highlights.strip().splitlines() if line.strip()]
+
+    def get_initials(self) -> str:
+        parts = self.name.strip().split()
+        if not parts:
+            return "؟"
+        if len(parts) == 1:
+            return parts[0][:1]
+        return parts[0][:1] + parts[-1][:1]
+
+    def _compress_image(self) -> None:
+        if not self.image:
+            return
+        from .image_compression import DEFAULT_MAX_BYTES, compress_image_field_to_jpeg
+
+        try:
+            if (self.image.name or "").lower().endswith(".jpg") and self.image.size <= DEFAULT_MAX_BYTES:
+                return
+        except (OSError, ValueError):
+            pass
+        target = course_instructor_image_upload_to(self, "photo.jpg")
+        compress_image_field_to_jpeg(self.image, target_name=target, max_side=640)
+
+    def save(self, *args, **kwargs):
+        if self.image and hasattr(self.image, "file"):
+            self._compress_image()
+        super().save(*args, **kwargs)
+
+
+class CourseInstructorResumeEntry(models.Model):
+    """ردیف رزومه / سوابق کاری مدرس."""
+
+    instructor = models.ForeignKey(
+        CourseInstructor,
+        on_delete=models.CASCADE,
+        related_name="resume_entries",
+        verbose_name="مدرس",
+    )
+    period = models.CharField("بازه زمانی", max_length=80, help_text="مثلاً ۱۴۰۰ – اکنون")
+    role_title = models.CharField("عنوان شغلی / نقش", max_length=200)
+    organization = models.CharField("موسسه / محل فعالیت", max_length=200, blank=True)
+    description = models.TextField("توضیحات", blank=True)
+    order = models.PositiveSmallIntegerField("ترتیب", default=0)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_courseinstructor_resume"
+        verbose_name = "سابقه مدرس"
+        verbose_name_plural = "سوابق مدرس"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return f"{self.role_title} — {self.organization or self.period}"
+
+
+class FAQCategory(models.Model):
+    """دسته‌بندی سوالات متداول برای فیلتر و صفحات سئو."""
+
+    name = models.CharField("نام دسته", max_length=120)
+    slug = models.SlugField(
+        "شناسه آدرس",
+        max_length=150,
+        unique=True,
+        help_text="برای آدرس صفحه دسته، مثلاً visa یا moshavere",
+    )
+    description = models.TextField(
+        "توضیح کوتاه",
+        blank=True,
+        help_text="نمایش زیر عنوان دسته در صفحه FAQ",
+    )
+    icon = models.CharField(
+        "آیکون",
+        max_length=60,
+        blank=True,
+        help_text="کلاس آیکون Themify، مثلاً ti-help-alt",
+    )
+    meta_title = models.CharField(
+        "عنوان سئو",
+        max_length=70,
+        blank=True,
+        help_text="اگر خالی باشد از نام دسته استفاده می‌شود.",
+    )
+    meta_description = models.CharField(
+        "توضیح متا (سئو)",
+        max_length=160,
+        blank=True,
+    )
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_faq_category"
+        verbose_name = "دسته سوالات متداول"
+        verbose_name_plural = "دسته‌های سوالات متداول"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    def get_meta_title(self) -> str:
+        return self.meta_title.strip() or self.name
+
+    def get_meta_description(self) -> str:
+        if self.meta_description.strip():
+            return self.meta_description.strip()
+        return (
+            f"پاسخ سوالات متداول درباره {self.name} "
+            f"در زمینه مهاجرت تحصیلی و اعزام دانشجو."
+        )
+
+
+class FAQ(models.Model):
+    """سوالات متداول برای نمایش در صفحه FAQ."""
+
+    category = models.ForeignKey(
+        FAQCategory,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="faqs",
+        verbose_name="دسته",
+    )
+    question = models.CharField("سوال", max_length=350)
+    answer = models.TextField(
+        "پاسخ کوتاه",
+        help_text="نمایش در لیست و آکوردئون صفحه سوالات متداول.",
+    )
+    detail_content = models.TextField(
+        "توضیحات کامل (صفحه جدا)",
+        blank=True,
+        help_text="محتوای کامل برای صفحه اختصاصی سوال و سئو؛ اگر خالی باشد از پاسخ کوتاه استفاده می‌شود.",
+    )
+    slug = models.SlugField(
+        "شناسه لینک",
+        max_length=200,
+        unique=True,
+        blank=True,
+        help_text="برای لینک مستقیم به سوال؛ در صورت خالی بودن خودکار ساخته می‌شود.",
+    )
+    search_keywords = models.TextField(
+        "کلمات کلیدی جستجو",
+        blank=True,
+        help_text="کلمات مرتبط با کاما جدا کنید تا در جستجو و پیشنهاد هوشمند بهتر دیده شود.",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+    is_featured = models.BooleanField(
+        "سوالات پرتکرار",
+        default=False,
+        help_text="اگر فعال باشد، این سوال در باکس «سوالات پرتکرار» زیر دسته‌بندی‌ها در صفحه FAQ نمایش داده می‌شود.",
+    )
+    view_count = models.PositiveIntegerField("تعداد بازدید", default=0, editable=False)
+    meta_title = models.CharField("عنوان سئو", max_length=70, blank=True)
+    meta_description = models.CharField("توضیح متا (سئو)", max_length=160, blank=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_faq"
+        verbose_name = "سوال متداول"
+        verbose_name_plural = "سوالات متداول"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.question[:60] + ("..." if len(self.question) > 60 else "")
+
+    def get_absolute_url(self) -> str:
+        from django.urls import reverse
+
+        return reverse("faq_detail", kwargs={"faq_slug": self.slug})
+
+    def has_extended_content(self) -> bool:
+        if not self.detail_content:
+            return False
+        from django.utils.html import strip_tags
+
+        return bool(strip_tags(self.detail_content).strip())
+
+    def get_meta_title(self) -> str:
+        return (self.meta_title or "").strip() or self.question
+
+    def get_meta_description(self) -> str:
+        if (self.meta_description or "").strip():
+            return self.meta_description.strip()
+        from django.utils.html import strip_tags
+
+        source = self.detail_content if self.has_extended_content() else self.answer
+        text = strip_tags(source or "").strip()
+        if len(text) > 157:
+            return text[:157].rstrip() + "…"
+        return text or self.question
+
+    def get_detail_html(self) -> str:
+        if self.has_extended_content():
+            return self.detail_content
+        return self.answer
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._build_unique_slug()
+        super().save(*args, **kwargs)
+
+    def _build_unique_slug(self) -> str:
+        from django.utils.text import slugify
+
+        base = slugify(self.question, allow_unicode=True)[:180]
+        if not base:
+            base = f"faq-{self.pk or 'new'}"
+        slug = base
+        n = 1
+        qs = FAQ.objects.all()
+        if self.pk:
+            qs = qs.exclude(pk=self.pk)
+        while qs.filter(slug=slug).exists():
+            slug = f"{base}-{n}"
+            n += 1
+        return slug
+
+    def get_keywords_list(self) -> list[str]:
+        if not self.search_keywords:
+            return []
+        return [k.strip() for k in self.search_keywords.replace("،", ",").split(",") if k.strip()]
+
+
+class University(models.Model):
+    """دانشگاه‌ها و موسسات مناسب پذیرش تحصیلی (مجاز برای سفیران)."""
+
+    COUNTRY_CHOICES = UNIVERSITY_COUNTRY_CHOICES
+
+    TYPE_UNIVERSITY = "university"
+    TYPE_COLLEGE = "college"
+    TYPE_SCHOOL = "school"
+    TYPE_INSTITUTE = "institute"
+    TYPE_CHOICES = [
+        (TYPE_UNIVERSITY, "دانشگاه"),
+        (TYPE_COLLEGE, "کالج"),
+        (TYPE_SCHOOL, "مدرسه"),
+        (TYPE_INSTITUTE, "موسسه"),
+    ]
+
+    slug = models.SlugField(
+        "شناسه آدرس (انگلیسی)", max_length=150, unique=True, help_text="برای آدرس صفحه، فقط حروف انگلیسی و خط تیره."
+    )
+    name_fa = models.CharField("نام فارسی", max_length=200)
+    name_en = models.CharField("نام انگلیسی", max_length=200)
+
+    image = models.ImageField(
+        "تصویر دانشگاه",
+        upload_to=university_image_upload_to,
+        blank=True,
+        null=True,
+        help_text="تصویر را آپلود کنید؛ به‌صورت خودکار تا حداکثر ۴۰۰KB فشرده و در پوشه کشور/دانشگاه ذخیره می‌شود.",
+    )
+
+    country = models.CharField("کشور", max_length=20, choices=COUNTRY_CHOICES)
+    city = models.CharField("شهر", max_length=100)
+    type = models.CharField("نوع موسسه", max_length=20, choices=TYPE_CHOICES, default=TYPE_UNIVERSITY)
+
+    world_rank = models.CharField(
+        "رتبه جهانی", max_length=50, blank=True, help_text="مثلاً 2 یا 101-150"
+    )
+    world_rank_num = models.PositiveSmallIntegerField(
+        "رتبه عددی (مرتب‌سازی)",
+        default=9999,
+        db_index=True,
+        help_text="برای مرتب‌سازی سریع لیست؛ از world_rank پر می‌شود.",
+    )
+
+    is_approved_by_mo_science = models.BooleanField(
+        "مورد تایید وزارت علوم", default=True
+    )
+    is_approved_by_mo_health = models.BooleanField(
+        "مورد تایید وزارت بهداشت", default=False
+    )
+
+    website = models.URLField("وب‌سایت دانشگاه", blank=True)
+    short_description = models.TextField("توضیح کوتاه", blank=True)
+    description = models.TextField("توضیحات کامل", blank=True)
+
+    meta_title = models.CharField(
+        "عنوان SEO",
+        max_length=200,
+        blank=True,
+        help_text="برای موتورهای جستجو؛ در صورت خالی بودن از نام دانشگاه استفاده می‌شود.",
+    )
+    meta_description = models.TextField(
+        "توضیح SEO",
+        blank=True,
+        help_text="خلاصه صفحه برای موتورهای جستجو (۱۵۰–۱۶۰ کاراکتر توصیه می‌شود).",
+    )
+
+    created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_university"
+        verbose_name = "دانشگاه / موسسه"
+        verbose_name_plural = "دانشگاه‌ها و موسسات"
+        ordering = ["country", "city", "name_fa"]
+        indexes = [
+            models.Index(fields=["country", "world_rank_num", "name_fa"], name="uni_browse_rank_idx"),
+            models.Index(fields=["country", "type", "world_rank_num"], name="uni_browse_type_idx"),
+            models.Index(fields=["country", "city"], name="uni_country_city_idx"),
+            models.Index(fields=["type"], name="uni_type_idx"),
+            models.Index(fields=["name_fa"], name="uni_name_fa_idx"),
+            models.Index(fields=["name_en"], name="uni_name_en_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return self.name_fa
+
+    def _compress_cover_image(self) -> None:
+        from .image_compression import DEFAULT_MAX_BYTES, compress_image_field_to_jpeg
+
+        if not self.image:
+            return
+        try:
+            if (self.image.name or "").lower().endswith(".jpg") and self.image.size <= DEFAULT_MAX_BYTES:
+                return
+        except (OSError, ValueError):
+            pass
+        target = university_image_upload_to(self, "cover.jpg")
+        compress_image_field_to_jpeg(self.image, target_name=target)
+
+    def save(self, *args, **kwargs):
+        from core.rank_utils import parse_world_rank_num
+
+        self.world_rank_num = parse_world_rank_num(self.world_rank)
+        if self.image and hasattr(self.image, "file"):
+            self._compress_cover_image()
+        super().save(*args, **kwargs)
+
+
+class TeamMember(models.Model):
+    """اعضای تیم موسسه برای نمایش در صفحه درباره ما."""
+
+    GROUP_LEADERSHIP = "leadership"
+    GROUP_SENIOR_CONSULTANT = "senior_consultant"
+    GROUP_CONSULTANT = "consultant"
+    GROUP_ADMISSIONS = "admissions"
+    GROUP_SUPPORT = "support"
+    GROUP_CHOICES = [
+        (GROUP_LEADERSHIP, "مدیریت و راهبری"),
+        (GROUP_SENIOR_CONSULTANT, "مشاوران ارشد"),
+        (GROUP_CONSULTANT, "مشاوران تحصیلی"),
+        (GROUP_ADMISSIONS, "کارشناسان پذیرش و پرونده"),
+        (GROUP_SUPPORT, "پشتیبانی و هماهنگی"),
+    ]
+
+    name = models.CharField("نام و نام خانوادگی", max_length=150)
+    position = models.CharField("سمت", max_length=150)
+    image = models.FileField(
+        "عکس",
+        upload_to="team/",
+        help_text="عکس عضو تیم (الزامی)",
+    )
+    title = models.CharField(
+        "عنوان / مدرک",
+        max_length=200,
+        blank=True,
+        help_text="مثلاً مشاور ارشد، کارشناس پذیرش",
+    )
+    phone = models.CharField("شماره تماس", max_length=20, blank=True)
+    email = models.EmailField("ایمیل", blank=True)
+    description = models.TextField(
+        "توضیحات",
+        blank=True,
+        help_text="معرفی کوتاه یا طولانی عضو تیم",
+    )
+    telegram = models.URLField("تلگرام", blank=True)
+    whatsapp = models.CharField("واتساپ", max_length=20, blank=True, help_text="شماره با کد کشور، مثلاً 989123456789")
+    instagram = models.URLField("اینستاگرام", blank=True)
+    linkedin = models.URLField("لینکدین", blank=True)
+    website = models.URLField("وب‌سایت شخصی", blank=True)
+
+    member_group = models.CharField(
+        "گروه نمایش",
+        max_length=30,
+        choices=GROUP_CHOICES,
+        default=GROUP_CONSULTANT,
+        help_text="برای گروه‌بندی در صفحه درباره ما",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_teammember"
+        verbose_name = "عضو تیم"
+        verbose_name_plural = "اعضای تیم"
+        ordering = ["member_group", "order", "id"]
+
+    def __str__(self):
+        return f"{self.name} — {self.position}"
+
+
+class MonthlyAchievement(models.Model):
+    """دستاورد ماه — داستان موفقیت دانشجویان (عکس، ویدیو، توضیحات)."""
+
+    person_name = models.CharField("نام و نام خانوادگی", max_length=150)
+    person_role = models.CharField(
+        "عنوان / مقصد",
+        max_length=200,
+        blank=True,
+        help_text="مثلاً پذیرش کارشناسی ارشد — کانادا",
+    )
+    title = models.CharField("عنوان دستاورد", max_length=250)
+    slug = models.SlugField(
+        "آدرس صفحه",
+        max_length=200,
+        unique=True,
+        allow_unicode=True,
+        blank=True,
+        help_text="برای URL صفحه اختصاصی؛ خالی بماند تا خودکار ساخته شود.",
+    )
+    description = models.TextField("خلاصه (لیست)")
+    detail_content = models.TextField(
+        "متن کامل صفحه",
+        blank=True,
+        help_text="توضیحات کامل داستان موفقیت؛ در صفحه اختصاصی نمایش داده می‌شود.",
+    )
+    search_keywords = models.CharField(
+        "کلمات کلیدی جستجو",
+        max_length=400,
+        blank=True,
+        help_text="کلمات جدا شده با ویرگول؛ مثلاً کانادا، ویزا، MBA، بورسیه",
+    )
+    meta_title = models.CharField("عنوان سئو", max_length=70, blank=True)
+    meta_description = models.CharField("توضیح سئو", max_length=160, blank=True)
+    image = models.ImageField(
+        "عکس",
+        upload_to="achievements/",
+        help_text="تصویر پرتره یا مستند دستاورد",
+    )
+    video_file = models.FileField(
+        "فایل ویدیو",
+        upload_to="achievements/videos/",
+        blank=True,
+        help_text="ویدیوی مصاحبه یا مستند (اختیاری)",
+    )
+    video_url = models.URLField(
+        "لینک ویدیو",
+        blank=True,
+        help_text="یوتیوب، آپارات و… (اگر فایل آپلود نکردید)",
+    )
+    month_label = models.CharField(
+        "برچسب ماه",
+        max_length=80,
+        blank=True,
+        help_text="مثلاً اردیبهشت ۱۴۰۵ — برای فیلتر در صفحه",
+    )
+    is_featured = models.BooleanField(
+        "نمایش ویژه",
+        default=False,
+        help_text="کارت بزرگ‌تر در ابتدای لیست",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+    view_count = models.PositiveIntegerField("بازدید", default=0)
+    created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_monthly_achievement"
+        verbose_name = "دستاورد ماه"
+        verbose_name_plural = "دستاوردهای ماه"
+        ordering = ["-is_featured", "order", "-created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.person_name} — {self.title}"
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+
+        return reverse("achievement_detail", kwargs={"achievement_slug": self.slug})
+
+    def get_keywords_list(self) -> list[str]:
+        raw = (self.search_keywords or "").replace("،", ",")
+        return [k.strip() for k in raw.split(",") if k.strip()]
+
+    def get_meta_title(self) -> str:
+        return (self.meta_title or "").strip() or f"{self.person_name} — {self.title}"
+
+    def get_meta_description(self) -> str:
+        if (self.meta_description or "").strip():
+            return self.meta_description.strip()
+        text = (self.description or "").strip()
+        return text[:160] if text else self.title
+
+    def has_extended_content(self) -> bool:
+        from django.utils.html import strip_tags
+
+        return bool(strip_tags(self.detail_content or "").strip())
+
+    def get_detail_html(self) -> str:
+        if self.has_extended_content():
+            return self.detail_content
+        return f"<p>{self.description}</p>"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._build_unique_slug()
+        super().save(*args, **kwargs)
+
+    def _build_unique_slug(self) -> str:
+        from django.utils.text import slugify
+
+        base = slugify(f"{self.person_name}-{self.title}", allow_unicode=True)[:180]
+        if not base:
+            import uuid
+
+            base = f"achievement-{uuid.uuid4().hex[:8]}"
+        slug = base
+        n = 1
+        qs = MonthlyAchievement.objects.exclude(pk=self.pk) if self.pk else MonthlyAchievement.objects.all()
+        while qs.filter(slug=slug).exists():
+            slug = f"{base}-{n}"
+            n += 1
+        return slug
+
+    def has_video(self) -> bool:
+        return bool(self.video_file) or bool((self.video_url or "").strip())
+
+    def get_video_embed_url(self) -> str:
+        """تبدیل لینک یوتیوب/آپارات به embed در صورت امکان."""
+        url = (self.video_url or "").strip()
+        if not url:
+            return ""
+        if "youtube.com/watch" in url:
+            from urllib.parse import parse_qs, urlparse
+
+            parsed = urlparse(url)
+            vid = parse_qs(parsed.query).get("v", [None])[0]
+            if vid:
+                return f"https://www.youtube.com/embed/{vid}"
+        if "youtu.be/" in url:
+            vid = url.rstrip("/").split("/")[-1].split("?")[0]
+            if vid:
+                return f"https://www.youtube.com/embed/{vid}"
+        if "aparat.com/v/" in url:
+            vid = url.rstrip("/").split("/")[-1]
+            return f"https://www.aparat.com/video/video/embed/videohash/{vid}/vt/frame"
+        if "embed" in url or "iframe" in url:
+            return url
+        return url
+
+
+class UniversityGalleryImage(models.Model):
+    """تصاویر گالری دانشگاه."""
+
+    university = models.ForeignKey(
+        "core.University",
+        on_delete=models.CASCADE,
+        related_name="gallery_images",
+        verbose_name="دانشگاه",
+    )
+    image = models.ImageField("تصویر", upload_to=university_gallery_upload_to)
+    caption = models.CharField("عنوان / توضیح تصویر", max_length=200, blank=True)
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_universitygalleryimage"
+        verbose_name = "تصویر گالری"
+        verbose_name_plural = "تصاویر گالری"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.caption or f"تصویر {self.order}"
+
+    def _compress_gallery_image(self) -> None:
+        from .image_compression import DEFAULT_MAX_BYTES, compress_image_field_to_jpeg
+
+        if not self.image:
+            return
+        try:
+            if (self.image.name or "").lower().endswith(".jpg") and self.image.size <= DEFAULT_MAX_BYTES:
+                return
+        except (OSError, ValueError):
+            pass
+        target = university_gallery_upload_to(self, "image.jpg")
+        compress_image_field_to_jpeg(self.image, target_name=target)
+
+    def save(self, *args, **kwargs):
+        if self.image and hasattr(self.image, "file"):
+            self._compress_gallery_image()
+        super().save(*args, **kwargs)
+
+
+class UniversityFAQ(models.Model):
+    """سوالات متداول اختصاصی هر دانشگاه برای نمایش در صفحه جزئیات دانشگاه."""
+
+    university = models.ForeignKey(
+        University,
+        on_delete=models.CASCADE,
+        related_name="faqs",
+        verbose_name="دانشگاه",
+    )
+    question = models.CharField("سوال", max_length=350)
+    answer = models.TextField("پاسخ")
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_university_faq"
+        verbose_name = "سوال متداول دانشگاه"
+        verbose_name_plural = "سوالات متداول دانشگاه"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.question[:60] + ("..." if len(self.question) > 60 else "")
+
+
+PRICING_CURRENCY_CHOICES = [
+    ("EUR", "یورو"),
+    ("USD", "دلار آمریکا"),
+    ("GBP", "پوند انگلیس"),
+    ("AUD", "دلار استرالیا"),
+    ("CAD", "دلار کانادا"),
+    ("CHF", "فرانک سوئیس"),
+    ("DKK", "کرون دانمارک"),
+    ("SEK", "کرون سوئد"),
+    ("NOK", "کرون نروژ"),
+    ("JPY", "ین ژاپن"),
+]
+
+
+class PricingCategory(models.Model):
+    """دسته‌بندی تعرفه‌ها در صفحه تعرفه."""
+
+    name = models.CharField("نام دسته", max_length=120)
+    slug = models.SlugField("شناسه", max_length=120, unique=True)
+    description = models.TextField("توضیح کوتاه", blank=True)
+    icon = models.CharField("کلاس آیکون", max_length=80, blank=True)
+    order = models.PositiveSmallIntegerField("ترتیب", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_pricingcategory"
+        verbose_name = "دسته تعرفه"
+        verbose_name_plural = "دسته‌های تعرفه"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class PricingTariff(models.Model):
+    """تعرفه هر خدمت موسسه — قابل استفاده در ماشین‌حساب."""
+
+    PRICE_FIXED = "fixed"
+    PRICE_FROM = "from"
+    PRICE_CONTACT = "contact"
+    PRICE_TYPE_CHOICES = [
+        (PRICE_FIXED, "مبلغ ثابت"),
+        (PRICE_FROM, "از (حداقل)"),
+        (PRICE_CONTACT, "تماس بگیرید"),
+    ]
+
+    category = models.ForeignKey(
+        PricingCategory,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="tariffs",
+        verbose_name="دسته",
+    )
+    title = models.CharField("عنوان خدمت", max_length=200)
+    slug = models.SlugField("شناسه", max_length=200, unique=True)
+    short_description = models.TextField("خلاصه", blank=True)
+    description = models.TextField(
+        "توضیحات کامل",
+        help_text="شرح کامل خدمت برای نمایش در صفحه تعرفه.",
+    )
+    calculator_key = models.CharField(
+        "کلید ماشین‌حساب",
+        max_length=60,
+        unique=True,
+        help_text="شناسه یکتا برای منطق پیشنهاددهنده؛ مثلاً visa_application",
+    )
+    price_toman = models.PositiveIntegerField(
+        "قیمت (تومان) — داخلی",
+        default=0,
+        help_text="فقط برای آرشیو؛ در سایت نمایش داده نمی‌شود.",
+    )
+    price_foreign_amount = models.PositiveIntegerField(
+        "مبلغ ثابت (ارز)",
+        default=0,
+        help_text="برای تعرفه ثابت مثل مشاوره؛ به ارز زیر",
+    )
+    price_foreign_currency = models.CharField(
+        "ارز مبلغ ثابت",
+        max_length=10,
+        choices=PRICING_CURRENCY_CHOICES,
+        blank=True,
+        default="",
+    )
+    allowance_percent = models.PositiveSmallIntegerField(
+        "درصد مقرری ماهانه",
+        null=True,
+        blank=True,
+        help_text="طبق قرارداد: حداکثر درصدی از یک‌ماه مقرری بورس دانشجوی مجرد در کشور مقصد",
+    )
+    price_type = models.CharField(
+        "نوع نمایش قیمت",
+        max_length=20,
+        choices=PRICE_TYPE_CHOICES,
+        default=PRICE_FIXED,
+    )
+    icon = models.CharField("کلاس آیکون", max_length=80, blank=True)
+    is_calculator_option = models.BooleanField(
+        "قابل انتخاب در ماشین‌حساب",
+        default=True,
+        help_text="کاربر می‌تواند این خدمت را در پیشنهاد نهایی ببیند/حذف کند.",
+    )
+    is_core = models.BooleanField(
+        "خدمت پایه",
+        default=False,
+        help_text="در پکیج‌های پیشنهادی معمولاً خودکار اضافه می‌شود.",
+    )
+    auto_for_goals = models.CharField(
+        "اهداف مرتبط",
+        max_length=120,
+        blank=True,
+        help_text="کلیدهای هدف جدا شده با کاما: study,language,visa_only,docs_only",
+    )
+    depends_on_keys = models.CharField(
+        "وابسته به خدمات",
+        max_length=200,
+        blank=True,
+        help_text="کلیدهای calculator که باید انتخاب شده باشند؛ با کاما جدا شود.",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_pricingtariff"
+        verbose_name = "تعرفه خدمت"
+        verbose_name_plural = "تعرفه خدمات"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.title
+
+    def get_auto_goals(self) -> set[str]:
+        if not self.auto_for_goals:
+            return set()
+        return {g.strip() for g in self.auto_for_goals.split(",") if g.strip()}
+
+    def get_depends_on(self) -> set[str]:
+        if not self.depends_on_keys:
+            return set()
+        return {k.strip() for k in self.depends_on_keys.split(",") if k.strip()}
+
+    @property
+    def price_display(self) -> str:
+        from .pricing_rates import format_foreign
+
+        if self.allowance_percent:
+            return f"حداکثر {self.allowance_percent}٪ یک‌ماهه مقرری (ارز کشور مقصد)"
+        if self.price_type == self.PRICE_CONTACT:
+            return "تماس بگیرید"
+        if self.price_foreign_amount and self.price_foreign_currency:
+            prefix = "از " if self.price_type == self.PRICE_FROM else ""
+            return prefix + format_foreign(
+                self.price_foreign_amount, self.price_foreign_currency
+            )
+        return "بر اساس کشور مقصد"
+
+    def is_allowance_based(self) -> bool:
+        return bool(self.allowance_percent)
+
+
+class StudyCountry(models.Model):
+    """صفحه اختصاصی هر کشور مقصد تحصیلی — محتوا، سئو و تصویر."""
+
+    FLAG_CODES = {
+        "canada": "ca",
+        "spain": "es",
+        "china": "cn",
+    }
+
+    code = models.SlugField(
+        "شناسه کشور",
+        max_length=30,
+        unique=True,
+        help_text="مثلاً canada، spain، china — در آدرس صفحه استفاده می‌شود.",
+    )
+    name = models.CharField("نام فارسی", max_length=100)
+    headline = models.CharField("تیتر اصلی", max_length=300)
+    intro = models.TextField("مقدمه (خلاصه)")
+    description = models.TextField(
+        "توضیحات کامل",
+        blank=True,
+        help_text="متن کامل صفحه؛ در ادمین با ویرایشگر غنی قابل ویرایش است.",
+    )
+    image = models.ImageField(
+        "تصویر شاخص",
+        upload_to="countries/",
+        blank=True,
+        null=True,
+        help_text="تصویر بزرگ بالای صفحه؛ در صورت خالی بودن از پرچم کشور استفاده می‌شود.",
+    )
+    pros = models.TextField(
+        "مزایا",
+        blank=True,
+        help_text="هر خط یک مورد.",
+    )
+    cons = models.TextField(
+        "معایب",
+        blank=True,
+        help_text="هر خط یک مورد.",
+    )
+    visa_info = models.TextField("راهنمای ویزا و اقامت", blank=True)
+    admission_info = models.TextField("مراحل پذیرش و اپلای", blank=True)
+    living_info = models.TextField("هزینه زندگی و شهرهای محبوب", blank=True)
+    scholarship_info = models.TextField("بورسیه و کمک‌هزینه", blank=True)
+    search_keywords = models.TextField(
+        "کلمات کلیدی جستجو",
+        blank=True,
+        help_text="کلمات مرتبط با کاما جدا کنید تا جستجوی «هرچی میخوای بپرس» بهتر کار کند.",
+    )
+    meta_title = models.CharField("عنوان SEO", max_length=200, blank=True)
+    meta_description = models.TextField("توضیح متا SEO", blank=True)
+    meta_keywords = models.CharField("کلمات کلیدی SEO", max_length=300, blank=True)
+    allowance_country = models.ForeignKey(
+        "core.LivingAllowanceCountry",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="study_countries",
+        verbose_name="ردیف مقرری (محاسبه تعرفه)",
+        help_text="برای محاسبه درصد پذیرش، ویزا و … در صفحه تعرفه.",
+    )
+    consultation_foreign_amount = models.PositiveIntegerField(
+        "مبلغ هر جلسه مشاوره (ارز)",
+        default=0,
+        help_text="مطابق ماده ۳-۱ قرارداد؛ مبلغ ثابت به ارز زیر.",
+    )
+    consultation_foreign_currency = models.CharField(
+        "ارز جلسه مشاوره",
+        max_length=10,
+        choices=PRICING_CURRENCY_CHOICES,
+        blank=True,
+        default="",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_studycountry"
+        verbose_name = "کشور مقصد"
+        verbose_name_plural = "کشورهای مقصد"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    @property
+    def consultation_display(self) -> str:
+        from .pricing_rates import format_foreign
+
+        if self.consultation_foreign_amount and self.consultation_foreign_currency:
+            return format_foreign(
+                self.consultation_foreign_amount,
+                self.consultation_foreign_currency,
+            )
+        return ""
+
+    def get_absolute_url(self) -> str:
+        from django.urls import reverse
+
+        return reverse("country_detail", kwargs={"country_code": self.code})
+
+    def get_flag_static(self) -> str:
+        from .study_destinations import country_flag_static
+
+        return country_flag_static(self.code) or (
+            f"img/flags/{self.code[:2]}.svg" if self.code else "img/flags/xx.svg"
+        )
+
+    def get_pros_list(self) -> list[str]:
+        if not self.pros:
+            return []
+        return [line.strip() for line in self.pros.strip().splitlines() if line.strip()]
+
+    def get_cons_list(self) -> list[str]:
+        if not self.cons:
+            return []
+        return [line.strip() for line in self.cons.strip().splitlines() if line.strip()]
+
+    def get_keywords_list(self) -> list[str]:
+        if not self.search_keywords:
+            return []
+        return [k.strip() for k in self.search_keywords.replace("،", ",").split(",") if k.strip()]
+
+    def get_meta_title(self) -> str:
+        return (self.meta_title or "").strip() or f"تحصیل در {self.name}"
+
+    def get_meta_description(self) -> str:
+        if (self.meta_description or "").strip():
+            return self.meta_description.strip()
+        text = (self.intro or "").strip()
+        if len(text) > 160:
+            return text[:157].rstrip() + "…"
+        return text
+
+    def get_search_markers(self) -> set[str]:
+        """نشانه‌های متنی برای فیلتر محتوای مرتبط با این کشور."""
+        markers = {
+            self.code.lower(),
+            self.name.lower(),
+        }
+        extra = {
+            "canada": {"کانادا", "canada", "canadian"},
+            "spain": {"اسپانیا", "spain", "spanish", "اسپانیایی"},
+            "china": {"چین", "china", "chinese", "چینی"},
+        }
+        markers.update(extra.get(self.code, set()))
+        for kw in self.get_keywords_list():
+            markers.add(kw.lower())
+        return markers
+
+
+class CountryScholarshipGuide(models.Model):
+    """صفحه اختصاصی بورسیه هر کشور — به تفکیک مقطع تحصیلی."""
+
+    DEGREE_ALL = ""
+    DEGREE_CHOICES = (
+        (DEGREE_ALL, "همه مقاطع"),
+        (EvaluationRequest.DEGREE_BACHELOR, "کارشناسی"),
+        (EvaluationRequest.DEGREE_MASTER, "کارشناسی ارشد"),
+        (EvaluationRequest.DEGREE_PHD, "دکتری"),
+    )
+
+    country = models.ForeignKey(
+        StudyCountry,
+        on_delete=models.CASCADE,
+        related_name="scholarship_guides",
+        verbose_name="کشور",
+    )
+    target_degree = models.CharField(
+        "مقطع",
+        max_length=20,
+        choices=DEGREE_CHOICES,
+        blank=True,
+        default=DEGREE_ALL,
+        help_text="خالی = همه مقاطع؛ برای صفحه کارشناسی «bachelor» انتخاب کنید.",
+    )
+    headline = models.CharField("تیتر صفحه", max_length=300)
+    intro = models.TextField("مقدمه")
+    overview = models.TextField(
+        "راهنمای کلی بورسیه",
+        blank=True,
+        help_text="متن غنی درباره انواع بورسیه، زمان‌بندی کلی و نکات مهم.",
+    )
+    application_guide = models.TextField(
+        "راهنمای اپلای بورسیه",
+        blank=True,
+        help_text="مراحل پیشنهادی، مدارک و اشتباهات رایج.",
+    )
+    search_keywords = models.TextField("کلمات کلیدی جستجو", blank=True)
+    meta_title = models.CharField("عنوان SEO", max_length=200, blank=True)
+    meta_description = models.TextField("توضیح متا SEO", blank=True)
+    meta_keywords = models.CharField("کلمات کلیدی SEO", max_length=300, blank=True)
+    is_active = models.BooleanField("فعال", default=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_countryscholarshipguide"
+        verbose_name = "راهنمای بورسیه کشور"
+        verbose_name_plural = "راهنماهای بورسیه کشورها"
+        ordering = ["country__order", "country_id", "target_degree"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["country", "target_degree"],
+                name="core_scholarshipguide_country_degree_uniq",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        degree = self.get_target_degree_display() if self.target_degree else "همه مقاطع"
+        return f"بورسیه {self.country.name} — {degree}"
+
+    def get_absolute_url(self) -> str:
+        from django.urls import reverse
+
+        path = reverse(
+            "country_scholarships",
+            kwargs={"country_code": self.country.code},
+        )
+        if self.target_degree:
+            path += f"?target_degree={self.target_degree}"
+        return path
+
+    def get_meta_title(self) -> str:
+        if (self.meta_title or "").strip():
+            return self.meta_title.strip()
+        degree = self.get_target_degree_display() if self.target_degree else ""
+        if degree and degree != "همه مقاطع":
+            return f"بورسیه تحصیل {degree} در {self.country.name}"
+        return f"بورسیه تحصیل در {self.country.name}"
+
+    def get_meta_description(self) -> str:
+        if (self.meta_description or "").strip():
+            return self.meta_description.strip()
+        text = (self.intro or "").strip()
+        if len(text) > 160:
+            return text[:157].rstrip() + "…"
+        return text
+
+    def get_degree_label(self) -> str:
+        if not self.target_degree:
+            return ""
+        return dict(self.DEGREE_CHOICES).get(self.target_degree, self.target_degree)
+
+
+class CountryScholarship(models.Model):
+    """یک برنامه بورسیه مشخص — قابل مدیریت در ادمین."""
+
+    guide = models.ForeignKey(
+        CountryScholarshipGuide,
+        on_delete=models.CASCADE,
+        related_name="scholarships",
+        verbose_name="راهنمای کشور",
+    )
+    slug = models.SlugField("شناسه", max_length=120)
+    program_key = models.SlugField(
+        "کلید کاتالوگ",
+        max_length=80,
+        blank=True,
+        help_text="اختیاری؛ برای همگام‌سازی با پیشنهاد ارزیابی (مثلاً ca-pearson).",
+    )
+    name = models.CharField("نام بورسیه", max_length=250)
+    provider = models.CharField("ارائه‌دهنده", max_length=200)
+    coverage = models.CharField("پوشش مالی (خلاصه)", max_length=300)
+    eligibility = models.TextField("شرایط واجد شرایط بودن", blank=True)
+    deadlines = models.CharField("مهلت‌ها", max_length=400, blank=True)
+    official_url = models.URLField("لینک رسمی", blank=True, max_length=500)
+    min_gpa = models.DecimalField(
+        "حداقل معدل (ایرانی ۲۰)",
+        max_digits=4,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
+    lang_requirement = models.CharField("شرط زبان", max_length=200, blank=True)
+    highlights = models.TextField(
+        "نکات برجسته",
+        blank=True,
+        help_text="هر خط یک مورد.",
+    )
+    tags = models.CharField(
+        "برچسب‌ها",
+        max_length=300,
+        blank=True,
+        help_text="با کاما جدا کنید.",
+    )
+    is_featured = models.BooleanField("ویژه (بالای لیست)", default=False)
+    order = models.PositiveSmallIntegerField("ترتیب", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_countryscholarship"
+        verbose_name = "برنامه بورسیه"
+        verbose_name_plural = "برنامه‌های بورسیه"
+        ordering = ["-is_featured", "order", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["guide", "slug"],
+                name="core_countryscholarship_guide_slug_uniq",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return self.name[:80]
+
+    def get_highlights_list(self) -> list[str]:
+        if not self.highlights:
+            return []
+        return [line.strip() for line in self.highlights.strip().splitlines() if line.strip()]
+
+    def get_tags_list(self) -> list[str]:
+        if not self.tags:
+            return []
+        return [t.strip() for t in self.tags.replace("،", ",").split(",") if t.strip()]
+
+
+class LivingAllowanceCountry(models.Model):
+    """میزان مقرری پیشنهادی بانکی به تفکیک کشور/منطقه."""
+
+    CURRENCY_EUR = "EUR"
+    CURRENCY_USD = "USD"
+    CURRENCY_GBP = "GBP"
+    CURRENCY_AUD = "AUD"
+    CURRENCY_CAD = "CAD"
+    CURRENCY_CHF = "CHF"
+    CURRENCY_DKK = "DKK"
+    CURRENCY_SEK = "SEK"
+    CURRENCY_NOK = "NOK"
+    CURRENCY_JPY = "JPY"
+    CURRENCY_CHOICES = PRICING_CURRENCY_CHOICES
+
+    name = models.CharField("نام کشور / منطقه", max_length=200)
+    slug = models.SlugField("شناسه", max_length=200, unique=True)
+    amount = models.PositiveBigIntegerField("میزان مقرری")
+    currency = models.CharField(
+        "واحد پول",
+        max_length=10,
+        choices=CURRENCY_CHOICES,
+        default=CURRENCY_EUR,
+    )
+    search_keywords = models.CharField(
+        "کلمات جستجو",
+        max_length=250,
+        blank=True,
+        help_text="برای جستجوی سریع در ماشین‌حساب؛ با فاصله جدا شود.",
+    )
+    region_group = models.CharField(
+        "گروه منطقه",
+        max_length=80,
+        blank=True,
+        help_text="مثلاً اروپا، انگلستان",
+    )
+    order = models.PositiveSmallIntegerField("ترتیب", default=0)
+    is_active = models.BooleanField("فعال", default=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_livingallowancecountry"
+        verbose_name = "مقرری کشور"
+        verbose_name_plural = "مقرری کشورها"
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    @property
+    def allowance_display(self) -> str:
+        label = dict(self.CURRENCY_CHOICES).get(self.currency, self.currency)
+        return f"{self.amount:,} {label}".replace(",", "٬")
+
+
+class AdminChangeLog(models.Model):
+    """لاگ تغییرات ادمین — نگهداری محدود (پیش‌فرض ۳۰ روز) با امکان بازگردانی."""
+
+    ACTION_CREATE = "create"
+    ACTION_UPDATE = "update"
+    ACTION_DELETE = "delete"
+    ACTION_REVERT = "revert"
+    ACTION_CHOICES = [
+        (ACTION_CREATE, "ایجاد"),
+        (ACTION_UPDATE, "ویرایش"),
+        (ACTION_DELETE, "حذف"),
+        (ACTION_REVERT, "بازگردانی"),
+    ]
+
+    user = models.ForeignKey(
+        "auth.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="admin_change_logs",
+        verbose_name="کاربر",
+    )
+    content_type = models.ForeignKey(
+        "contenttypes.ContentType",
+        on_delete=models.CASCADE,
+        verbose_name="نوع محتوا",
+    )
+    object_id = models.CharField("شناسه شیء", max_length=64, db_index=True)
+    object_repr = models.CharField("نمایش شیء", max_length=255)
+    action = models.CharField("عملیات", max_length=20, choices=ACTION_CHOICES)
+    payload = models.JSONField(
+        "داده",
+        default=dict,
+        help_text="before / after / changed_fields برای بازگردانی و نمایش diff",
+    )
+    note = models.CharField("یادداشت", max_length=500, blank=True)
+    reverted_at = models.DateTimeField("زمان بازگردانی", null=True, blank=True)
+    reverted_by = models.ForeignKey(
+        "auth.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="admin_reverts_done",
+        verbose_name="بازگردانی توسط",
+    )
+    created_at = models.DateTimeField("زمان", auto_now_add=True, db_index=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_admin_change_log"
+        verbose_name = "لاگ تغییر ادمین"
+        verbose_name_plural = "لاگ تغییرات ادمین"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["content_type", "object_id"], name="adm_log_ct_obj_idx"),
+            models.Index(fields=["created_at"], name="adm_log_created_idx"),
+            models.Index(fields=["action", "created_at"], name="adm_log_act_cr_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.get_action_display()} — {self.object_repr}"
+
+    @property
+    def changed_fields(self) -> list[str]:
+        return list((self.payload or {}).get("changed_fields") or [])
+
+    @property
+    def can_revert(self) -> bool:
+        if self.reverted_at:
+            return False
+        return self.action in (
+            self.ACTION_CREATE,
+            self.ACTION_UPDATE,
+            self.ACTION_DELETE,
+        )
+
+
+class CkeditorAsset(models.Model):
+    """فایل تصویر آپلودشده از ویرایشگر CKEditor — برای مدیریت در ادمین."""
+
+    path = models.CharField(
+        "مسیر فایل",
+        max_length=300,
+        unique=True,
+        help_text="نسبت به MEDIA_ROOT، مثلاً ckeditor/abc.jpg",
+    )
+    size_bytes = models.PositiveIntegerField("حجم (بایت)", default=0)
+    uploaded_at = models.DateTimeField("زمان آپلود", auto_now_add=True)
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="ckeditor_uploads",
+        verbose_name="آپلودکننده",
+    )
+    usage_count = models.PositiveIntegerField("تعداد استفاده", default=0)
+    usage_snapshot = models.JSONField(
+        "محل‌های استفاده",
+        default=list,
+        blank=True,
+        help_text="فهرست محتواهایی که این تصویر در آن‌ها درج شده است.",
+    )
+    primary_category = models.CharField(
+        "دسته اصلی",
+        max_length=80,
+        blank=True,
+        db_index=True,
+        help_text="مثلاً وبلاگ، دوره آموزشی",
+    )
+    categories_summary = models.CharField(
+        "خلاصه دسته‌بندی",
+        max_length=300,
+        blank=True,
+        help_text="مثلاً وبلاگ (۲) · دوره (۱)",
+    )
+    is_orphan = models.BooleanField(
+        "بدون استفاده",
+        default=True,
+        db_index=True,
+        help_text="در هیچ محتوای فعالی استفاده نشده است.",
+    )
+    indexed_at = models.DateTimeField("آخرین ایندکس", null=True, blank=True)
+
+    class Meta:
+        app_label = "core"
+        db_table = "core_ckeditor_asset"
+        verbose_name = "فایل CKEditor"
+        verbose_name_plural = "فایل‌های CKEditor"
+        ordering = ["-uploaded_at", "-id"]
+
+    def __str__(self) -> str:
+        return os.path.basename(self.path)
+
+    @property
+    def file_url(self) -> str:
+        return f"{settings.MEDIA_URL}{self.path.replace(os.sep, '/')}"
+
+    @property
+    def abs_path(self) -> str:
+        return os.path.join(settings.MEDIA_ROOT, self.path)
+

@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}رزرو وقت مشاوره | {{ institute.name }}{% endblock %}
+
+{% block meta_description %}رزرو جلسه مشاوره مهاجرت تحصیلی با {{ institute.name }}. انتخاب زمان از میان زمان‌های موجود.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/appointment.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/referral-source.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script>window.PAGE_CONFIG = window.PAGE_CONFIG || {}; window.PAGE_CONFIG.appointmentSlotsUrl = "{% url 'appointment_slots' %}";</script>
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title="رزرو وقت مشاوره" hero_lead="زمان مناسب را انتخاب کنید؛ مشاوره حضوری و آنلاین هر کدام ۳۰ دقیقه است. پس از ثبت، کارشناسان ما با شما تماس می‌گیرند." hero_compact=1 crumb2_label="رزرو مشاوره" %}
+
+<section class="appt-page section_padding" dir="rtl">
+    <div class="container">
+        <div class="row g-4">
+            <aside class="col-lg-4 col-xl-3 appt-page__aside" aria-label="راهنمای رزرو">
+                <div class="appt-page__panel appt-page__panel--compact">
+                    <p class="appt-page__panel-kicker">
+                        <span class="ti-list" aria-hidden="true"></span>
+                        مراحل رزرو
+                    </p>
+                    <ol class="appt-page__steps" role="list">
+                        <li class="appt-page__step is-active" data-appt-step="1">
+                            <span class="appt-page__step-num">۱</span>
+                            <span class="appt-page__step-text">اطلاعات تماس</span>
+                        </li>
+                        <li class="appt-page__step" data-appt-step="2">
+                            <span class="appt-page__step-num">۲</span>
+                            <span class="appt-page__step-text">نوع مشاوره و کشور</span>
+                        </li>
+                        <li class="appt-page__step" data-appt-step="3">
+                            <span class="appt-page__step-num">۳</span>
+                            <span class="appt-page__step-text">انتخاب زمان</span>
+                        </li>
+                        <li class="appt-page__step" data-appt-step="4">
+                            <span class="appt-page__step-num">۴</span>
+                            <span class="appt-page__step-text">توضیحات و ثبت</span>
+                        </li>
+                    </ol>
+                    <div class="appt-page__aside-foot">
+                        <a href="tel:{{ institute.phone }}" class="appt-page__aside-phone tel-ltr">
+                            <span class="ti-mobile" aria-hidden="true"></span>
+                            {{ institute.phone_formatted }}
+                        </a>
+                        <a href="{% url 'contact' %}" class="appt-page__aside-contact-link">تماس با ما</a>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 appt-page__main">
+                {% if success %}
+                <div class="appt-page__success" role="status">
+                    <span class="appt-page__success-icon ti-check" aria-hidden="true"></span>
+                    <div>
+                        <strong>درخواست شما ثبت شد</strong>
+                        <p>کارشناسان {{ institute.name }} در اولین فرصت با شما تماس خواهند گرفت.</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="appt-page__card">
+                    <div class="appt-page__progress-mobile" aria-label="مراحل رزرو">
+                        <span class="appt-page__progress-item is-active" data-appt-step="1">۱</span>
+                        <span class="appt-page__progress-line"></span>
+                        <span class="appt-page__progress-item" data-appt-step="2">۲</span>
+                        <span class="appt-page__progress-line"></span>
+                        <span class="appt-page__progress-item" data-appt-step="3">۳</span>
+                        <span class="appt-page__progress-line"></span>
+                        <span class="appt-page__progress-item" data-appt-step="4">۴</span>
+                    </div>
+                    <form method="post" class="appt-page__form" novalidate id="appt-form">
+                        {% csrf_token %}
+
+                        <fieldset class="appt-page__section" data-appt-section="1">
+                            <legend class="appt-page__section-title">
+                                <span class="ti-user" aria-hidden="true"></span>
+                                اطلاعات تماس
+                            </legend>
+                            <div class="row appt-page__contact-row">
+                                <div class="col-12 col-md-6 appt-page__contact-col">
+                                    <div class="appt-page__field">
+                                        <label class="appt-page__label" for="{{ form.full_name.id_for_label }}">
+                                            نام و نام خانوادگی <span class="appt-page__req">*</span>
+                                        </label>
+                                        {{ form.full_name }}
+                                        {% if form.full_name.errors %}<span class="appt-page__error">{{ form.full_name.errors|striptags }}</span>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 appt-page__contact-col">
+                                    <div class="appt-page__field">
+                                        <label class="appt-page__label" for="{{ form.phone.id_for_label }}">
+                                            شماره تماس <span class="appt-page__req">*</span>
+                                        </label>
+                                        {{ form.phone }}
+                                        {% if form.phone.errors %}<span class="appt-page__error">{{ form.phone.errors|striptags }}</span>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-12 appt-page__contact-col appt-page__contact-col--email">
+                                    <div class="appt-page__field appt-page__field--email">
+                                        <label class="appt-page__label" for="{{ form.email.id_for_label }}">ایمیل <span class="appt-page__optional">(اختیاری)</span></label>
+                                        {{ form.email }}
+                                        {% if form.email.errors %}<span class="appt-page__error">{{ form.email.errors|striptags }}</span>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="appt-page__section" data-appt-section="2">
+                            <legend class="appt-page__section-title">
+                                <span class="ti-settings" aria-hidden="true"></span>
+                                نوع مشاوره و کشور مقصد
+                            </legend>
+
+                            <div class="appt-page__field">
+                                <span class="appt-page__label">نوع مشاوره <span class="appt-page__req">*</span></span>
+                                <div class="appt-page__type-grid" role="radiogroup" aria-label="نوع مشاوره">
+                                    <label class="appt-page__type-card{% if form.consultation_type.value == 'in_person' %} is-selected{% endif %}">
+                                        <input type="radio" name="consultation_type" value="in_person"
+                                               {% if form.consultation_type.value == 'in_person' %}checked{% endif %}
+                                               class="appt-page__sr-only">
+                                        <span class="appt-page__type-icon ti-home" aria-hidden="true"></span>
+                                        <span class="appt-page__type-name">حضوری</span>
+                                        <span class="appt-page__type-desc">۳۰ دقیقه در دفتر</span>
+                                    </label>
+                                    <label class="appt-page__type-card{% if form.consultation_type.value == 'online' or not form.consultation_type.value %} is-selected{% endif %}">
+                                        <input type="radio" name="consultation_type" value="online"
+                                               {% if form.consultation_type.value == 'online' or not form.consultation_type.value %}checked{% endif %}
+                                               class="appt-page__sr-only">
+                                        <span class="appt-page__type-icon ti-video-camera" aria-hidden="true"></span>
+                                        <span class="appt-page__type-name">آنلاین</span>
+                                        <span class="appt-page__type-desc">۳۰ دقیقه تماس تصویری</span>
+                                    </label>
+                                </div>
+                                {% if form.consultation_type.errors %}<span class="appt-page__error">{{ form.consultation_type.errors|striptags }}</span>{% endif %}
+                            </div>
+
+                            <div class="appt-page__field">
+                                <span class="appt-page__label">کشور مقصد <span class="appt-page__req">*</span></span>
+                                <div class="appt-page__country-grid" role="radiogroup" aria-label="کشور مقصد">
+                                    {% for value, label, flag in country_options %}
+                                    <label class="appt-page__country-chip{% if form.country.value == value or not form.country.value and value == 'canada' %} is-selected{% endif %}">
+                                        <input type="radio" name="country" value="{{ value }}"
+                                               {% if form.country.value == value %}checked{% elif not form.country.value and value == 'canada' %}checked{% endif %}
+                                               class="appt-page__sr-only" required>
+                                        {% if flag %}
+                                        <img src="{% static flag %}" alt="" class="appt-page__country-flag-img" width="24" height="18" loading="lazy">
+                                        {% else %}
+                                        <span class="appt-page__country-flag-icon ti-world" aria-hidden="true"></span>
+                                        {% endif %}
+                                        <span>{{ label }}</span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                {% if form.country.errors %}<span class="appt-page__error">{{ form.country.errors|striptags }}</span>{% endif %}
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="appt-page__section" data-appt-section="3">
+                            <legend class="appt-page__section-title">
+                                <span class="ti-calendar" aria-hidden="true"></span>
+                                انتخاب زمان
+                            </legend>
+
+                            {% if available_days %}
+                            <div class="appt-page__field">
+                                <span class="appt-page__label">تاریخ مشاوره <span class="appt-page__req">*</span></span>
+                                <select name="day" id="appt-day-select" class="appt-page__day-select appt-page__sr-only" aria-hidden="true" tabindex="-1">
+                                    {% for day in available_days %}
+                                    <option value="{{ day.value }}" {% if selected_date and day.date == selected_date %}selected{% endif %}>
+                                        {{ day.label_j }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="appt-page__days-scroll" role="group" aria-label="انتخاب تاریخ">
+                                    {% for day in available_days %}
+                                    <button type="button"
+                                            class="appt-page__day-btn{% if selected_date and day.date == selected_date %} is-active{% elif not selected_date and forloop.first %} is-active{% endif %}"
+                                            data-day="{{ day.value }}"
+                                            data-day-label="{{ day.label_j }}"
+                                            aria-pressed="{% if selected_date and day.date == selected_date %}true{% elif not selected_date and forloop.first %}true{% else %}false{% endif %}">
+                                        <span class="appt-page__day-jalali">{{ day.label_j }}</span>
+                                        <span class="appt-page__day-greg">{{ day.label_g }}</span>
+                                    </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="appt-page__field appt-page__time-field">
+                                <span class="appt-page__label">ساعت مشاوره <span class="appt-page__req">*</span></span>
+                                <p class="appt-page__time-hint">ابتدا تاریخ را انتخاب کنید؛ سپس ساعت را در پنجره انتخاب می‌کنید.</p>
+
+                                <button type="button"
+                                        id="appt-time-trigger"
+                                        class="appt-page__time-trigger"
+                                        aria-haspopup="dialog"
+                                        aria-controls="appt-time-modal">
+                                    <span class="appt-page__time-trigger-icon ti-time" aria-hidden="true"></span>
+                                    <span class="appt-page__time-trigger-body">
+                                        <span class="appt-page__time-trigger-label" id="appt-time-trigger-label">انتخاب ساعت مشاوره</span>
+                                        <span class="appt-page__time-trigger-sub" id="appt-time-trigger-sub">{% if selected_date_jalali %}برای {{ selected_date_jalali }} — کلیک کنید تا ساعت را انتخاب کنید{% else %}پس از انتخاب تاریخ، ساعت را انتخاب کنید{% endif %}</span>
+                                    </span>
+                                    <span class="ti-angle-left appt-page__time-trigger-arrow" aria-hidden="true"></span>
+                                </button>
+
+                                <div id="appt-time-modal"
+                                     class="appt-time-modal"
+                                     role="dialog"
+                                     aria-modal="true"
+                                     aria-labelledby="appt-time-modal-title"
+                                     aria-hidden="true"
+                                     hidden>
+                                    <div class="appt-time-modal__backdrop" data-appt-modal-close tabindex="-1"></div>
+                                    <div class="appt-time-modal__panel">
+                                        <header class="appt-time-modal__header">
+                                            <h2 id="appt-time-modal-title" class="appt-time-modal__title">انتخاب ساعت مشاوره</h2>
+                                            <p class="appt-time-modal__date" id="appt-time-modal-date"></p>
+                                            <button type="button" class="appt-time-modal__close" data-appt-modal-close aria-label="بستن">
+                                                <span class="ti-close" aria-hidden="true"></span>
+                                            </button>
+                                        </header>
+                                        <div id="appt-slots-wrapper" class="appt-time-modal__body" aria-live="polite">
+                                            {% include "core/_appointment_slots.html" %}
+                                        </div>
+                                        <footer class="appt-time-modal__footer">
+                                            <button type="button" class="appt-time-modal__cancel" data-appt-modal-close>انصراف</button>
+                                        </footer>
+                                    </div>
+                                </div>
+                                {% if form.slot.errors %}<span class="appt-page__error">{{ form.slot.errors|striptags }}</span>{% endif %}
+                            </div>
+                            {% else %}
+                            <div class="appt-page__empty">
+                                <span class="appt-page__empty-icon ti-calendar" aria-hidden="true"></span>
+                                <p>در حال حاضر زمان خالی برای رزرو وجود ندارد. لطفاً با ما تماس بگیرید.</p>
+                                <a href="{% url 'contact' %}" class="appt-page__btn appt-page__btn--ghost">تماس با ما</a>
+                            </div>
+                            {% endif %}
+                        </fieldset>
+
+                        <fieldset class="appt-page__section appt-page__section--last" data-appt-section="4">
+                            <legend class="appt-page__section-title">
+                                <span class="ti-pencil-alt" aria-hidden="true"></span>
+                                توضیحات تکمیلی
+                            </legend>
+                            <div class="appt-page__field">
+                                <label class="appt-page__label appt-page__sr-only" for="{{ form.description.id_for_label }}">توضیحات</label>
+                                {{ form.description }}
+                                <p class="appt-page__hint">شرایط، اهداف و سوالات خود را بنویسید تا مشاوره مؤثرتر باشد.</p>
+                                {% if form.description.errors %}<span class="appt-page__error">{{ form.description.errors|striptags }}</span>{% endif %}
+                            </div>
+                            {% include "layout/_referral_source_picker.html" with referral_heading_id="appt-ref-src-heading" %}
+                        </fieldset>
+
+                        {% include "layout/_form_captcha.html" with captcha_class="appt-page__captcha-block" captcha_form_key="appointment" %}
+
+                        <div class="appt-page__actions">
+                            <div class="appt-page__actions-main">
+                                <button type="submit" class="appt-page__btn appt-page__btn--submit" {% if not available_days %}disabled{% endif %}>
+                                    ثبت درخواست مشاوره
+                                </button>
+                            </div>
+                            <div class="appt-page__actions-contact d-lg-none" aria-label="تماس مستقیم">
+                                <ul class="appt-page__actions-contact-list">
+                                    <li>
+                                        <span class="ti-mobile" aria-hidden="true"></span>
+                                        <a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a>
+                                    </li>
+                                    <li>
+                                        <span class="ti-email" aria-hidden="true"></span>
+                                        <a href="mailto:{{ institute.email }}">{{ institute.email }}</a>
+                                    </li>
+                                    <li>
+                                        <span class="ti-location-pin" aria-hidden="true"></span>
+                                        <span>{{ institute.city }} — {{ institute.address }}</span>
+                                    </li>
+                                </ul>
+                                <a href="{% url 'contact' %}" class="appt-page__actions-contact-link">تماس با ما</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/components/referral-source.js' %}" defer></script>
+<script src="{% static 'js/app/pages/appointment.js' %}" defer></script>
+{% endblock %}

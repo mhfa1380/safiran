@@ -70,6 +70,31 @@ JALALI_MONTH_NAMES = (
     "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند",
 )
 
+_PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹"
+_ASCII_DIGITS = "0123456789"
+_EN_TO_FA_DIGITS = str.maketrans(_ASCII_DIGITS, _PERSIAN_DIGITS)
+_FA_TO_EN_DIGITS = str.maketrans(_PERSIAN_DIGITS, _ASCII_DIGITS)
+
+
+def to_persian_digits(value) -> str:
+    """تبدیل ارقام انگلیسی به فارسی در رشته."""
+    return str(value).translate(_EN_TO_FA_DIGITS)
+
+
+def format_time_label_persian(label: str) -> str:
+    """بازه زمانی مشاوره با ارقام فارسی، مثلاً ۱۰:۰۰ - ۱۰:۳۰."""
+    if not label:
+        return ""
+    normalized = str(label).strip().translate(_FA_TO_EN_DIGITS)
+    return to_persian_digits(normalized)
+
+
+def format_jalali_day_label(d: _date) -> str:
+    """برچسب روز برای انتخاب تاریخ: ۷ آذر ۱۴۰۴."""
+    if d is None:
+        return ""
+    return to_persian_digits(format_jalali_display(d))
+
 
 def format_jalali_date(d: _date) -> str:
     """تاریخ شمسی را به صورت ۱۳۸۰/۰۱/۰۵ برمی‌گرداند."""

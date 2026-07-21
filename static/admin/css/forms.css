@@ -96,7 +96,7 @@ form ul.inline li {
 
 .aligned label + p, .aligned .checkbox-row + div.help, .aligned label + div.readonly {
     padding: 6px 0;
-    margin-top: 14px;
+    margin-top: 0;
     margin-bottom: 0;
     margin-left: 0;
     overflow-wrap: break-word;
@@ -130,7 +130,7 @@ form .aligned div.radiolist {
 form .aligned p.help,
 form .aligned div.help {
     margin-top: 0;
-    margin-left: 10px;
+    margin-left: 160px;
     padding-left: 10px;
 }
 
@@ -291,11 +291,10 @@ body.popup .submit-row {
     display: block;
     background: var(--delete-button-bg);
     border-radius: 4px;
-    padding: 0.625rem 1.9375rem;
+    padding: 0.625rem 0.9375rem;
     height: 0.9375rem;
     line-height: 0.9375rem;
     color: var(--button-fg);
-    border-radius: 23px;
 }
 
 .submit-row a.closelink {
@@ -386,7 +385,6 @@ body.popup .submit-row {
 
 .inline-group thead th {
     padding: 8px 10px;
-    text-align: center;
 }
 
 .inline-group .aligned label {
@@ -435,7 +433,6 @@ body.popup .submit-row {
 
 .inline-group .tabular fieldset.module {
     border: none;
-    overflow-x: auto;
 }
 
 .inline-related.tabular fieldset.module table {
@@ -448,8 +445,7 @@ body.popup .submit-row {
 }
 
 .inline-group .tabular tr.has_original td {
-    padding-top: 1em;
-    text-align: center;
+    padding-top: 2em;
 }
 
 .inline-group .tabular tr td.original {
@@ -465,7 +461,6 @@ body.popup .submit-row {
 
 .inline-group .tabular td.original p {
     position: absolute;
-    display: none;
     left: 0;
     height: 1.1em;
     padding: 2px 9px;
@@ -493,14 +488,11 @@ body.popup .submit-row {
     background: var(--darkened-bg);
     padding: 8px 10px;
     border-bottom: 1px solid var(--hairline-color);
-    text-align: center;
 }
 
 .inline-group .tabular tr.add-row td {
     padding: 8px 10px;
     border-bottom: 1px solid var(--hairline-color);
-    text-align: center;
-    font-weight: bold;
 }
 
 .inline-group ul.tools a.add,

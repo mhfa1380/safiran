@@ -1,0 +1,788 @@
+/**
+ * صفحه جزئیات دانشگاه — نسخه مدرن و ریسپانسیو
+ */
+
+.school-detail-v2 {
+    --sd-radius: 18px;
+    --sd-radius-sm: 12px;
+    --sd-shadow: 0 8px 32px rgba(12, 46, 96, 0.08);
+    --sd-shadow-hover: 0 14px 40px rgba(12, 46, 96, 0.12);
+    direction: rtl;
+    text-align: right;
+    padding-top: 0.5rem;
+    padding-bottom: 4.5rem;
+    background: linear-gradient(180deg, #eef3fa 0%, #f6f8fc 280px, var(--color-bg-gray, #f4f6fa) 100%);
+}
+
+.school-detail-v2,
+.school-detail-v2 * {
+    box-sizing: border-box;
+}
+
+.school-detail-v2 .school-detail__main,
+.school-detail-v2 .sd-card,
+.school-detail-v2 .sd-hero__body,
+.school-detail-v2 .sd-eval-banner,
+.school-detail-v2 .sd-faq__item,
+.school-detail-v2 .school-detail__content,
+.school-detail-v2 .guide-content,
+.school-detail-v2 .faq-page__cta {
+    direction: rtl;
+    text-align: right;
+}
+
+/* محتوای CKEditor گاهی چپ‌چین ذخیره می‌شود */
+.school-detail-v2 .school-detail__content.ck-content,
+.school-detail-v2 .school-detail__content.ck-content p,
+.school-detail-v2 .school-detail__content.ck-content li,
+.school-detail-v2 .school-detail__content.ck-content h2,
+.school-detail-v2 .school-detail__content.ck-content h3,
+.school-detail-v2 .school-detail__content.ck-content h4,
+.school-detail-v2 .sd-faq__answer-body {
+    direction: rtl;
+    text-align: right;
+}
+
+.school-detail-v2 .school-detail__content.ck-content [style*="text-align: left"],
+.school-detail-v2 .school-detail__content.ck-content [style*="text-align:left"] {
+    text-align: right !important;
+}
+
+.school-detail-v2 .school-detail__layout {
+    align-items: flex-start;
+}
+
+/* ─── Hero ─── */
+.sd-hero {
+    margin-bottom: 1.25rem;
+    scroll-margin-top: calc(var(--site-header-height, 57px) + 4.5rem);
+}
+
+#school-rank {
+    scroll-margin-top: calc(var(--site-header-height, 57px) + 4.5rem);
+}
+
+.sd-hero__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 300px);
+    min-height: 280px;
+    border-radius: var(--sd-radius);
+    overflow: hidden;
+    background: var(--color-bg);
+    border: 1px solid rgba(12, 46, 96, 0.08);
+    box-shadow: var(--sd-shadow);
+}
+
+.sd-hero__media {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    max-width: 300px;
+    height: 280px;
+    max-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0c2e60 0%, #1a4a8a 100%);
+}
+
+.sd-hero__img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.sd-hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(270deg, rgba(12, 35, 64, 0.15) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+.sd-hero__country {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.sd-hero__flag {
+    border-radius: 3px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sd-hero__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem 1.65rem;
+    text-align: right;
+}
+
+.sd-hero__name-en {
+    margin: 0 0 0.45rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    direction: ltr;
+    text-align: right;
+    letter-spacing: 0.01em;
+}
+
+.sd-hero__summary {
+    margin: 0 0 1rem;
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--color-text);
+}
+
+.sd-hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.45rem;
+    margin-bottom: 1.1rem;
+}
+
+.sd-hero__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.38rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: rgba(12, 46, 96, 0.06);
+    border: 1px solid rgba(12, 46, 96, 0.1);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-heading);
+    line-height: 1.35;
+}
+
+.sd-hero__chip span[class^="ti-"] {
+    color: var(--color-primary);
+    font-size: 0.82rem;
+}
+
+.sd-hero__chip--rank {
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.14) 0%, rgba(12, 46, 96, 0.06) 100%);
+    border-color: rgba(201, 162, 39, 0.25);
+}
+
+.sd-hero__approvals {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.4rem;
+    margin-bottom: 1.15rem;
+}
+
+.sd-hero__approval {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.22rem 0.65rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.sd-hero__approval--science {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.sd-hero__approval--health {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.sd-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.sd-hero__btn--website {
+    direction: ltr;
+    unicode-bidi: embed;
+}
+
+.sd-hero__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+}
+
+.sd-hero__btn:hover {
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.sd-hero__btn--primary {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    box-shadow: 0 4px 16px rgba(12, 46, 96, 0.22);
+}
+
+.sd-hero__btn--primary:hover {
+    background: var(--color-primary-dark);
+    color: var(--color-on-primary);
+}
+
+.sd-hero__btn--ghost {
+    background: var(--color-bg);
+    color: var(--color-primary);
+    border: 1px solid rgba(12, 46, 96, 0.16);
+}
+
+.sd-hero__btn--ghost:hover {
+    background: rgba(12, 46, 96, 0.05);
+    color: var(--color-primary-dark);
+}
+
+/* ─── Jump nav ─── */
+.sd-jump {
+    position: sticky;
+    top: calc(var(--site-header-height, 57px) + 0.5rem);
+    z-index: 12;
+    margin-bottom: 1.15rem;
+    padding: 0.45rem;
+    border-radius: var(--sd-radius-sm);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(12, 46, 96, 0.08);
+    box-shadow: 0 4px 20px rgba(12, 46, 96, 0.06);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.sd-jump::-webkit-scrollbar {
+    display: none;
+}
+
+.sd-jump.is-scrolled {
+    box-shadow: 0 6px 24px rgba(12, 46, 96, 0.1);
+}
+
+.sd-jump__list {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-width: min-content;
+}
+
+.sd-jump__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--radius-pill);
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sd-jump__link span[class^="ti-"] {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.sd-jump__link:hover,
+.sd-jump__link.is-active {
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
+}
+
+/* ─── Content cards ─── */
+.sd-card {
+    margin-bottom: 1.15rem;
+    padding: 1.35rem 1.4rem;
+    border-radius: var(--sd-radius);
+    background: var(--color-bg);
+    border: 1px solid rgba(12, 46, 96, 0.07);
+    box-shadow: var(--sd-shadow);
+    scroll-margin-top: calc(var(--site-header-height, 57px) + 4.5rem);
+}
+
+.sd-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(12, 46, 96, 0.07);
+}
+
+.sd-card__title {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--color-heading);
+    line-height: 1.45;
+    text-align: right;
+}
+
+.sd-card__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(12, 46, 96, 0.1) 0%, rgba(12, 46, 96, 0.04) 100%);
+    color: var(--color-primary);
+    font-size: 1.05rem;
+}
+
+.sd-card__lead {
+    margin: -0.35rem 0 1rem;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    text-align: right;
+}
+
+.school-detail-v2 .school-detail__content {
+    font-size: 0.94rem;
+    line-height: 2;
+}
+
+.school-detail-v2 .school-detail__content img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 420px;
+    margin: 0.85rem auto;
+    object-fit: contain;
+    object-position: center;
+    border-radius: var(--sd-radius-sm);
+}
+
+.school-detail-v2 .school-detail__gallery-item a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: rgba(12, 46, 96, 0.04);
+}
+
+.school-detail-v2 .school-detail__gallery-item img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.school-detail-v2 .school-detail__gallery-grid {
+    gap: 0.65rem;
+}
+
+.school-detail-v2 .school-detail__gallery-item {
+    border-radius: var(--sd-radius-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.school-detail-v2 .school-detail__gallery-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sd-shadow-hover);
+}
+
+/* ─── Majors ─── */
+.school-detail-v2 .school-detail__major-group {
+    padding: 0.85rem 1rem;
+    border-radius: var(--sd-radius-sm);
+    background: linear-gradient(135deg, rgba(12, 46, 96, 0.03) 0%, rgba(255, 255, 255, 0.8) 100%);
+    border: 1px solid rgba(12, 46, 96, 0.06);
+}
+
+.school-detail-v2 .school-detail__major-chip {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    box-shadow: 0 1px 4px rgba(12, 46, 96, 0.04);
+}
+
+/* ─── Eval banner ─── */
+.sd-eval-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem 1rem;
+    padding: 1rem 1.2rem;
+    border-radius: var(--sd-radius-sm);
+    background: linear-gradient(135deg, rgba(12, 46, 96, 0.06) 0%, rgba(201, 162, 39, 0.08) 100%);
+    border: 1px solid rgba(12, 46, 96, 0.1);
+    text-align: right;
+}
+
+.sd-eval-banner__text {
+    margin: 0;
+    flex: 1;
+    min-width: 14rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--color-text-dark);
+}
+
+.sd-eval-banner__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.sd-eval-banner__btn:hover {
+    background: var(--color-primary-dark);
+    color: var(--color-on-primary);
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* ─── FAQ ─── */
+.sd-faq {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.sd-faq__item {
+    border-radius: var(--sd-radius-sm);
+    background: var(--color-bg);
+    border: 1px solid rgba(12, 46, 96, 0.09);
+    overflow: hidden;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    scroll-margin-top: calc(var(--site-header-height, 57px) + 4.5rem);
+}
+
+.sd-faq__item:hover {
+    border-color: rgba(12, 46, 96, 0.16);
+}
+
+.sd-faq__item[open] {
+    border-color: rgba(12, 46, 96, 0.2);
+    box-shadow: 0 6px 20px rgba(12, 46, 96, 0.07);
+}
+
+.sd-faq__item:target,
+.sd-faq__item.is-hash-focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(12, 46, 96, 0.12), 0 8px 24px rgba(12, 46, 96, 0.1);
+    animation: sd-faq-highlight 1.2s ease;
+}
+
+@keyframes sd-faq-highlight {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(12, 46, 96, 0.12), 0 8px 24px rgba(12, 46, 96, 0.1); }
+    50% { box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.35), 0 10px 28px rgba(12, 46, 96, 0.12); }
+}
+
+.sd-faq__trigger {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 0.75rem;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    text-align: right;
+}
+
+.sd-faq__trigger::-webkit-details-marker {
+    display: none;
+}
+
+.sd-faq__q-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.sd-faq__num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(12, 46, 96, 0.08);
+    color: var(--color-primary);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.sd-faq__item[open] .sd-faq__num {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.sd-faq__q {
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.65;
+    color: var(--color-heading);
+    text-align: right;
+}
+
+.sd-faq__answer {
+    padding-block: 0 1.1rem;
+    padding-inline: 3.5rem 1.1rem;
+}
+
+.sd-faq__chevron {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    margin-top: 0.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(12, 46, 96, 0.06);
+    color: var(--color-primary);
+    font-size: 0.7rem;
+    transition: transform 0.25s ease, background 0.2s;
+}
+
+.sd-faq__item[open] .sd-faq__chevron {
+    transform: rotate(180deg);
+    background: rgba(12, 46, 96, 0.12);
+}
+
+.sd-faq__answer-body {
+    font-size: 0.88rem;
+    line-height: 1.9;
+    color: var(--color-text);
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    background: rgba(12, 46, 96, 0.03);
+    border-inline-start: 3px solid var(--color-accent);
+}
+
+/* ─── بخش مشاوره (پایین صفحه) ─── */
+.school-detail-v2 .sd-consult {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin: 0 0 1.15rem;
+    padding: 1.35rem 1.5rem;
+    border-radius: var(--sd-radius);
+    scroll-margin-top: calc(var(--site-header-height, 57px) + 4.5rem);
+    box-shadow: var(--sd-shadow);
+}
+
+.school-detail-v2 .sd-consult.is-hash-focus {
+    outline: 2px solid rgba(201, 162, 39, 0.55);
+    outline-offset: 3px;
+}
+
+/* ─── Mobile action bar ─── */
+.sd-mobile-bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 0.55rem 0.75rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(12, 46, 96, 0.1);
+    box-shadow: 0 -8px 32px rgba(12, 46, 96, 0.1);
+    gap: 0.5rem;
+}
+
+.sd-mobile-bar__btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.65rem 0.5rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    font-family: inherit;
+}
+
+.sd-mobile-bar__btn--primary {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.sd-mobile-bar__btn--accent {
+    background: var(--color-accent);
+    color: var(--color-on-primary);
+}
+
+/* ─── Related ─── */
+.school-detail-v2 .school-detail__major-group-head {
+    flex-direction: row;
+    text-align: right;
+}
+
+.school-detail-v2 .school-detail__major-chips {
+    justify-content: flex-start;
+}
+
+.school-detail-v2 .school-detail__gallery-item figcaption {
+    text-align: right;
+}
+
+.school-detail-v2 .school-detail__majors-cta {
+    justify-content: flex-start;
+}
+
+.school-detail__hero-answer {
+    text-align: right;
+}
+
+.school-detail-v2 .school-detail__related {
+    margin-top: 2rem;
+    padding: 1.25rem 1.35rem;
+    border-radius: var(--sd-radius);
+    background: var(--color-bg);
+    border: 1px solid rgba(12, 46, 96, 0.07);
+    box-shadow: var(--sd-shadow);
+    text-align: right;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 991.98px) {
+    .sd-hero__card {
+        grid-template-columns: 1fr;
+    }
+
+    .sd-hero__media {
+        order: -1;
+        max-width: none;
+        width: 100%;
+        height: 220px;
+        max-height: 220px;
+    }
+
+    .sd-hero__img {
+        max-height: 220px;
+    }
+
+    .sd-hero__body {
+        padding: 1.25rem 1.2rem 1.35rem;
+    }
+
+    .school-detail-v2 .sd-consult .faq-page__cta-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .school-detail-v2 .sd-consult .faq-page__btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sd-mobile-bar {
+        display: flex;
+    }
+
+    .school-detail-v2 {
+        padding-bottom: 5.5rem;
+    }
+
+    .sd-jump {
+        top: calc(var(--site-header-height, 57px) + 0.25rem);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .sd-card {
+        padding: 1.1rem 1rem;
+    }
+
+    .sd-hero__actions {
+        flex-direction: column;
+    }
+
+    .sd-hero__btn {
+        width: 100%;
+    }
+
+    .sd-faq__answer {
+        padding-inline: 1.1rem;
+    }
+
+    .sd-eval-banner {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: right;
+    }
+
+    .sd-eval-banner__btn {
+        justify-content: center;
+    }
+}
+
+@media (min-width: 992px) {
+    .school-detail-v2 .school-detail__aside {
+        position: sticky;
+        top: calc(var(--site-header-height, 57px) + 1rem);
+    }
+}

@@ -1,0 +1,13 @@
+<div class="form-captcha{% if captcha_class %} {{ captcha_class }}{% endif %}"
+     {% if captcha_form_key %}data-captcha-form="{{ captcha_form_key }}" data-captcha-refresh-url="{% url 'captcha_refresh' %}?form={{ captcha_form_key }}"{% endif %}>
+    <span class="form-captcha__label">{{ captcha_label|default:"کد امنیتی" }} <span class="form-captcha__req">*</span></span>
+    <div class="form-captcha__row">
+        <span class="form-captcha__q" dir="ltr" aria-label="کد امنیتی">{{ captcha_question }}</span>
+        <div class="form-captcha__input">
+            {{ form.captcha_answer }}
+        </div>
+    </div>
+    {% if form.captcha_answer.errors %}
+    <span class="form-captcha__error">{{ form.captcha_answer.errors|striptags }}</span>
+    {% endif %}
+</div>

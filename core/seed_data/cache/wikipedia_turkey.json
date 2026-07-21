@@ -1,0 +1,806 @@
+[
+  {
+    "name_en": "Adana Alparslan Türkeş University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Çukurova University",
+    "city": ""
+  },
+  {
+    "name_en": "Adıyaman University",
+    "city": ""
+  },
+  {
+    "name_en": "Afyon Kocatepe University",
+    "city": ""
+  },
+  {
+    "name_en": "Afyonkarahisar Health Sciences University",
+    "city": ""
+  },
+  {
+    "name_en": "Ağrı İbrahim Çeçen University",
+    "city": ""
+  },
+  {
+    "name_en": "Aksaray University",
+    "city": ""
+  },
+  {
+    "name_en": "Amasya University",
+    "city": ""
+  },
+  {
+    "name_en": "Ankara University",
+    "city": ""
+  },
+  {
+    "name_en": "Ankara Music and Fine Arts University",
+    "city": ""
+  },
+  {
+    "name_en": "Ankara Hacı Bayram Veli University",
+    "city": ""
+  },
+  {
+    "name_en": "Social Sciences University of Ankara",
+    "city": ""
+  },
+  {
+    "name_en": "Gazi University",
+    "city": ""
+  },
+  {
+    "name_en": "Hacettepe University",
+    "city": ""
+  },
+  {
+    "name_en": "Middle East Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Ankara Yıldırım Beyazıt University",
+    "city": ""
+  },
+  {
+    "name_en": "Ankara Medipol University",
+    "city": ""
+  },
+  {
+    "name_en": "Atılım University",
+    "city": ""
+  },
+  {
+    "name_en": "Başkent University",
+    "city": ""
+  },
+  {
+    "name_en": "Çankaya University",
+    "city": ""
+  },
+  {
+    "name_en": "Bilkent University",
+    "city": ""
+  },
+  {
+    "name_en": "Lokman Hekim University",
+    "city": ""
+  },
+  {
+    "name_en": "OSTIM Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "TED University",
+    "city": ""
+  },
+  {
+    "name_en": "TOBB University of Economics and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Ufuk University",
+    "city": ""
+  },
+  {
+    "name_en": "Yüksek İhtisas University",
+    "city": ""
+  },
+  {
+    "name_en": "Akdeniz University",
+    "city": ""
+  },
+  {
+    "name_en": "Alanya Alaaddin Keykubat University",
+    "city": ""
+  },
+  {
+    "name_en": "Alanya University",
+    "city": ""
+  },
+  {
+    "name_en": "Antalya Science University",
+    "city": ""
+  },
+  {
+    "name_en": "Ardahan University",
+    "city": ""
+  },
+  {
+    "name_en": "Artvin Çoruh University",
+    "city": ""
+  },
+  {
+    "name_en": "Aydın Adnan Menderes University",
+    "city": ""
+  },
+  {
+    "name_en": "Balıkesir University",
+    "city": ""
+  },
+  {
+    "name_en": "Bandırma Onyedi Eylül University",
+    "city": ""
+  },
+  {
+    "name_en": "Bartın University",
+    "city": ""
+  },
+  {
+    "name_en": "Batman University",
+    "city": ""
+  },
+  {
+    "name_en": "Bayburt University",
+    "city": ""
+  },
+  {
+    "name_en": "Bilecik Şeyh Edebali University",
+    "city": ""
+  },
+  {
+    "name_en": "Bingöl University",
+    "city": ""
+  },
+  {
+    "name_en": "Bitlis Eren University",
+    "city": ""
+  },
+  {
+    "name_en": "Bolu Abant İzzet Baysal University",
+    "city": ""
+  },
+  {
+    "name_en": "Burdur Mehmet Akif Ersoy University",
+    "city": ""
+  },
+  {
+    "name_en": "Bursa Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Bursa Uludağ University",
+    "city": ""
+  },
+  {
+    "name_en": "Çanakkale Onsekiz Mart University",
+    "city": ""
+  },
+  {
+    "name_en": "Çankırı Karatekin University",
+    "city": ""
+  },
+  {
+    "name_en": "Hitit University",
+    "city": ""
+  },
+  {
+    "name_en": "Pamukkale University",
+    "city": ""
+  },
+  {
+    "name_en": "Dicle University",
+    "city": ""
+  },
+  {
+    "name_en": "Düzce University",
+    "city": ""
+  },
+  {
+    "name_en": "Trakya University",
+    "city": ""
+  },
+  {
+    "name_en": "Fırat University",
+    "city": ""
+  },
+  {
+    "name_en": "Erzincan Binali Yıldırım  University",
+    "city": ""
+  },
+  {
+    "name_en": "Atatürk University",
+    "city": ""
+  },
+  {
+    "name_en": "Erzurum Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Anadolu University",
+    "city": ""
+  },
+  {
+    "name_en": "Eskişehir Osmangazi University",
+    "city": ""
+  },
+  {
+    "name_en": "Eskişehir Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Gaziantep University",
+    "city": ""
+  },
+  {
+    "name_en": "Gaziantep Islam Science and Technology University",
+    "city": ""
+  },
+  {
+    "name_en": "Sanko University",
+    "city": ""
+  },
+  {
+    "name_en": "Giresun University",
+    "city": ""
+  },
+  {
+    "name_en": "Gümüşhane University",
+    "city": ""
+  },
+  {
+    "name_en": "Hakkari University",
+    "city": ""
+  },
+  {
+    "name_en": "Iskenderun Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Hatay Mustafa Kemal University",
+    "city": ""
+  },
+  {
+    "name_en": "Iğdır University",
+    "city": ""
+  },
+  {
+    "name_en": "Süleyman Demirel University",
+    "city": ""
+  },
+  {
+    "name_en": "Isparta University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Boğaziçi University",
+    "city": ""
+  },
+  {
+    "name_en": "Galatasaray University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Medeniyet University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul University-Cerrahpaşa",
+    "city": ""
+  },
+  {
+    "name_en": "Marmara University",
+    "city": ""
+  },
+  {
+    "name_en": "Mimar Sinan Fine Arts University",
+    "city": ""
+  },
+  {
+    "name_en": "Turkish-German University",
+    "city": ""
+  },
+  {
+    "name_en": "Yıldız Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Acıbadem University",
+    "city": ""
+  },
+  {
+    "name_en": "Altınbaş University",
+    "city": ""
+  },
+  {
+    "name_en": "Bahçeşehir University",
+    "city": ""
+  },
+  {
+    "name_en": "Bezmialem Vakıf University",
+    "city": ""
+  },
+  {
+    "name_en": "Demiroğlu Bilim University",
+    "city": ""
+  },
+  {
+    "name_en": "Doğuş University",
+    "city": ""
+  },
+  {
+    "name_en": "Fatih Sultan Mehmet Vakıf University",
+    "city": ""
+  },
+  {
+    "name_en": "Haliç University",
+    "city": ""
+  },
+  {
+    "name_en": "Ibn Haldun University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Arel University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Aydın University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Beykent University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Bilgi University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Commerce University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Gelişim University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Kültür University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Medipol University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Nişantaşı University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Okan University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Rumeli University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Sabahattin Zaim University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Topkapı University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Yeni Yüzyıl University",
+    "city": ""
+  },
+  {
+    "name_en": "Işık University",
+    "city": ""
+  },
+  {
+    "name_en": "İstinye University",
+    "city": ""
+  },
+  {
+    "name_en": "Kadir Has University",
+    "city": ""
+  },
+  {
+    "name_en": "Koç University",
+    "city": ""
+  },
+  {
+    "name_en": "Maltepe University",
+    "city": ""
+  },
+  {
+    "name_en": "MEF University",
+    "city": ""
+  },
+  {
+    "name_en": "Özyeğin University",
+    "city": ""
+  },
+  {
+    "name_en": "Piri Reis University",
+    "city": ""
+  },
+  {
+    "name_en": "Sabancı University",
+    "city": ""
+  },
+  {
+    "name_en": "Üsküdar University",
+    "city": ""
+  },
+  {
+    "name_en": "Yeditepe University",
+    "city": ""
+  },
+  {
+    "name_en": "Dokuz Eylül University",
+    "city": ""
+  },
+  {
+    "name_en": "Ege University",
+    "city": ""
+  },
+  {
+    "name_en": "Yaşar University",
+    "city": ""
+  },
+  {
+    "name_en": "İzmir Kâtip Çelebi University",
+    "city": ""
+  },
+  {
+    "name_en": "İzmir Bakırçay University",
+    "city": ""
+  },
+  {
+    "name_en": "İzmir Democracy University",
+    "city": ""
+  },
+  {
+    "name_en": "İzmir University of Economics",
+    "city": ""
+  },
+  {
+    "name_en": "İzmir Tınaztepe University",
+    "city": ""
+  },
+  {
+    "name_en": "Kahramanmaraş İstiklal University",
+    "city": ""
+  },
+  {
+    "name_en": "Kahramanmaraş Sütçü İmam University",
+    "city": ""
+  },
+  {
+    "name_en": "Karabük University",
+    "city": ""
+  },
+  {
+    "name_en": "Karamanoğlu Mehmetbey University",
+    "city": ""
+  },
+  {
+    "name_en": "Kafkas University",
+    "city": ""
+  },
+  {
+    "name_en": "Kastamonu University",
+    "city": ""
+  },
+  {
+    "name_en": "Abdullah Gül University",
+    "city": ""
+  },
+  {
+    "name_en": "Erciyes University",
+    "city": ""
+  },
+  {
+    "name_en": "Kayseri University",
+    "city": ""
+  },
+  {
+    "name_en": "Nuh Naci Yazgan University",
+    "city": ""
+  },
+  {
+    "name_en": "Kırıkkale University",
+    "city": ""
+  },
+  {
+    "name_en": "Kırklareli University",
+    "city": ""
+  },
+  {
+    "name_en": "Kırşehir Ahi Evran University",
+    "city": ""
+  },
+  {
+    "name_en": "Kilis 7 Aralık University",
+    "city": ""
+  },
+  {
+    "name_en": "Gebze Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Kocaeli University",
+    "city": ""
+  },
+  {
+    "name_en": "Konya Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Necmettin Erbakan University",
+    "city": ""
+  },
+  {
+    "name_en": "Selçuk University",
+    "city": ""
+  },
+  {
+    "name_en": "Konya Food and Agriculture University",
+    "city": ""
+  },
+  {
+    "name_en": "KTO Karatay University",
+    "city": ""
+  },
+  {
+    "name_en": "Kütahya Dumlupınar University",
+    "city": ""
+  },
+  {
+    "name_en": "Kütahya Health Sciences University",
+    "city": ""
+  },
+  {
+    "name_en": "İnönü University",
+    "city": ""
+  },
+  {
+    "name_en": "Malatya Turgut Özal University",
+    "city": ""
+  },
+  {
+    "name_en": "Manisa Celal Bayar University",
+    "city": ""
+  },
+  {
+    "name_en": "Mardin Artuklu University",
+    "city": ""
+  },
+  {
+    "name_en": "Mersin University",
+    "city": ""
+  },
+  {
+    "name_en": "Çağ University",
+    "city": ""
+  },
+  {
+    "name_en": "Toros University",
+    "city": ""
+  },
+  {
+    "name_en": "Muğla Sıtkı Koçman University",
+    "city": ""
+  },
+  {
+    "name_en": "Muş Alparslan University",
+    "city": ""
+  },
+  {
+    "name_en": "Nevşehir Hacı Bektaş Veli University",
+    "city": ""
+  },
+  {
+    "name_en": "Cappadocia University",
+    "city": ""
+  },
+  {
+    "name_en": "Niğde Ömer Halisdemir University",
+    "city": ""
+  },
+  {
+    "name_en": "Ordu University",
+    "city": ""
+  },
+  {
+    "name_en": "Osmaniye Korkut Ata University",
+    "city": ""
+  },
+  {
+    "name_en": "Recep Tayyip Erdoğan University",
+    "city": ""
+  },
+  {
+    "name_en": "Sakarya University",
+    "city": ""
+  },
+  {
+    "name_en": "Sakarya University of Applied Sciences",
+    "city": ""
+  },
+  {
+    "name_en": "Ondokuz Mayıs University",
+    "city": ""
+  },
+  {
+    "name_en": "Samsun University",
+    "city": ""
+  },
+  {
+    "name_en": "Siirt University",
+    "city": ""
+  },
+  {
+    "name_en": "Sinop University",
+    "city": ""
+  },
+  {
+    "name_en": "Sivas Cumhuriyet University",
+    "city": ""
+  },
+  {
+    "name_en": "Sivas University of Science and Technology",
+    "city": ""
+  },
+  {
+    "name_en": "Harran University",
+    "city": ""
+  },
+  {
+    "name_en": "Şırnak University",
+    "city": ""
+  },
+  {
+    "name_en": "Tekirdağ Namık Kemal University",
+    "city": ""
+  },
+  {
+    "name_en": "Tokat Gaziosmanpaşa University",
+    "city": ""
+  },
+  {
+    "name_en": "Karadeniz Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Trabzon University",
+    "city": ""
+  },
+  {
+    "name_en": "Avrasya University",
+    "city": ""
+  },
+  {
+    "name_en": "Munzur University",
+    "city": ""
+  },
+  {
+    "name_en": "Uşak University",
+    "city": ""
+  },
+  {
+    "name_en": "Van Yüzüncü Yıl University",
+    "city": ""
+  },
+  {
+    "name_en": "Yalova University",
+    "city": ""
+  },
+  {
+    "name_en": "Yozgat Bozok University",
+    "city": ""
+  },
+  {
+    "name_en": "Zonguldak Bülent Ecevit University",
+    "city": ""
+  },
+  {
+    "name_en": "Technical University",
+    "city": ""
+  },
+  {
+    "name_en": "Milli Savunma University",
+    "city": ""
+  },
+  {
+    "name_en": "Adana Alparslan Türkeş University",
+    "city": ""
+  },
+  {
+    "name_en": "Social Sciences University",
+    "city": ""
+  },
+  {
+    "name_en": "TOBB University",
+    "city": ""
+  },
+  {
+    "name_en": "Mudanya University",
+    "city": ""
+  },
+  {
+    "name_en": "Erzincan Binali Yıldırım University",
+    "city": ""
+  },
+  {
+    "name_en": "Isparta University",
+    "city": ""
+  },
+  {
+    "name_en": "Turkish-Japanese Science and Technology University",
+    "city": ""
+  },
+  {
+    "name_en": "Beykoz University",
+    "city": ""
+  },
+  {
+    "name_en": "Fenerbahçe University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Atlas University",
+    "city": ""
+  },
+  {
+    "name_en": "Istanbul Health and Technology University",
+    "city": ""
+  },
+  {
+    "name_en": "İzmir University",
+    "city": ""
+  },
+  {
+    "name_en": "Kocaeli Health and Technology University",
+    "city": ""
+  },
+  {
+    "name_en": "Tarsus University",
+    "city": ""
+  },
+  {
+    "name_en": "Sivas University",
+    "city": ""
+  },
+  {
+    "name_en": "Ahmet Yesevi University",
+    "city": ""
+  },
+  {
+    "name_en": "Manas University",
+    "city": ""
+  }
+]

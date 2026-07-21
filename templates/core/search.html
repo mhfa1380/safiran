@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if search_q %}جستجو: {{ search_q }}{% else %}جستجو در سایت{% endif %} | {{ institute.name }}{% endblock %}
+{% block meta_description %}جستجو در مقالات، خدمات، دانشگاه‌ها، رشته‌ها، سوالات متداول و بیشتر در {{ institute.name }}.{% endblock %}
+
+{% block extra_head %}
+<meta name="robots" content="noindex, follow">
+<script>
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+window.PAGE_CONFIG.siteSuggestUrl = "{% url 'site_suggest' %}";
+window.PAGE_CONFIG.siteSearchUrl = "{% url 'site_search' %}";
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/search.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title="جستجو در سایت" hero_lead="مقالات، خدمات، دانشگاه‌ها، رشته‌ها و سوالات متداول را یک‌جا جستجو کنید." crumb2_label="جستجو" %}
+
+<section class="search-page section_padding" dir="rtl" aria-label="صفحه جستجوی سراسری">
+    <div class="container">
+        <div class="row g-4 search-page__layout">
+            <aside class="col-lg-4 col-xl-3 search-page__aside" aria-label="راهنمای جستجو">
+                <div class="search-page__panel search-page__panel--sticky search-page__panel--tips">
+                    <h2 class="search-page__panel-title">
+                        <span class="ti-light-bulb" aria-hidden="true"></span>
+                        نکات جستجو
+                    </h2>
+                    <ul class="search-page__tips">
+                        <li>کلمات کلیدی کوتاه‌تر معمولاً نتیجه بهتری می‌دهند.</li>
+                        <li>برای پیدا کردن خدمات یا مقالات، نام دقیق‌تر را امتحان کنید.</li>
+                        <li>از میانبر صفحه‌کلید (Ctrl+K) در هر صفحه‌ای می‌توانید جستجو کنید.</li>
+                    </ul>
+                </div>
+
+                <div class="search-page__panel search-page__panel--links">
+                    <h2 class="search-page__panel-title">
+                        <span class="ti-link" aria-hidden="true"></span>
+                        دسترسی سریع
+                    </h2>
+                    <nav class="search-page__quick" aria-label="لینک‌های پرکاربرد">
+                        {% for link in site_nav.quick_links %}
+                        <a href="{{ link.url }}" class="search-page__quick-link">{{ link.label }}</a>
+                        {% endfor %}
+                        {% if site_nav.header_eval %}
+                        <a href="{{ site_nav.header_eval.url }}" class="search-page__quick-link search-page__quick-link--accent">{{ site_nav.header_eval.label }}</a>
+                        {% endif %}
+                    </nav>
+                </div>
+            </aside>
+
+            <div class="col-lg-8 col-xl-9 search-page__main">
+                <div class="search-page__search-card">
+                    <form class="search-page__form" action="{% url 'site_search' %}" method="get" role="search" id="search-page-form">
+                        <label class="search-page__sr-only" for="site-search-page-input">عبارت جستجو</label>
+                        <div class="search-page__search-field">
+                            <input type="search"
+                                   id="site-search-page-input"
+                                   name="q"
+                                   class="search-page__search-input"
+                                   value="{{ search_q }}"
+                                   placeholder="مثال: مشاوره تحصیلی، کانادا، بورسیه…"
+                                   autocomplete="off"
+                                   enterkeyhint="search"
+                                   maxlength="120"
+                                   aria-controls="search-page-suggest"
+                                   aria-expanded="false">
+                            <button type="button" class="search-page__search-clear" id="search-page-clear" {% if not search_q %}hidden{% endif %} aria-label="پاک کردن جستجو">&times;</button>
+                            <div id="search-page-suggest" class="search-page__suggest" hidden role="listbox" aria-label="پیشنهادهای جستجو"></div>
+                        </div>
+                        <button type="submit" class="search-page__submit">جستجو</button>
+                    </form>
+                    <p class="search-page__search-note">با تایپ، پیشنهادهای مرتبط زیر کادر جستجو نمایش داده می‌شود.</p>
+                </div>
+
+                {% if search_q %}
+                <div class="search-page__summary" role="status">
+                    {% if result_count %}
+                    <p class="search-page__summary-text">
+                        <strong>{{ result_count }}</strong> نتیجه برای &laquo;<span class="search-page__query">{{ search_q }}</span>&raquo;
+                    </p>
+                    {% else %}
+                    <p class="search-page__summary-text search-page__summary-text--empty">
+                        نتیجه‌ای برای &laquo;<span class="search-page__query">{{ search_q }}</span>&raquo; یافت نشد
+                    </p>
+                    {% endif %}
+                    {% if did_you_mean and did_you_mean != search_q %}
+                    <p class="search-page__did-you-mean">
+                        آیا منظورتان
+                        <a href="{% url 'site_search' %}?q={{ did_you_mean|urlencode }}">&laquo;{{ did_you_mean }}&raquo;</a>
+                        است؟
+                    </p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if groups %}
+                <div class="search-page__results" id="search-page-results">
+                    {% for group in groups %}
+                    <section class="search-page__group"
+                             data-search-group="{{ group.type }}"
+                             aria-label="{{ group.type_label }}">
+                        <header class="search-page__group-head">
+                            <h2 class="search-page__group-title">{{ group.type_label }}</h2>
+                            <span class="search-page__group-count">{{ group.items|length }}</span>
+                        </header>
+                        <ul class="search-page__list">
+                            {% for item in group.items %}
+                            <li class="search-page__item">
+                                <a class="search-page__link" href="{{ item.url }}">
+                                    <span class="search-page__link-body">
+                                        <span class="search-page__link-title">{{ item.title }}</span>
+                                        {% if item.subtitle %}
+                                        <span class="search-page__link-sub">{{ item.subtitle }}</span>
+                                        {% endif %}
+                                    </span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                    {% endfor %}
+                </div>
+                <p class="search-page__filter-empty" id="search-page-filter-empty" hidden>نتیجه‌ای در این دسته نیست.</p>
+
+                {% if type_filters %}
+                <div class="search-page__filters-wrap" role="group" aria-label="فیلتر نوع محتوا">
+                    <p class="search-page__filters-label d-lg-none">فیلتر نتایج:</p>
+                    <div class="search-page__filters-bar">
+                        <button type="button" class="search-page__chip is-active" data-search-filter="all">
+                            همه <span>({{ result_count }})</span>
+                        </button>
+                        {% for f in type_filters %}
+                        <button type="button" class="search-page__chip" data-search-filter="{{ f.type }}">
+                            {{ f.label }} <span>({{ f.count }})</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% elif search_q %}
+                <div class="search-page__empty">
+                    <h2 class="search-page__empty-title">نتیجه‌ای یافت نشد</h2>
+                    <p class="search-page__empty-text">عبارت دیگری امتحان کنید یا از لینک‌های سریع کنار صفحه استفاده کنید.</p>
+                </div>
+                {% else %}
+                <div class="search-page__intro">
+                    <h2 class="search-page__intro-title">چه چیزی می‌خواهید پیدا کنید؟</h2>
+                    <p class="search-page__intro-text">عبارت جستجو را در کادر بالا وارد کنید یا از میانبر سراسری (Ctrl+K) استفاده کنید.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/app/pages/search.js' %}" defer></script>
+{% endblock %}

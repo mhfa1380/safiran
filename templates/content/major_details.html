@@ -1,175 +1,345 @@
 {% extends "base.html" %}
-{% load static %}
 
-{% block title %}{{ major.title }} | {{ institute.name }}{% endblock %}
-{% block meta_description %}{{ major.short_description|default:major.description|striptags|truncatechars:160 }}{% endblock %}
-{% block og_title %}{{ major.title }} | {{ institute.name }}{% endblock %}
-{% block og_description %}{{ major.short_description|default:major.description|striptags|truncatechars:160 }}{% endblock %}
-{% block og_image %}{% if major.image %}{% if "http" in major.image %}{{ major.image }}{% else %}{{ site_url }}{{ major.image }}{% endif %}{% else %}{{ site_url }}{% static 'img/single_cource.webp' %}{% endif %}{% endblock %}
-{% block twitter_image %}{% if major.image %}{% if "http" in major.image %}{{ major.image }}{% else %}{{ site_url }}{{ major.image }}{% endif %}{% else %}{{ site_url }}{% static 'img/single_cource.webp' %}{% endif %}{% endblock %}
+{% load static jalali_filters %}
+
+
+
+{% block title %}{% if major.meta_title %}{{ major.meta_title }}{% else %}{{ major.get_meta_title }} | {{ institute.name }}{% endif %}{% endblock %}
+
+{% block meta_description %}{{ major.get_meta_description }}{% endblock %}
+
+{% block og_title %}{% if major.meta_title %}{{ major.meta_title }}{% else %}{{ major.get_meta_title }} | {{ institute.name }}{% endif %}{% endblock %}
+
+{% block og_description %}{{ major.get_meta_description }}{% endblock %}
+
+{% block og_image %}{% if major.image %}{{ site_url }}{{ major.image.url }}{% else %}{{ site_url }}{% static 'img/single_cource.webp' %}{% endif %}{% endblock %}
+
+{% block twitter_image %}{% if major.image %}{{ site_url }}{{ major.image.url }}{% else %}{{ site_url }}{% static 'img/single_cource.webp' %}{% endif %}{% endblock %}
+
+
 
 {% block extra_head %}
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه اصلی","item":"{{ site_url }}/"},{"@type":"ListItem","position":2,"name":"رشته‌ها","item":"{{ site_url }}{% url 'majors' %}"},{"@type":"ListItem","position":3,"name":"{{ major.title|escapejs }}","item":"{{ canonical_url }}"}]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"EducationalOccupationalProgram","name":"{{ major.title|escapejs }}","description":"{{ major.short_description|default:major.description|striptags|truncatechars:300|escapejs }}","url":"{{ canonical_url }}","provider":{"@type":"Organization","name":"{{ institute.name|escapejs }}"}}
-</script>
-{% if major_faqs %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {% for faq in major_faqs %}
-    {
-      "@type": "Question",
-      "name": "{{ faq.question|escapejs }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ faq.answer|striptags|escapejs }}"
-      }
-    }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-  ]
-}
-</script>
-{% endif %}
+<script type="application/ld+json">{{ major_schema_json|safe }}</script>
 {% endblock %}
+
+
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/app/pages/content.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+
 <link rel="stylesheet" href="{% static 'css/app/pages/schools.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/app/pages/major-detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/content-guide.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/app/components/ai-qa-section.css' %}">
+
 {% endblock %}
+
+
 
 {% block content %}
-<section class="breadcrumb breadcrumb_bg" dir="rtl">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb_iner text-center">
-                    <div class="breadcrumb_iner_item">
-                        <h2>{{ major.title }}</h2>
-                        <p><a href="{% url 'index' %}">صفحه اصلی</a><span>/</span><a href="{% url 'majors' %}">رشته‌ها</a><span>/</span>{{ major.title }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-<section class="major-detail section_padding" dir="rtl">
+{% include "layout/page_hero.html" with hero_title=major.title hero_lead=major.short_description|default:"راهنمای تحصیل، شرایط پذیرش و مشاوره تخصصی برای این رشته در کشور مقصد." hero_compact=1 crumb2_label="رشته‌های تحصیلی" crumb2_url_name="majors" crumb3_label=major.title|truncatechars:72 %}
+
+{% include "layout/_answer_summary_banner.html" with answer_text=major_answer_summary answer_class="major-detail__hero-answer ai-qa-section__answer" %}
+
+
+
+<section class="major-detail faq-page section_padding" dir="rtl" lang="fa">
+
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="major-detail__hero school-detail__hero">
-                    <div class="school-detail__hero-img">
-                        {% if major.image %}
-                            <img src="{{ major.image }}" alt="{{ major.title }}">
+
+        <div class="row g-4">
+
+            <div class="col-lg-8 major-detail__main">
+
+                {% include "layout/_evaluation_promo.html" with promo_url=evaluation_url promo_country=major.country promo_major=major.title promo_ref="major-detail" promo_title="ارزیابی هوشمند رشته "|add:major.title promo_text="گزارش رایگان: کشور مناسب، دانشگاه‌های پیشنهادی، بورسیه و شانس پذیرش برای این رشته." %}
+
+                {% include "layout/_ai_qa_section.html" with ai_qa_blocks=major_ai_qa_blocks ai_qa_title=major_ai_qa_title ai_qa_lead=major_ai_qa_lead ai_qa_section_id="major-qa" %}
+
+                <div class="major-detail__meta">
+
+                    {% if major.country %}
+
+                    <a href="{% url 'country_detail' major.country %}" class="major-detail__chip">
+
+                        {% if major.country == "canada" %}
+
+                        <img src="{% static 'img/flags/ca.svg' %}" alt="" width="18" height="12" loading="lazy">
+
+                        {% elif major.country == "spain" %}
+
+                        <img src="{% static 'img/flags/es.svg' %}" alt="" width="18" height="12" loading="lazy">
+
+                        {% elif major.country == "china" %}
+
+                        <img src="{% static 'img/flags/cn.svg' %}" alt="" width="18" height="12" loading="lazy">
+
                         {% else %}
-                            <img src="{% static 'img/single_cource.webp' %}" alt="{{ major.title }}">
+
+                        <span class="ti-world" aria-hidden="true"></span>
+
                         {% endif %}
-                        {% if major.country %}
-                        <span class="school-detail__hero-badge">
-                            {% if major.country == "china" %}چین{% elif major.country == "canada" %}کانادا{% elif major.country == "spain" %}اسپانیا{% else %}سایر{% endif %}
-                        </span>
-                        {% endif %}
-                    </div>
-                    <div class="school-detail__hero-body">
-                        <h1 class="school-detail__title">{{ major.title }}</h1>
-                        {% if major.short_description %}
-                        <p class="school-detail__subtitle">{{ major.short_description }}</p>
-                        {% endif %}
-                        {% if major.country %}
-                        <div class="school-detail__meta">
-                            <span class="school-detail__meta-item">
-                                <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                {% if major.country == "china" %}چین{% elif major.country == "canada" %}کانادا{% elif major.country == "spain" %}اسپانیا{% else %}سایر کشورها{% endif %}
-                            </span>
-                        </div>
-                        {% endif %}
-                    </div>
+
+                        <span>تحصیل در {{ major.get_country_display }}</span>
+
+                    </a>
+
+                    {% endif %}
+
+                    <span class="major-detail__chip major-detail__chip--muted">
+
+                        <span class="ti-book" aria-hidden="true"></span>
+
+                        <span>رشته تحصیلی</span>
+
+                    </span>
+
                 </div>
+
+
+
+                <div class="major-detail__lead-panel" id="major-intro">
+
+                    <div class="major-detail__lead-grid">
+
+                        <figure class="major-detail__figure">
+
+                            {% if major.image %}
+
+                            <img src="{{ major.image.url }}" alt="{{ major.title }}" class="major-detail__img" width="1200" height="675" loading="eager" decoding="async">
+
+                            {% else %}
+
+                            <img src="{% static 'img/single_cource.webp' %}" alt="{{ major.title }}" class="major-detail__img" width="640" height="480" loading="eager" decoding="async">
+
+                            {% endif %}
+
+                        </figure>
+
+                        <div class="major-detail__intro">
+
+                            {% if major.short_description %}
+
+                            <p class="major-detail__lead-text">{{ major.short_description }}</p>
+
+                            {% else %}
+
+                            <p class="major-detail__lead-text">موسسه {{ institute.name }} همراه شما در انتخاب مسیر تحصیلی، اخذ پذیرش و برنامه‌ریزی مهاجرت تحصیلی برای رشته {{ major.title }} است.</p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
 
                 {% if major.description %}
-                <div class="school-detail__block">
-                    <h3 class="school-detail__section-title">توضیحات رشته</h3>
-                    <div class="school-detail__block-content ck-content">{{ major.description|safe }}</div>
-                </div>
+
+                <section class="major-detail__section faq-page__panel" aria-labelledby="major-desc-title">
+
+                    <h2 id="major-desc-title" class="major-detail__section-title">
+
+                        <span class="ti-info-alt" aria-hidden="true"></span>
+
+                        درباره رشته {{ major.title }}
+
+                    </h2>
+
+                    <div class="major-detail__content guide-content ck-content" itemprop="description">
+
+                        {{ major.description|safe }}
+
+                    </div>
+
+                </section>
+
+                {% elif not major_faqs %}
+
+                <section class="major-detail__section faq-page__panel" aria-labelledby="major-desc-title">
+
+                    <h2 id="major-desc-title" class="major-detail__section-title">
+
+                        <span class="ti-info-alt" aria-hidden="true"></span>
+
+                        درباره این رشته
+
+                    </h2>
+
+                    <p class="major-detail__placeholder">
+
+                        موسسه {{ institute.name }} با مجوز رسمی وزارت علوم، آماده ارائه خدمات مشاوره و اعزام دانشجو است.
+
+                        برای دریافت اطلاعات کامل درباره رشته {{ major.title }} و شرایط تحصیل، با مشاوران ما تماس بگیرید.
+
+                    </p>
+
+                </section>
+
                 {% endif %}
 
-                {% if not major.description %}
-                <div class="school-detail__block">
-                    <div class="school-detail__block-content">
-                        موسسه {{ institute.name }} با مجوز رسمی وزارت علوم، آماده ارائه خدمات مشاوره و اعزام دانشجو است.
-                        برای دریافت اطلاعات کامل درباره این رشته و شرایط تحصیل، با مشاوران ما تماس بگیرید.
-                    </div>
-                </div>
-                {% endif %}
-                {% if major_faqs %}
-                <div class="school-detail__block">
-                    <h3 class="school-detail__section-title">سوالات متداول درباره رشته {{ major.title }}</h3>
-                    <div class="school-detail__block-content">
-                        {% for faq in major_faqs %}
-                        <h4 class="school-detail__faq-question">{{ forloop.counter }}. {{ faq.question }}</h4>
-                        <p>{{ faq.answer|linebreaks }}</p>
+                {% if university_groups %}
+                <section class="major-detail__section faq-page__panel major-detail__universities" aria-labelledby="major-universities-title">
+                    <h2 id="major-universities-title" class="major-detail__section-title">
+                        <span class="ti-home" aria-hidden="true"></span>
+                        دانشگاه‌های {{ major.title }}
+                    </h2>
+                    <p class="major-detail__universities-lead">
+                        از هر بازه رتبه، چند دانشگاه برتر نمایش داده شده است.
+                        برای مشاهده {{ linked_universities_count|persian_numbers }} دانشگاه مرتبط با این رشته، لیست فیلترشده را ببینید.
+                    </p>
+                    <div class="major-detail__uni-groups">
+                        {% for group in university_groups %}
+                        <div class="major-detail__uni-group">
+                            <div class="major-detail__uni-group-head">
+                                <h3 class="major-detail__uni-group-title">{{ group.label }}</h3>
+                                {% if group.more_count %}
+                                <span class="major-detail__uni-group-meta">+{{ group.more_count }} دانشگاه دیگر</span>
+                                {% endif %}
+                            </div>
+                            <ul class="major-detail__uni-chips" role="list">
+                                {% for uni in group.universities %}
+                                <li>
+                                    <a href="{% url 'school_detail' uni.slug %}" class="major-detail__uni-chip">
+                                        <span class="major-detail__uni-chip-name">{{ uni.name_fa }}</span>
+                                        {% if uni.city %}
+                                        <span class="major-detail__uni-chip-city">{{ uni.city }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                         {% endfor %}
                     </div>
-                </div>
+                    <div class="major-detail__universities-cta">
+                        <div class="major-detail__universities-cta-actions">
+                            <a href="{{ schools_list_url }}" class="major-detail__quick-btn major-detail__quick-btn--primary major-detail__universities-cta-btn">
+                                <span class="ti-layout-grid2" aria-hidden="true"></span>
+                                <span class="major-detail__universities-cta-label">مشاهده همه {{ linked_universities_count|persian_numbers }} دانشگاه</span>
+                            </a>
+                            <a href="{{ evaluation_url }}" class="major-detail__quick-btn major-detail__quick-btn--ghost">
+                                <span class="ti-clipboard" aria-hidden="true"></span>
+                                ارزیابی هوشمند
+                            </a>
+                        </div>
+                    </div>
+                </section>
                 {% endif %}
 
-                <a href="{% url 'majors' %}" class="btn_2 mt-3">بازگشت به لیست رشته‌ها</a>
+                {% if major_faqs %}
+
+                <section class="major-detail__section major-detail__faqs" aria-labelledby="major-faqs-title">
+
+                    <h2 id="major-faqs-title" class="major-detail__section-title major-detail__section-title--plain">
+
+                        <span class="ti-help-alt" aria-hidden="true"></span>
+
+                        سوالات متداول
+
+                    </h2>
+
+                    <div class="faq-page__accordion">
+
+                        {% for faq in major_faqs %}
+
+                        <details class="faq-page__item" id="major-faq-{{ forloop.counter }}"{% if forloop.first %} open{% endif %}>
+
+                            <summary class="faq-page__trigger">
+
+                                <span class="faq-page__trigger-text">{{ faq.question }}</span>
+
+                                <span class="faq-page__chevron" aria-hidden="true"></span>
+
+                            </summary>
+
+                            <div class="faq-page__answer">
+
+                                <div class="faq-page__answer-body ck-content">{{ faq.answer|linebreaks }}</div>
+
+                            </div>
+
+                        </details>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+                {% endif %}
+
+
+
+                <aside class="faq-page__cta school-detail__cta-mobile major-detail__cta-mobile">
+
+                    <div class="faq-page__cta-body">
+
+                        <h3 class="faq-page__cta-title">برای تحصیل در {{ major.title }} آماده‌اید؟</h3>
+
+                        <p class="faq-page__cta-text">مشاوران {{ institute.name }} شرایط شما را بررسی می‌کنند و بهترین مسیر پذیرش را پیشنهاد می‌دهند.</p>
+
+                    </div>
+
+                    <div class="faq-page__cta-actions">
+
+                        <a href="{{ evaluation_url }}" class="faq-page__btn faq-page__btn--primary">ارزیابی هوشمند رایگان</a>
+
+                        <a href="{{ appointment_url }}" class="faq-page__btn faq-page__btn--ghost">رزرو مشاوره</a>
+
+                    </div>
+
+                </aside>
+
+
+
+                <nav class="school-detail__back" aria-label="بازگشت به لیست رشته‌ها">
+                    <a href="{% url 'majors' %}{% if major.country %}?country={{ major.country }}{% endif %}" class="school-detail__back-link">
+                        <span class="ti-angle-right" aria-hidden="true"></span>
+                        بازگشت به لیست رشته‌ها
+                    </a>
+                </nav>
+
             </div>
 
-            <div class="col-lg-4">
-                <div class="school-detail__sidebar">
-                    <div class="school-detail__card">
-                        <h4 class="school-detail__card-title">درخواست مشاوره</h4>
-                        <p class="school-detail__card_desc">
-                            برای دریافت مشاوره درباره این رشته و شرایط تحصیل، جلسه رزرو کنید.
-                        </p>
-                        <a href="{% url 'appointment' %}?about=major&title={{ major.title|urlencode }}" class="btn_1 school-detail__btn-consult">رزرو مشاوره</a>
-                    </div>
 
-                    <div class="school-detail__card">
-                        <h4 class="school-detail__card-title">تماس با موسسه</h4>
-                        <div class="school-detail__contact-row">
-                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            <a href="tel:{{ institute.phone }}" class="tel-ltr">{{ institute.phone_formatted }}</a>
-                        </div>
-                        <div class="school-detail__contact-row">
-                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            <a href="mailto:{{ institute.email }}">{{ institute.email }}</a>
-                        </div>
-                        <div class="school-detail__contact-row">
-                            <svg class="school-detail__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            <span>{{ institute.address }}</span>
-                        </div>
-                    </div>
 
-                    <div class="school-detail__card">
-                        <h4 class="school-detail__card-title">اشتراک‌گذاری</h4>
-                        <div class="school-detail__share">
-                            <a href="https://wa.me/?text={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" title="واتساپ">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.462 4.436-9.908 9.898-9.908 2.65 0 5.122 1.03 6.982 2.769a9.825 9.825 0 012.76 6.965c-.003 5.463-4.437 9.908-9.885 9.908m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                            </a>
-                            <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" title="تلگرام">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                            </a>
-                            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ major.title|urlencode }}" target="_blank" rel="noopener" title="توییتر">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                            </a>
-                            <a href="mailto:?subject={{ major.title|urlencode }}&body={{ request.build_absolute_uri|urlencode }}" title="ایمیل">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                            </a>
-                            <a href="#" onclick="window.print(); return false;" class="school-detail__share-print" title="چاپ">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% if university_groups %}
+            {% include "schools/_detail_sidebar.html" with sidebar_aria_label="مشاوره و تماس" sidebar_about="major" sidebar_subject=major.title sidebar_country=major.get_country_display sidebar_appointment_url=appointment_url sidebar_evaluation_url=evaluation_url sidebar_extra_url=schools_list_url sidebar_extra_count=linked_universities_count sidebar_extra_unit="دانشگاه" only %}
+            {% else %}
+            {% include "schools/_detail_sidebar.html" with sidebar_aria_label="مشاوره و تماس" sidebar_about="major" sidebar_subject=major.title sidebar_country=major.get_country_display sidebar_appointment_url=appointment_url sidebar_evaluation_url=evaluation_url only %}
+            {% endif %}
+
         </div>
+
+        {% if related_majors %}
+        <section class="school-detail__related major-detail__related" aria-labelledby="major-related-title">
+            <h2 id="major-related-title" class="school-detail__section-title school-detail__section-title--plain">
+                <span class="ti-layout-grid2" aria-hidden="true"></span>
+                رشته‌های پرجستجو در {{ major.get_country_display }}
+            </h2>
+            <ul class="school-detail__major-chips major-detail__related-chips" role="list">
+                {% for rel in related_majors %}
+                <li>
+                    <a href="{% url 'major_details' rel.slug %}" class="school-detail__major-chip">{{ rel.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            <p class="major-detail__related-more">
+                <a href="{% url 'majors' %}{% if major.country %}?country={{ major.country }}{% endif %}">مشاهده همه رشته‌های {{ major.get_country_display }}</a>
+            </p>
+        </section>
+        {% endif %}
+
     </div>
+
 </section>
+
 {% endblock %}
+
+

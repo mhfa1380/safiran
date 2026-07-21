@@ -1,0 +1,267 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ instructor_meta_title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ instructor_meta_description }}{% endblock %}
+{% block canonical_url %}{{ instructor_page_url }}{% endblock %}
+{% block og_title %}{{ instructor_og_title }}{% endblock %}
+{% block og_description %}{{ instructor_meta_description }}{% endblock %}
+{% block twitter_title %}{{ instructor_og_title }}{% endblock %}
+{% block twitter_description %}{{ instructor_meta_description }}{% endblock %}
+{% block og_image %}{% if instructor.image %}{{ site_url }}{{ instructor.image.url }}{% else %}{{ site_url }}{% static 'img/learning_img.png' %}{% endif %}{% endblock %}
+{% block twitter_image %}{% if instructor.image %}{{ site_url }}{{ instructor.image.url }}{% else %}{{ site_url }}{% static 'img/learning_img.png' %}{% endif %}{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{{ instructor_schema_json|safe }}</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/faq.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/schools.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/pages/instructor.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title=instructor.name hero_lead=instructor.short_bio|default:instructor.position crumb2_label="دوره‌ها" crumb2_url_name="courses_list" crumb3_label=instructor.name %}
+
+<section class="instructor-detail faq-page section_padding" dir="rtl" lang="fa">
+    <div class="container">
+        <div class="row g-4 instructor-detail__layout">
+            <div class="col-12 col-lg-8 instructor-detail__main">
+                <div class="instructor-detail__meta">
+                    <span class="instructor-detail__chip instructor-detail__chip--muted">
+                        <span class="ti-user" aria-hidden="true"></span>
+                        <span>مدرس دوره</span>
+                    </span>
+                    {% if instructor_courses %}
+                    <span class="instructor-detail__chip instructor-detail__chip--muted">
+                        <span class="ti-blackboard" aria-hidden="true"></span>
+                        <span>{{ instructor_courses|length }} دوره فعال</span>
+                    </span>
+                    {% endif %}
+                </div>
+
+                <div class="instructor-detail__profile-mobile faq-page__panel" aria-label="خلاصه پروفایل مدرس">
+                    <div class="instructor-detail__profile-mobile-inner">
+                        <div class="instructor-detail__avatar" aria-hidden="true">
+                            {% if instructor.image %}
+                            <img src="{{ instructor.image.url }}" alt="{{ instructor.name }}" width="80" height="80" loading="eager">
+                            {% else %}
+                            <span class="instructor-detail__initials">{{ instructor.get_initials }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="instructor-detail__profile-mobile-text">
+                            <p class="instructor-detail__eyebrow">مدرس دوره</p>
+                            <h1 class="instructor-detail__name">{{ instructor.name }}</h1>
+                            <p class="instructor-detail__position">{{ instructor.position }}</p>
+                        </div>
+                    </div>
+                    {% if instructor.get_specialties_list %}
+                    <div class="instructor-detail__tags instructor-detail__tags--mobile">
+                        {% for tag in instructor.get_specialties_list %}
+                        <span class="instructor-detail__tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="instructor-detail__actions instructor-detail__actions--stack">
+                        {% if instructor.phone %}
+                        <a href="tel:{{ instructor.phone }}" class="instructor-detail__btn instructor-detail__btn--call">
+                            <span class="ti-mobile" aria-hidden="true"></span>
+                            تماس: <span class="tel-ltr">{{ instructor.phone }}</span>
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'appointment' %}?about=course&amp;title={{ instructor.name|urlencode }}" class="instructor-detail__btn instructor-detail__btn--primary">رزرو مشاوره / ثبت‌نام</a>
+                    </div>
+                </div>
+
+                {% if instructor.short_bio %}
+                <div class="instructor-detail__lead faq-page__panel">
+                    <p class="instructor-detail__lead-text">{{ instructor.short_bio }}</p>
+                </div>
+                {% endif %}
+
+                {% if instructor.bio %}
+                <section class="instructor-detail__section faq-page__panel" aria-labelledby="instructor-bio-title">
+                    <h2 id="instructor-bio-title" class="instructor-detail__section-title">
+                        <span class="ti-user" aria-hidden="true"></span>
+                        درباره مدرس
+                    </h2>
+                    <div class="instructor-detail__content ck-content">{{ instructor.bio|safe }}</div>
+                </section>
+                {% endif %}
+
+                {% if instructor.resume_entries.exists %}
+                <section class="instructor-detail__section faq-page__panel" aria-labelledby="instructor-resume-title">
+                    <h2 id="instructor-resume-title" class="instructor-detail__section-title">
+                        <span class="ti-time" aria-hidden="true"></span>
+                        رزومه و سوابق
+                    </h2>
+                    <ol class="instructor-timeline">
+                        {% for entry in instructor.resume_entries.all %}
+                        <li class="instructor-timeline__item">
+                            <div class="instructor-timeline__marker" aria-hidden="true"></div>
+                            <div class="instructor-timeline__body">
+                                <span class="instructor-timeline__period">{{ entry.period }}</span>
+                                <h3 class="instructor-timeline__role">{{ entry.role_title }}</h3>
+                                {% if entry.organization %}
+                                <p class="instructor-timeline__org">{{ entry.organization }}</p>
+                                {% endif %}
+                                {% if entry.description %}
+                                <p class="instructor-timeline__desc">{{ entry.description }}</p>
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </section>
+                {% endif %}
+
+                {% if instructor_courses %}
+                <section class="instructor-detail__section" aria-labelledby="instructor-courses-title">
+                    <h2 id="instructor-courses-title" class="instructor-detail__section-title instructor-detail__section-title--plain">
+                        <span class="ti-book" aria-hidden="true"></span>
+                        دوره‌های ارائه‌شده
+                    </h2>
+                    <div class="instructor-detail__courses">
+                        {% for course in instructor_courses %}
+                        <article class="instructor-course-card">
+                            <a href="{{ course.get_course_url }}" class="instructor-course-card__main"{% include "content/_course_link_attrs.html" %}>
+                                <h3 class="instructor-course-card__title">{{ course.title }}</h3>
+                                {% if course.short_description %}
+                                <p class="instructor-course-card__desc">{{ course.short_description|truncatechars:120 }}</p>
+                                {% endif %}
+                                <span class="instructor-course-card__more">مشاهده دوره <span class="ti-angle-left" aria-hidden="true"></span></span>
+                            </a>
+                            <div class="instructor-course-card__footer">
+                                {% if course.price %}
+                                <span class="instructor-course-card__price">
+                                    <span class="ti-money" aria-hidden="true"></span>
+                                    {{ course.price }}
+                                </span>
+                                {% endif %}
+                                {% if course.phone %}
+                                <a href="tel:{{ course.phone }}" class="instructor-course-card__phone tel-ltr">
+                                    <span class="ti-mobile" aria-hidden="true"></span>{{ course.phone }}
+                                </a>
+                                {% elif instructor.phone %}
+                                <a href="tel:{{ instructor.phone }}" class="instructor-course-card__phone tel-ltr">
+                                    <span class="ti-mobile" aria-hidden="true"></span>{{ instructor.phone }}
+                                </a>
+                                {% endif %}
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endif %}
+
+                <aside class="faq-page__cta instructor-detail__cta-mobile" aria-label="درخواست مشاوره">
+                    <div class="faq-page__cta-body">
+                        <h3 class="faq-page__cta-title">آماده شروع یادگیری با {{ instructor.name }} هستید؟</h3>
+                        <p class="faq-page__cta-text">برای ثبت‌نام در دوره یا دریافت مشاوره تخصصی، همین حالا درخواست خود را ثبت کنید.</p>
+                    </div>
+                    <div class="faq-page__cta-actions">
+                        {% if instructor.phone %}
+                        <a href="tel:{{ instructor.phone }}" class="instructor-detail__btn instructor-detail__btn--call instructor-detail__btn--on-dark">
+                            <span class="ti-mobile" aria-hidden="true"></span>
+                            تماس تلفنی
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'appointment' %}?about=course&amp;title={{ instructor.name|urlencode }}" class="instructor-detail__btn instructor-detail__btn--primary instructor-detail__btn--on-dark">رزرو مشاوره</a>
+                        <a href="{% url 'courses_list' %}" class="faq-page__btn faq-page__btn--ghost">همه دوره‌ها</a>
+                    </div>
+                </aside>
+
+                <p class="instructor-detail__back">
+                    <a href="{% url 'courses_list' %}" class="instructor-detail__btn instructor-detail__btn--outline">
+                        <span class="ti-arrow-right" aria-hidden="true"></span>
+                        بازگشت به لیست دوره‌ها
+                    </a>
+                </p>
+            </div>
+
+            <aside class="col-12 col-lg-4 instructor-detail__aside school-detail__aside course-detail__aside" aria-label="پروفایل و ارتباط با مدرس">
+                <div class="instructor-detail__sidebar">
+                    <div class="faq-page__panel instructor-detail__sidebar-head">
+                        <div class="instructor-detail__profile-head">
+                            <div class="instructor-detail__avatar instructor-detail__avatar--sidebar" aria-hidden="true">
+                                {% if instructor.image %}
+                                <img src="{{ instructor.image.url }}" alt="" width="88" height="88" loading="lazy">
+                                {% else %}
+                                <span class="instructor-detail__initials">{{ instructor.get_initials }}</span>
+                                {% endif %}
+                            </div>
+                            <h2 class="instructor-detail__name instructor-detail__name--sidebar">{{ instructor.name }}</h2>
+                            <p class="instructor-detail__position">{{ instructor.position }}</p>
+                            {% if instructor.title %}
+                            <p class="instructor-detail__subtitle">{{ instructor.title }}</p>
+                            {% endif %}
+                        </div>
+                        {% if instructor.get_specialties_list %}
+                        <div class="instructor-detail__tags instructor-detail__tags--sidebar">
+                            {% for tag in instructor.get_specialties_list %}
+                            <span class="instructor-detail__tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="instructor-detail__actions">
+                            {% if instructor.phone %}
+                            <a href="tel:{{ instructor.phone }}" class="instructor-detail__btn instructor-detail__btn--call">
+                                <span class="ti-mobile" aria-hidden="true"></span>
+                                <span class="tel-ltr">{{ instructor.phone }}</span>
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'appointment' %}?about=course&amp;title={{ instructor.name|urlencode }}" class="instructor-detail__btn instructor-detail__btn--primary">رزرو مشاوره</a>
+                        </div>
+                    </div>
+
+                    <div class="faq-page__panel instructor-detail__sidebar-extra">
+                        {% if instructor.get_highlights_list %}
+                        <h3 class="instructor-detail__mini-title">ویژگی‌ها</h3>
+                        <ul class="instructor-detail__highlights instructor-detail__highlights--compact">
+                            {% for item in instructor.get_highlights_list %}
+                            <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        {% if instructor.email or instructor.telegram or instructor.whatsapp %}
+                        <h3 class="instructor-detail__mini-title">ارتباط</h3>
+                        <ul class="instructor-detail__links">
+                            {% if instructor.email %}
+                            <li><a href="mailto:{{ instructor.email }}"><span class="ti-email" aria-hidden="true"></span>{{ instructor.email }}</a></li>
+                            {% endif %}
+                            {% if instructor.telegram %}
+                            <li><a href="{{ instructor.telegram }}" target="_blank" rel="noopener noreferrer"><span class="ti-comments" aria-hidden="true"></span>تلگرام</a></li>
+                            {% endif %}
+                            {% if instructor.whatsapp %}
+                            <li><a href="https://wa.me/{{ instructor.whatsapp }}" target="_blank" rel="noopener noreferrer"><span class="ti-mobile" aria-hidden="true"></span>واتساپ</a></li>
+                            {% endif %}
+                        </ul>
+                        {% endif %}
+
+                        {% if instructor_courses %}
+                        <h3 class="instructor-detail__mini-title">دوره‌ها</h3>
+                        <ul class="instructor-detail__course-links">
+                            {% for course in instructor_courses %}
+                            <li>
+                                <a href="{{ course.get_course_url }}"{% include "content/_course_link_attrs.html" %}>{{ course.title }}</a>
+                                {% if course.price %}<span class="instructor-detail__course-price">{{ course.price }}</span>{% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        <h3 class="instructor-detail__mini-title">مسیرهای مرتبط</h3>
+                        <nav class="instructor-detail__nav" aria-label="لینک‌های مرتبط">
+                            <a href="{% url 'courses_list' %}" class="instructor-detail__nav-link">همه دوره‌ها</a>
+                            <a href="{% url 'services' %}" class="instructor-detail__nav-link">خدمات موسسه</a>
+                            <a href="{% url 'faq' %}" class="instructor-detail__nav-link">سوالات متداول</a>
+                        </nav>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}

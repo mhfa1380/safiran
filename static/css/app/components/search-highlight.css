@@ -1,0 +1,101 @@
+/* هایلایت عبارت جستجو در صفحه مقصد */
+mark.site-search-highlight {
+  background: linear-gradient(180deg, transparent 35%, rgba(255, 214, 102, 0.95) 35%);
+  color: inherit;
+  padding: 0 0.12em;
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+mark.site-search-highlight.is-active {
+  background: rgba(255, 193, 7, 0.55);
+  outline: 2px solid var(--primary, #c9a227);
+  outline-offset: 2px;
+}
+
+.site-search-highlight-block {
+  animation: site-search-highlight-pulse 2.2s ease-out;
+}
+
+@keyframes site-search-highlight-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.45);
+  }
+  40% {
+    box-shadow: 0 0 0 6px rgba(201, 162, 39, 0.15);
+  }
+  100% {
+    box-shadow: none;
+  }
+}
+
+.site-search-highlight-banner {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10050;
+  width: min(560px, calc(100vw - 1.5rem));
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #1a2332;
+  color: #f5f7fa;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.site-search-highlight-banner__text {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.site-search-highlight-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.site-search-highlight-banner__nav,
+.site-search-highlight-banner__close {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.site-search-highlight-banner__nav {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.site-search-highlight-banner__nav:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.site-search-highlight-banner__nav:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.site-search-highlight-banner__close {
+  background: var(--primary, #c9a227);
+  color: #1a2332;
+  font-weight: 600;
+}
+
+.site-search-highlight-banner__close:hover {
+  filter: brightness(1.05);
+}
+
+@media (max-width: 575px) {
+  .site-search-highlight-banner {
+    bottom: 0.75rem;
+  }
+}

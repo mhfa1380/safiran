@@ -14,7 +14,45 @@
 {% block nav-sidebar %}{% endblock %}
 
 {% block content %}
-<div id="content-main">
+<div id="content-main" class="admin-dashboard-main">
+  {% if admin_quick_stats %}
+  <section class="admin-quick-panel" aria-label="دسترسی سریع">
+    <h2 class="admin-quick-panel__title">کارهای فوری امروز</h2>
+    <div class="admin-quick-panel__grid">
+      <a href="{{ admin_quick_stats.urls.evaluation_logs }}" class="admin-quick-card admin-quick-card--primary">
+        <span class="admin-quick-card__label">لاگ‌های تماس ارزیابی</span>
+        <span class="admin-quick-card__value">{{ admin_quick_stats.logs_today }}</span>
+        <span class="admin-quick-card__hint">تماس ثبت‌شده امروز</span>
+      </a>
+      <a href="{{ admin_quick_stats.urls.evaluation_requests }}" class="admin-quick-card">
+        <span class="admin-quick-card__label">پرونده‌های جدید</span>
+        <span class="admin-quick-card__value">{{ admin_quick_stats.eval_new }}</span>
+        <span class="admin-quick-card__hint">ارزیابی — وضعیت جدید</span>
+      </a>
+      <a href="{{ admin_quick_stats.urls.evaluation_requests }}?followup_due=overdue" class="admin-quick-card{% if admin_quick_stats.eval_follow_up_due %} admin-quick-card--warn{% endif %}">
+        <span class="admin-quick-card__label">پیگیری عقب‌افتاده</span>
+        <span class="admin-quick-card__value">{{ admin_quick_stats.eval_follow_up_due }}</span>
+        <span class="admin-quick-card__hint">نیاز به تماس مجدد</span>
+      </a>
+      <a href="{{ admin_quick_stats.urls.consultations }}" class="admin-quick-card">
+        <span class="admin-quick-card__label">مشاوره جدید</span>
+        <span class="admin-quick-card__value">{{ admin_quick_stats.consultation_new }}</span>
+        <span class="admin-quick-card__hint">درخواست مشاوره</span>
+      </a>
+      <a href="{{ admin_quick_stats.urls.contact_messages }}" class="admin-quick-card">
+        <span class="admin-quick-card__label">پیام تماس</span>
+        <span class="admin-quick-card__value">{{ admin_quick_stats.contact_new }}</span>
+        <span class="admin-quick-card__hint">خوانده نشده</span>
+      </a>
+      <a href="{{ admin_quick_stats.urls.referral_stats }}" class="admin-quick-card">
+        <span class="admin-quick-card__label">منبع آشنایی</span>
+        <span class="admin-quick-card__value">گزارش</span>
+        <span class="admin-quick-card__hint">آمار «از کجا آشنا شدید»</span>
+      </a>
+    </div>
+  </section>
+  {% endif %}
+
   {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
 </div>
 {% endblock %}

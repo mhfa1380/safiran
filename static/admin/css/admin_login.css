@@ -1,0 +1,345 @@
+/**
+ * صفحه ورود ادمین — کارت وسط‌چین + کپچای پایین
+ */
+
+body.login {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(46, 101, 165, 0.18), transparent),
+        linear-gradient(165deg, #e8eef8 0%, #f4f6fa 45%, #eef2f8 100%) !important;
+}
+
+body.login #container {
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    margin: 0 auto !important;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible;
+}
+
+body.login #header {
+    display: none !important;
+}
+
+body.login #content {
+    width: 100%;
+    padding: 0 !important;
+    margin: 0;
+    float: none;
+}
+
+body.login #footer {
+    display: none;
+}
+
+/* ─── کارت ورود ─── */
+.admin-login {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-login__card {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #d8e2ef;
+    border-radius: 16px;
+    box-shadow:
+        0 4px 6px rgba(12, 46, 96, 0.04),
+        0 20px 48px rgba(12, 46, 96, 0.12);
+    overflow: hidden;
+}
+
+.admin-login__head {
+    text-align: center;
+    padding: 1.75rem 1.5rem 1.25rem;
+    background: linear-gradient(135deg, #0c2e60 0%, #1a4a8a 55%, #2e65a5 100%);
+    color: #fff;
+}
+
+.admin-login__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 0.85rem;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    backdrop-filter: blur(4px);
+}
+
+.admin-login__logo-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+}
+
+.admin-login__title {
+    margin: 0 0 0.35rem;
+    font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.admin-login__subtitle {
+    margin: 0;
+    font-size: 0.8125rem;
+    opacity: 0.88;
+    font-weight: 500;
+}
+
+/* ─── فرم ─── */
+.admin-login__form {
+    padding: 1.35rem 1.5rem 1.5rem;
+}
+
+.admin-login__field {
+    margin-bottom: 1rem;
+}
+
+.admin-login__label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.admin-login__input,
+.admin-login__form input[type="text"],
+.admin-login__form input[type="password"] {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.65rem 0.85rem !important;
+    font-family: IRANSans, Tahoma, sans-serif !important;
+    font-size: 0.9375rem !important;
+    line-height: 1.4;
+    color: #0f172a;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.admin-login__input:focus,
+.admin-login__form input:focus {
+    outline: none;
+    background: #fff;
+    border-color: #2e65a5;
+    box-shadow: 0 0 0 3px rgba(46, 101, 165, 0.18);
+}
+
+.admin-login__forgot {
+    margin: -0.25rem 0 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.admin-login__forgot a {
+    color: #2e65a5;
+    text-decoration: none;
+}
+
+.admin-login__forgot a:hover {
+    text-decoration: underline;
+}
+
+/* ─── کپچا — پایین فرم، وسط‌چین ─── */
+.admin-login__captcha {
+    margin-top: 0.25rem;
+    margin-bottom: 1.1rem;
+    padding: 1rem 1rem 0.85rem;
+    text-align: center;
+    background: #f1f5f9;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+}
+
+.admin-login__captcha-label {
+    margin: 0 0 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.admin-login__captcha-question {
+    margin: 0 0 0.65rem;
+    font-family: Vazirmatn, IRANSans, monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0c2e60;
+    letter-spacing: 0.08em;
+    user-select: none;
+}
+
+.admin-login__captcha-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-login__captcha-input {
+    width: 100%;
+    max-width: 140px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.125rem !important;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.55rem 0.75rem !important;
+    border: 1px solid #94a3b8 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+}
+
+.admin-login__captcha-input:focus {
+    border-color: #2e65a5 !important;
+    box-shadow: 0 0 0 3px rgba(46, 101, 165, 0.2) !important;
+}
+
+.admin-login__captcha-hint {
+    margin: 0.5rem 0 0;
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
+
+/* ─── دکمه ورود ─── */
+.admin-login__submit {
+    margin: 0;
+    padding: 0;
+}
+
+.admin-login__btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #0c2e60 0%, #2e65a5 100%);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(12, 46, 96, 0.28);
+    transition: transform 0.12s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.admin-login__btn:hover {
+    box-shadow: 0 6px 20px rgba(12, 46, 96, 0.35);
+    opacity: 0.96;
+}
+
+.admin-login__btn:active {
+    transform: translateY(1px);
+}
+
+.admin-login__btn:focus {
+    outline: 2px solid #2e65a5;
+    outline-offset: 2px;
+}
+
+/* ─── خطاها ─── */
+.admin-login__error {
+    margin: 0.35rem 0 0;
+    font-size: 0.75rem;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.admin-login__error--note {
+    margin: 0 1.5rem 0.75rem;
+    padding: 0.55rem 0.75rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+}
+
+.admin-login__error--captcha {
+    text-align: center;
+    margin-top: 0.4rem;
+}
+
+/* ─── فوتر ─── */
+.admin-login__footer {
+    margin: 0;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-align: center;
+}
+
+/* ─── دارک مود ─── */
+html[data-theme="dark"] body.login {
+    background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(59, 130, 196, 0.15), transparent),
+        linear-gradient(165deg, #0a0f14 0%, #0f1419 100%) !important;
+}
+
+html[data-theme="dark"] .admin-login__card {
+    background: #1a2332;
+    border-color: #334155;
+}
+
+html[data-theme="dark"] .admin-login__label {
+    color: #cbd5e1;
+}
+
+html[data-theme="dark"] .admin-login__input,
+html[data-theme="dark"] .admin-login__form input[type="text"],
+html[data-theme="dark"] .admin-login__form input[type="password"] {
+    background: #0f1419;
+    border-color: #475569;
+    color: #f1f5f9;
+}
+
+html[data-theme="dark"] .admin-login__captcha {
+    background: #0f1419;
+    border-color: #475569;
+}
+
+html[data-theme="dark"] .admin-login__captcha-question {
+    color: #e2e8f0;
+}
+
+html[data-theme="dark"] .admin-login__captcha-input {
+    background: #1a2332 !important;
+    border-color: #64748b !important;
+    color: #f1f5f9;
+}
+
+@media (max-width: 480px) {
+    body.login {
+        padding: 1rem;
+    }
+
+    .admin-login__head {
+        padding: 1.35rem 1.15rem 1rem;
+    }
+
+    .admin-login__form {
+        padding: 1.15rem 1.15rem 1.25rem;
+    }
+
+    .admin-login__captcha-question {
+        font-size: 1.35rem;
+    }
+}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ achievement_meta_title }} | {{ institute.name }}{% endblock %}
+{% block meta_description %}{{ achievement_meta_description }}{% endblock %}
+{% block meta_keywords %}{{ achievement_meta_keywords }}{% endblock %}
+{% block canonical_url %}{{ achievement_page_url }}{% endblock %}
+{% block og_title %}{{ achievement_og_title }}{% endblock %}
+{% block og_description %}{{ achievement_meta_description }}{% endblock %}
+{% block og_image %}{% if achievement.image %}{{ site_url }}{{ achievement.image.url }}{% endif %}{% endblock %}
+{% block twitter_title %}{{ achievement_og_title }}{% endblock %}
+{% block twitter_description %}{{ achievement_meta_description }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/achievements.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{{ achievement_schema_json|safe }}</script>
+{% endblock %}
+
+{% block content %}
+{% url 'monthly_achievements' as achievements_url %}
+{% include "layout/page_hero.html" with hero_title=achievement.person_name hero_lead=achievement.person_role|default:achievement.title crumb2_label="دستاوردهای ما" crumb2_url=achievements_url crumb3_label=achievement.title|truncatechars:70 %}
+
+<section class="achievement-detail section_padding" dir="rtl" lang="fa">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                <article class="achievement-detail__shell" itemscope itemtype="https://schema.org/Article">
+                    <header class="achievement-detail__header">
+                        {% if achievement.month_label %}
+                        <span class="achievement-detail__month">
+                            <span class="ti-calendar" aria-hidden="true"></span>
+                            {{ achievement.month_label }}
+                        </span>
+                        {% endif %}
+                        <h1 class="achievement-detail__title" itemprop="headline">{{ achievement.title }}</h1>
+                        <p class="achievement-detail__role" itemprop="author">{{ achievement.person_name }}{% if achievement.person_role %} · {{ achievement.person_role }}{% endif %}</p>
+                    </header>
+
+                    <figure class="achievement-detail__figure">
+                        <img src="{{ achievement.image.url }}"
+                             alt="{{ achievement.person_name }}"
+                             class="achievement-detail__img"
+                             itemprop="image"
+                             width="800"
+                             height="500"
+                             loading="eager">
+                    </figure>
+
+                    {% if achievement.has_video %}
+                    <div class="achievement-detail__video">
+                        <h2 class="achievement-detail__video-title">ویدیوی مصاحبه</h2>
+                        <div class="achievement-detail__player">
+                            {% if achievement.video_file %}
+                            <video controls playsinline preload="metadata" src="{{ achievement.video_file.url }}"></video>
+                            {% else %}
+                            <iframe src="{{ achievement.get_video_embed_url }}"
+                                    title="ویدیوی {{ achievement.person_name }}"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    loading="lazy"></iframe>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="achievement-detail__body ck-content" itemprop="articleBody">
+                        {{ achievement.get_detail_html|safe }}
+                    </div>
+                </article>
+
+                <nav class="achievement-detail__actions" aria-label="بازگشت">
+                    <a href="{% url 'monthly_achievements' %}" class="achievement-detail__back">
+                        <span class="ti-angle-right" aria-hidden="true"></span>
+                        همه دستاوردها
+                    </a>
+                    <a href="{% url 'appointment' %}" class="btn_1 btn-sm">مشاوره رایگان</a>
+                </nav>
+
+                {% if related_achievements %}
+                <aside class="achievement-detail__related" aria-label="تجربه‌های مشابه">
+                    <h2 class="achievement-detail__related-title">مسیرهای مشابه</h2>
+                    <ul class="achievement-detail__related-list">
+                        {% for item in related_achievements %}
+                        <li>
+                            <a href="{% url 'achievement_detail' achievement_slug=item.slug %}" class="achievement-detail__related-link">
+                                <img src="{{ item.image.url }}" alt="" class="achievement-detail__related-thumb" loading="lazy" width="56" height="56">
+                                <span class="achievement-detail__related-text">
+                                    <strong>{{ item.person_name }}</strong>
+                                    <small>{{ item.person_role|default:item.title|truncatechars:48 }}</small>
+                                </span>
+                                <span class="ti-angle-left" aria-hidden="true"></span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<div id="content-track-config" hidden data-track-url="{% url 'achievement_track' %}" data-track-id="{{ achievement.id }}" data-track-field="achievement_id"></div>
+<script src="{% static 'js/app/content-track.js' %}" defer></script>
+{% endblock %}

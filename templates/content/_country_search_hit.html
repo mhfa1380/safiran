@@ -1,0 +1,23 @@
+<article class="country-hit{% if is_best %} country-hit--best{% endif %}">
+    <span class="country-hit__badge">{{ hit.badge }}</span>
+    <h4 class="country-hit__title">
+        {% if hit.kind == "faq" and hit.faq %}
+        <button type="button" class="country-hit__toggle" data-country-faq-toggle aria-expanded="false">
+            {{ hit.title }}
+        </button>
+        {% else %}
+        <a href="{{ hit.url }}" class="country-hit__link">{{ hit.title }}</a>
+        {% endif %}
+    </h4>
+    {% if hit.kind == "faq" and hit.faq %}
+    <div class="country-hit__answer" hidden>
+        <div class="country-hit__answer-body">{{ hit.faq.answer|safe }}</div>
+        <a href="{{ hit.url }}" class="country-hit__more">مشاهده کامل سوال</a>
+    </div>
+    {% else %}
+    <p class="country-hit__snippet">{{ hit.snippet }}</p>
+    {% if hit.kind != "faq" %}
+    <a href="{{ hit.url }}" class="country-hit__more">مشاهده جزئیات</a>
+    {% endif %}
+    {% endif %}
+</article>

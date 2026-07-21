@@ -1,0 +1,45 @@
+{% load static evaluation_tags %}
+<article class="major-card{% if compact %} major-card--compact{% endif %}{% if is_best_match %} major-card--best{% endif %}"
+         id="major-{{ major.slug }}"
+         data-major-id="{{ major.id }}"
+         data-major-slug="{{ major.slug }}">
+    <a href="{% url 'major_details' major.slug %}" class="major-card__media" tabindex="-1" aria-hidden="true">
+        {% if major.image %}
+        <img src="{{ major.image.url }}" alt="{{ major.title }}" class="major-card__image" width="640" height="360" loading="lazy">
+        {% else %}
+        <img src="{% static 'img/single_cource.webp' %}" alt="" class="major-card__image" width="640" height="360" loading="lazy">
+        {% endif %}
+    </a>
+    <div class="major-card__body">
+        <header class="major-card__head">
+            {% if is_best_match %}
+            <span class="faq-page__match-badge">بهترین تطابق</span>
+            {% endif %}
+            <h3 class="major-card__title">
+                <a href="{% url 'major_details' major.slug %}">{{ major.title }}</a>
+            </h3>
+            {% if major.country %}
+            <span class="major-card__country">{{ major.get_country_display }}</span>
+            {% endif %}
+        </header>
+        {% if not compact %}
+        <p class="major-card__desc">
+            {% if major.short_description %}
+            {{ major.short_description|truncatechars:150 }}
+            {% elif major.description %}
+            {{ major.description|truncatechars:150 }}
+            {% else %}
+            برای دریافت اطلاعات کامل درباره این رشته و شرایط تحصیل، با مشاوران ما تماس بگیرید.
+            {% endif %}
+        </p>
+        {% elif major.short_description %}
+        <p class="major-card__desc major-card__desc--compact">{{ major.short_description|truncatechars:90 }}</p>
+        {% endif %}
+        <div class="major-card__actions">
+            <a href="{% url 'major_details' major.slug %}" class="major-card__btn major-card__btn--ghost">جزئیات رشته</a>
+            {% if not compact %}
+            <a href="{% evaluation_url country=major.country major=major.title ref='major-card' %}" class="major-card__btn major-card__btn--primary">ارزیابی هوشمند</a>
+            {% endif %}
+        </div>
+    </div>
+</article>

@@ -1,28 +1,65 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static jalali_filters %}
 
-{% block title %}موسسه {{ institute.name }} | اعزام دانشجو به کانادا، اسپانیا، چین{% endblock %}
-{% block meta_description %}موسسه {{ institute.name }} - مشاوره رایگان و اعزام دانشجو به کانادا، اسپانیا، چین. اخذ پذیرش دانشگاه، ویزای تحصیلی، بورسیه. مشاوران مجرب در کنار شما.{% endblock %}
-{% block og_title %}موسسه {{ institute.name }} | اعزام دانشجو به کانادا، اسپانیا، چین{% endblock %}
-{% block og_description %}موسسه {{ institute.name }} - مشاوره رایگان و اعزام دانشجو به کانادا، اسپانیا، چین. اخذ پذیرش دانشگاه، ویزای تحصیلی، بورسیه.{% endblock %}
+{% block title %}موسسه {{ institute.name }} | مشاوره رایگان مهاجرت تحصیلی ۲۰۲۶{% endblock %}
+{% block meta_description %}مشاوره رایگان اعزام دانشجو به کانادا، اسپانیا و چین — پذیرش دانشگاه، بورسیه CSC، ویزای تحصیلی و ارزیابی هوشمند. موسسه {{ institute.name }} در بابل.{% endblock %}
+{% block og_title %}موسسه {{ institute.name }} | مشاوره رایگان مهاجرت تحصیلی ۲۰۲۶{% endblock %}
+{% block og_description %}اعزام دانشجو به کانادا، اسپانیا و چین — پذیرش دانشگاه، بورسیه، ویزا و مشاوره رایگان. موسسه {{ institute.name }}.{% endblock %}
+{% block og_image %}{{ site_url }}{% static 'img/banner_img.png' %}{% endblock %}
+{% block twitter_image %}{{ site_url }}{% static 'img/banner_img.png' %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/app/pages/index.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/discovery-hub.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{{ index_schema_json|safe }}</script>
 {% endblock %}
 
 {% block content %}
-<section class="banner_part index_banner">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 col-xl-6">
-                <div class="banner_text">
-                    <div class="banner_text_iner">
-                        <h5>موسسه اعزام دانشجوی</h5>
-                        <h1>{{ institute.name }}</h1>
-                        <p>با همراهی مشاوران مجرب ما، مسیر تحصیل در برترین دانشگاه‌های جهان را هموار کنید. از دریافت پذیرش تا اخذ ویزا، در کنار شما هستیم تا با کمترین هزینه و زمان، به رویاهای تحصیلی خود برسید.</p>
-                        <a href="{% url 'contact' %}" class="btn_1">نیاز به مشاوره دارید؟</a>
-                        <a href="{% url 'faq' %}" class="btn_2">سوالات متداول</a>
-                    </div>
+<section class="index-hero" dir="rtl" lang="fa" aria-labelledby="index-hero-title">
+    <div class="index-hero__backdrop" aria-hidden="true">
+        <div class="index-hero__mesh"></div>
+        <div class="index-hero__glow index-hero__glow--1"></div>
+        <div class="index-hero__glow index-hero__glow--2"></div>
+        <div class="index-hero__glow index-hero__glow--3"></div>
+    </div>
+    <div class="index-hero__curve" aria-hidden="true"></div>
+    <div class="container index-hero__container">
+        <div class="index-hero__grid">
+            <div class="index-hero__content">
+                <p class="index-hero__eyebrow">
+                    <span class="index-hero__eyebrow-dot" aria-hidden="true"></span>
+                    موسسه اعزام دانشجوی
+                </p>
+                <h1 class="index-hero__title" id="index-hero-title">{{ institute.name }}</h1>
+                {% include "layout/_answer_summary_banner.html" with answer_text=index_answer_summary answer_class="index-hero__answer" answer_id="index-answer-summary" answer_inline=True %}
+                <div class="index-hero__rotator" id="indexHeroRotator" aria-live="polite">
+                    <p class="index-hero__line index-hero__line--active" data-index-hero-line>با همراهی مشاوران مجرب، مسیر تحصیل در برترین دانشگاه‌های جهان را هموار کنید.</p>
+                </div>
+                <div class="index-hero__actions">
+                    <a href="{% url 'evaluation' %}" class="btn_1 index-hero__cta-primary">نیاز به مشاوره دارید؟</a>
+                    <a href="{% url 'faq' %}" class="btn_2 index-hero__cta-secondary">سوالات متداول</a>
+                </div>
+                <ul class="index-hero__trust" aria-label="مزایای کوتاه">
+                    <li class="index-hero__trust-item">مشاوره تخصصی</li>
+                    <li class="index-hero__trust-item">ارزیابی هوشمند</li>
+                    <li class="index-hero__trust-item">پشتیبانی تا ویزا</li>
+                </ul>
+            </div>
+            <div class="index-hero__visual" aria-hidden="true">
+                <div class="index-hero__visual-ring"></div>
+                <div class="index-hero__visual-frame">
+                    <img
+                        src="{% static 'img/banner_img.png' %}"
+                        alt=""
+                        class="index-hero__image"
+                        width="520"
+                        height="520"
+                        loading="eager"
+                        decoding="async"
+                    >
                 </div>
             </div>
         </div>
@@ -34,29 +71,29 @@
         <div class="row index_feature_row">
             <div class="col-sm-6 col-xl-3">
                 <div class="single_feature">
-                    <div class="single_feature_part">
+                    <a href="{% url 'country_detail' 'canada' %}" class="single_feature_part d-block">
                         <span class="single_feature_icon"><img src="{% static 'img/flags/ca.svg' %}" alt="کانادا" class="flag-icon"></span>
                         <h3>کانادا</h3>
                         <p class="tex_dir">تحصیل در قلب طبیعت و تکنولوژی؛ با ما به آینده‌ای روشن قدم بگذارید.</p>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="single_feature">
-                    <div class="single_feature_part">
+                    <a href="{% url 'country_detail' 'spain' %}" class="single_feature_part d-block">
                         <span class="single_feature_icon"><img src="{% static 'img/flags/es.svg' %}" alt="اسپانیا" class="flag-icon"></span>
                         <h3>اسپانیا</h3>
                         <p class="tex_dir">تجربه‌ای ناب از تحصیل و زندگی در سرزمین فرهنگ و خورشید.</p>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="single_feature">
-                    <div class="single_feature_part single_feature_part_2">
+                    <a href="{% url 'country_detail' 'china' %}" class="single_feature_part single_feature_part_2 d-block">
                         <span class="single_feature_icon"><img src="{% static 'img/flags/cn.svg' %}" alt="چین" class="flag-icon"></span>
                         <h3>چین</h3>
                         <p class="tex_dir">در مرکز نوآوری آسیا بدرخشید؛ آینده‌تان را همین‌جا بسازید.</p>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="col-sm-6 col-xl-3 align-self-center">
@@ -67,6 +104,34 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<section class="index_eval_promo" aria-label="ارزیابی هوشمند" dir="rtl">
+    <div class="container">
+        <a href="{% url 'evaluation' %}" class="index_eval_promo__card" title="ارزیابی رایگان مهاجرت تحصیلی آنلاین">
+            <span class="index_eval_promo__glow" aria-hidden="true"></span>
+            <span class="index_eval_promo__icon" aria-hidden="true">
+                <span class="ti-stats-up"></span>
+            </span>
+            <div class="index_eval_promo__body">
+                <p class="index_eval_promo__eyebrow">فقط در {{ institute.name }}</p>
+                <h2 class="index_eval_promo__title">ارزیابی هوشمند مهاجرت تحصیلی</h2>
+                <p class="index_eval_promo__lead">
+                    <strong>رایگان و آنلاین</strong> — در چند دقیقه شرایط خود را وارد کنید و
+                    <strong>گزارش تحلیل هوشمند</strong> برای کشور، دانشگاه، بورسیه و هزینه ببینید.
+                </p>
+                <ul class="index_eval_promo__perks">
+                    <li><span class="ti-check-box"></span> ارزیابی رایگان</li>
+                    <li><span class="ti-check-box"></span> تحلیل فوری پرونده</li>
+                    <li><span class="ti-check-box"></span> تماس کارشناس در صورت تمایل</li>
+                </ul>
+            </div>
+            <span class="index_eval_promo__cta">
+                شروع ارزیابی
+                <span class="ti-angle-left index_eval_promo__cta-arrow" aria-hidden="true"></span>
+            </span>
+        </a>
     </div>
 </section>
 
@@ -121,106 +186,6 @@
                     <h3>دانشجو اعزام‌شده</h3>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<section class="index_blog index_blog_margin" dir="rtl">
-    <div class="container">
-        <div class="index_blog_intro">
-            <h2 class="index_blog_title">اخبار موسسه</h2>
-            <a href="{% url 'blog' %}" class="btn_2 index_blog_btn">همه مطالب</a>
-        </div>
-        <div class="row">
-            {% if latest_posts %}
-                {% for item in latest_posts %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <article class="index_blog_card">
-                        <a href="{% url 'blog_detail' item.post.slug %}" class="index_blog_card__image-link">
-                            {% if item.post.image %}
-                                <img src="{{ item.post.image }}" alt="{{ item.post.title }}" class="index_blog_card__image" loading="lazy">
-                            {% else %}
-                                <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ item.post.title }}" class="index_blog_card__image" loading="lazy">
-                            {% endif %}
-                            {% if item.post.country_tag %}
-                                <span class="index_blog_card__badge">{{ item.post.country_tag }}</span>
-                            {% endif %}
-                        </a>
-                        <div class="index_blog_card__header">
-                            <h3 class="index_blog_card__title">
-                                <a href="{% url 'blog_detail' item.post.slug %}">{{ item.post.title }}</a>
-                            </h5>
-                            <span class="index_blog_card__date">{{ item.created_at_jalali }}</span>
-                        </div>
-                        <div class="index_blog_card__body">
-                            <p class="index_blog_card__desc">
-                                {% if item.post.excerpt %}
-                                    {{ item.post.excerpt|truncatechars:120 }}
-                                {% else %}
-                                    {{ item.post.content|striptags|truncatechars:120 }}
-                                {% endif %}
-                            </p>
-                        </div>
-                      
-                    </article>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <article class="index_blog_card">
-                        <a href="{% url 'blog' %}" class="index_blog_card__image-link">
-                            <img src="{% static 'img/blog/blog_1.png' %}" alt="blog" class="index_blog_card__image" loading="lazy">
-                            <span class="index_blog_card__badge">مهاجرت و مسائل مربوطه</span>
-                        </a>
-                        <div class="index_blog_card__header">
-                            <h5 class="index_blog_card__title"><a href="{% url 'blog' %}">مهاجرت در مقطع دکترای تخصصی و حرفه ای</a></h5>
-                            <span class="index_blog_card__date">۱۴۰۳</span>
-                        </div>
-                        <div class="index_blog_card__body">
-                            <p class="index_blog_card__desc">دکتری تخصصی (PhD) و دکتری حرفه‌ای (Professional Doctorate) به‌عنوان بالاترین مدارج تحصیلی در بسیاری از حوزه‌ها شناخته می‌شوند...</p>
-                        </div>
-                        <div class="index_blog_card__footer">
-                            <a href="{% url 'blog' %}" class="btn_2">ادامه مطلب</a>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <article class="index_blog_card">
-                        <a href="{% url 'blog' %}" class="index_blog_card__image-link">
-                            <img src="{% static 'img/blog/blog_2.png' %}" alt="blog" class="index_blog_card__image" loading="lazy">
-                            <span class="index_blog_card__badge">خدمات موسسه</span>
-                        </a>
-                        <div class="index_blog_card__header">
-                            <h5 class="index_blog_card__title"><a href="{% url 'blog' %}">خدمات مشاوره رایگان در موسسه {{ institute.name }}</a></h5>
-                            <span class="index_blog_card__date">۱۴۰۳</span>
-                        </div>
-                        <div class="index_blog_card__body">
-                            <p class="index_blog_card__desc">آیا رویای تحصیل در خارج از کشور را در سر دارید؟ موسسه {{ institute.name }} با افتخار خدمات مشاوره رایگان را ارائه می‌دهد.</p>
-                        </div>
-                        <div class="index_blog_card__footer">
-                            <a href="{% url 'blog' %}" class="btn_2">ادامه مطلب</a>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <article class="index_blog_card">
-                        <a href="{% url 'blog' %}" class="index_blog_card__image-link">
-                            <img src="{% static 'img/blog/blog_3.png' %}" alt="blog" class="index_blog_card__image" loading="lazy">
-                            <span class="index_blog_card__badge">خدمات موسسه</span>
-                        </a>
-                        <div class="index_blog_card__header">
-                            <h5 class="index_blog_card__title"><a href="{% url 'blog' %}">اخذ بورسیه</a></h5>
-                            <span class="index_blog_card__date">۱۴۰۳</span>
-                        </div>
-                        <div class="index_blog_card__body">
-                            <p class="index_blog_card__desc">آیا رویای تحصیل رایگان در خارج از کشور را دارید؟ موسسه {{ institute.name }} با ارائه خدمات تخصصی، شما را در مسیر اخذ بورسیه تحصیلی همراهی می‌کند.</p>
-                        </div>
-                        <div class="index_blog_card__footer">
-                            <a href="{% url 'blog' %}" class="btn_2">ادامه مطلب</a>
-                        </div>
-                    </article>
-                </div>
-            {% endif %}
         </div>
     </div>
 </section>
@@ -288,6 +253,98 @@
         </div>
     </div>
 </section>
+
+{% include "layout/_discovery_hub.html" with discovery_title="راهنمای سریع مهاجرت تحصیلی" discovery_lead="صفحات پربازدید کاربران — دانشگاه، رشته و مقالات تخصصی برای شروع مسیر پذیرش." %}
+
+{% if featured_faqs %}
+<section class="index-ai-faq section_padding" dir="rtl" lang="fa" aria-labelledby="index-ai-faq-title">
+    <div class="container">
+        <header class="index-ai-faq__head">
+            <p class="index-ai-faq__eyebrow">پاسخ‌های رسمی موسسه</p>
+            <h2 class="index-ai-faq__title" id="index-ai-faq-title">سوالات پرتکرار مهاجرت تحصیلی</h2>
+            <p class="index-ai-faq__lead">پاسخ‌های رسمی {{ institute.name }} — مشاوره، ویزا، بورسیه و پذیرش دانشگاه</p>
+        </header>
+        <div class="index-ai-faq__list">
+            {% for faq in featured_faqs %}
+            <article class="index-ai-faq__item">
+                <h3 class="index-ai-faq__question">
+                    {% if faq.slug %}
+                    <a href="{% url 'faq_detail' faq_slug=faq.slug %}">{{ faq.question }}</a>
+                    {% else %}
+                    {{ faq.question }}
+                    {% endif %}
+                </h3>
+                <p class="index-ai-faq__answer">{{ faq.answer|striptags }}</p>
+            </article>
+            {% endfor %}
+        </div>
+        <p class="index-ai-faq__more">
+            <a href="{% url 'faq' %}" class="btn_2">همه سوالات متداول</a>
+        </p>
+    </div>
+</section>
+{% endif %}
+
+{% if latest_posts %}
+<section class="index-blog index-blog--margin" dir="rtl" lang="fa" aria-labelledby="index-blog-title">
+    <div class="index-blog__bg" aria-hidden="true"></div>
+    <div class="container index-blog__container">
+        <header class="index-blog__head">
+            <div class="index-blog__head-text">
+                <p class="index-blog__eyebrow">وبلاگ و راهنما</p>
+                <h2 class="index-blog__title" id="index-blog-title">آخرین مطالب</h2>
+                <p class="index-blog__lead">نکات مهاجرت تحصیلی، کشورها و تجربه دانشجویان</p>
+            </div>
+            <a href="{% url 'blog' %}" class="index-blog__all-link">
+                همه مطالب
+                <span class="ti-angle-left" aria-hidden="true"></span>
+            </a>
+        </header>
+        <div class="index-blog__grid">
+            {% for item in latest_posts %}
+            <article class="index-blog-card">
+                <a href="{% url 'blog_detail' item.post.slug %}" class="index-blog-card__media">
+                    {% if item.post.image %}
+                    <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}" class="index-blog-card__img" width="400" height="240" loading="lazy" decoding="async">
+                    {% else %}
+                    <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ item.post.title }}" class="index-blog-card__img" width="400" height="240" loading="lazy" decoding="async">
+                    {% endif %}
+                    <span class="index-blog-card__date">
+                        <strong>{{ item.post.created_at|jalali_day|persian_numbers }}</strong>
+                        {{ item.post.created_at|jalali_month_year|persian_numbers }}
+                    </span>
+                </a>
+                <div class="index-blog-card__body">
+                    {% if item.post.country_tag %}
+                    <a href="{% url 'blog' %}?tag={{ item.post.country_tag|urlencode }}" class="index-blog-card__tag">{{ item.post.country_tag }}</a>
+                    {% endif %}
+                    <h3 class="index-blog-card__title">
+                        <a href="{% url 'blog_detail' item.post.slug %}">{{ item.post.title }}</a>
+                    </h3>
+                    <p class="index-blog-card__excerpt">
+                        {% if item.post.excerpt %}
+                            {{ item.post.excerpt|truncatechars:110 }}
+                        {% else %}
+                            {{ item.post.content|striptags|truncatechars:110 }}
+                        {% endif %}
+                    </p>
+                </div>
+                <footer class="index-blog-card__foot">
+                    <a href="{% url 'blog_detail' item.post.slug %}" class="index-blog-card__more">
+                        ادامه مطلب
+                        <span class="ti-angle-left" aria-hidden="true"></span>
+                    </a>
+                </footer>
+            </article>
+            {% endfor %}
+               
+            
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
 {% endblock %}
 
 {% block extra_js %}

@@ -1,0 +1,681 @@
+﻿{% extends "base.html" %}
+
+{% load static %}
+
+
+
+{% block title %}{{ country_meta_title }}{% endblock %}
+
+{% block meta_description %}{{ country_meta_description }}{% endblock %}
+
+{% block meta_keywords %}{{ country_meta_keywords }}{% endblock %}
+
+{% block canonical_url %}{{ country_page_url }}{% endblock %}
+
+{% block og_title %}{{ country_og_title }}{% endblock %}
+
+{% block og_description %}{{ country_meta_description }}{% endblock %}
+
+{% block twitter_title %}{{ country_og_title }}{% endblock %}
+
+{% block twitter_description %}{{ country_meta_description }}{% endblock %}
+
+{% block og_image %}{% if country.image %}{{ site_url }}{{ country.image.url }}{% else %}{{ site_url }}{% static country.get_flag_static %}{% endif %}{% endblock %}
+
+
+
+{% block extra_head %}
+
+<script type="application/ld+json">{{ country_schema_json|safe }}</script>
+
+<script>
+
+window.PAGE_CONFIG = window.PAGE_CONFIG || {};
+
+window.PAGE_CONFIG.countrySearchUrl = "{% url 'country_search' country_code=country.code %}";
+
+window.PAGE_CONFIG.countrySuggestUrl = "{% url 'country_suggest' country_code=country.code %}";
+
+window.PAGE_CONFIG.countryCode = "{{ country.code }}";
+
+window.PAGE_CONFIG.focusScholarship = {% if nav_show_scholarship_banner %}true{% else %}false{% endif %};
+
+</script>
+
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/app/pages/schools.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/app/pages/country.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/app/pages/country-scholarships.css' %}">
+
+{% endblock %}
+
+
+
+{% block content %}
+
+{% include "layout/page_hero.html" with hero_title=country.name hero_lead=country.headline hero_compact=True crumb2_label="کشورهای مقصد" crumb3_label=country.name %}
+
+
+
+<section class="country-page" dir="rtl" data-country-page>
+
+    <div class="country-page__cover" aria-hidden="true">
+
+        {% if country.image %}
+
+        <img src="{{ country.image.url }}" alt="" class="country-page__cover-img" loading="eager" width="1600" height="640">
+
+        {% else %}
+
+        <img src="{% static country.get_flag_static %}" alt="" class="country-page__cover-img country-page__cover-img--flag" loading="eager">
+
+        {% endif %}
+
+        <div class="country-page__cover-shade"></div>
+
+    </div>
+
+
+
+    <div class="container country-page__shell">
+
+        <header class="country-page__mast">
+
+            <div class="country-page__mast-top">
+
+                <img src="{% static country.get_flag_static %}" alt="" class="country-page__mast-flag" width="40" height="28" loading="eager">
+
+                <div class="country-page__mast-text">
+
+                    <p class="country-page__mast-label">راهنمای تحصیل</p>
+
+                    <p class="country-page__mast-lead">{{ country.intro }}</p>
+
+                </div>
+
+            </div>
+
+            {% if country_answer_summary %}
+
+            <p class="country-page__summary">{{ country_answer_summary }}</p>
+
+            {% endif %}
+
+            <div class="country-page__mast-actions">
+
+                <a href="{% url 'appointment' %}?about=universities&title={{ country.name|urlencode }}" class="country-page__btn country-page__btn--primary">مشاوره {{ country.name }}</a>
+
+                <a href="{% url 'evaluation' %}?country={{ country_code }}" class="country-page__btn country-page__btn--ghost">ارزیابی رایگان</a>
+
+                <a href="{% url 'schools_list' %}?country={{ country_code }}" class="country-page__btn country-page__btn--ghost">دانشگاه‌ها</a>
+
+            </div>
+
+        </header>
+
+
+
+        {% include "layout/_nav_degree_banner.html" %}
+
+
+
+        {% if study_countries|length > 1 %}
+
+        <div class="country-page__countries" aria-label="تغییر کشور مقصد">
+
+            <div class="country-page__countries-scroll">
+
+                {% for sc in study_countries %}
+
+                <a href="{% url 'country_detail' country_code=sc.code %}{% if nav_degree_query %}?{{ nav_degree_query }}{% endif %}"
+
+                   class="country-page__country-pill{% if sc.code == country.code %} is-active{% endif %}"
+
+                   {% if sc.code == country.code %}aria-current="page"{% endif %}>
+
+                    <img src="{% static sc.get_flag_static %}" alt="" width="18" height="13" loading="lazy">
+
+                    <span>{{ sc.name }}</span>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <nav class="country-page__tabs" aria-label="بخش‌های صفحه" id="country-section-nav">
+
+            <div class="country-page__tabs-scroll">
+
+                <button type="button" class="country-page__tab is-active" data-country-jump="country-intro">معرفی</button>
+
+                <button type="button" class="country-page__tab" data-country-jump="country-pathway">مسیر</button>
+
+                {% if country.visa_info %}<button type="button" class="country-page__tab" data-country-jump="guide-visa">ویزا</button>{% endif %}
+
+                {% if country.admission_info %}<button type="button" class="country-page__tab" data-country-jump="guide-admission">پذیرش</button>{% endif %}
+
+                {% if country.living_info %}<button type="button" class="country-page__tab" data-country-jump="guide-living">هزینه</button>{% endif %}
+
+                {% if country.scholarship_info or scholarship_guide %}<button type="button" class="country-page__tab" data-country-jump="guide-scholarship">بورسیه</button>{% endif %}
+
+                {% if universities %}<button type="button" class="country-page__tab" data-country-jump="country-universities">دانشگاه‌ها</button>{% endif %}
+
+                {% if majors %}<button type="button" class="country-page__tab" data-country-jump="country-majors">رشته‌ها</button>{% endif %}
+
+            </div>
+
+        </nav>
+
+
+
+        <div class="country-page__toolbar">
+
+            <label class="country-page__sr-only" for="country-search-input">جستجو در {{ country.name }}</label>
+
+            <div class="country-page__search-field">
+
+                <span class="country-page__search-icon ti-search" aria-hidden="true"></span>
+
+                <input type="search"
+
+                       id="country-search-input"
+
+                       class="country-page__search-input"
+
+                       placeholder="جستجو در ویزا، هزینه، بورسیه…"
+
+                       autocomplete="off"
+
+                       enterkeyhint="search"
+
+                       aria-controls="country-search-wrapper">
+
+                <div id="country-suggest-panel" class="country-page__suggest" hidden role="listbox" aria-label="پیشنهادها"></div>
+
+            </div>
+
+        </div>
+
+
+
+        <div id="country-search-wrapper" class="country-page__search-results" role="region" aria-label="نتایج جستجو" hidden></div>
+
+
+
+        <div class="country-page__content">
+
+            <article id="country-intro" class="country-page__section scroll-target">
+
+                <header class="country-page__section-head">
+
+                    <h2 class="country-page__section-title">تحصیل در {{ country.name }}</h2>
+
+                    <p class="country-page__section-lead">همه‌چیز را ساده و مرحله‌به‌مرحله بخوانید.</p>
+
+                </header>
+
+                {% if country.description %}
+
+                <div class="country-page__prose country-page__rich ck-content">{{ country.description|safe }}</div>
+
+                {% endif %}
+
+            </article>
+
+
+
+            {% if country_ai_qa_blocks %}
+
+            <section class="country-page__section country-page__faq scroll-target" id="country-qa" aria-labelledby="country-qa-title">
+
+                <header class="country-page__section-head">
+
+                    <h2 class="country-page__section-title" id="country-qa-title">سوالات پرتکرار</h2>
+
+                </header>
+
+                <div class="country-page__faq-list">
+
+                    {% for block in country_ai_qa_blocks %}
+
+                    <details class="country-page__faq-item">
+
+                        <summary class="country-page__faq-q">{{ block.question }}</summary>
+
+                        <div class="country-page__faq-a">
+
+                            <p>{{ block.short_answer }}</p>
+
+                            {% if block.anchor %}
+
+                            <a href="#{{ block.anchor }}" class="country-page__faq-link" data-country-jump="{{ block.anchor }}">جزئیات بیشتر</a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </details>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            {% endif %}
+
+
+
+            {% include "content/_country_immigration_pathway.html" %}
+
+
+
+            {% if country.visa_info or country.admission_info or country.living_info or country.scholarship_info or scholarship_guide %}
+
+            <div class="country-page__section country-page__guides scroll-target" id="country-guides">
+
+                <header class="country-page__section-head">
+
+                    <h2 class="country-page__section-title">راهنمای {{ country.name }}</h2>
+
+                    <p class="country-page__section-lead">ویزا، پذیرش، هزینه و بورسیه</p>
+
+                </header>
+
+                <div class="country-page__accordion">
+
+                    {% if country.visa_info %}
+
+                    <details class="country-page__item scroll-target" id="guide-visa" open>
+
+                        <summary class="country-page__trigger">
+
+                            <span class="country-page__trigger-text">{{ country_guide_questions.guide_visa|default:"ویزا و اقامت" }}</span>
+
+                            <span class="country-page__chevron" aria-hidden="true"></span>
+
+                        </summary>
+
+                        {% with qa=country_qa_by_anchor.guide_visa %}
+
+                        {% if qa.show_guide_teaser %}<p class="country-page__guide-answer">{{ qa.short_answer }}</p>{% endif %}
+
+                        {% endwith %}
+
+                        <div class="country-page__answer country-page__rich ck-content">{{ country.visa_info|safe }}</div>
+
+                    </details>
+
+                    {% endif %}
+
+                    {% if country.admission_info %}
+
+                    <details class="country-page__item scroll-target" id="guide-admission">
+
+                        <summary class="country-page__trigger">
+
+                            <span class="country-page__trigger-text">{{ country_guide_questions.guide_admission|default:"پذیرش و اپلای" }}</span>
+
+                            <span class="country-page__chevron" aria-hidden="true"></span>
+
+                        </summary>
+
+                        {% with qa=country_qa_by_anchor.guide_admission %}
+
+                        {% if qa.show_guide_teaser %}<p class="country-page__guide-answer">{{ qa.short_answer }}</p>{% endif %}
+
+                        {% endwith %}
+
+                        <div class="country-page__answer country-page__rich ck-content">{{ country.admission_info|safe }}</div>
+
+                    </details>
+
+                    {% endif %}
+
+                    {% if country.living_info %}
+
+                    <details class="country-page__item scroll-target" id="guide-living">
+
+                        <summary class="country-page__trigger">
+
+                            <span class="country-page__trigger-text">{{ country_guide_questions.guide_living|default:"هزینه و زندگی" }}</span>
+
+                            <span class="country-page__chevron" aria-hidden="true"></span>
+
+                        </summary>
+
+                        {% with qa=country_qa_by_anchor.guide_living %}
+
+                        {% if qa.show_guide_teaser %}<p class="country-page__guide-answer">{{ qa.short_answer }}</p>{% endif %}
+
+                        {% endwith %}
+
+                        <div class="country-page__answer country-page__rich ck-content">{{ country.living_info|safe }}</div>
+
+                    </details>
+
+                    {% endif %}
+
+                    {% if country.scholarship_info or scholarship_guide %}
+
+                    <details class="country-page__item scroll-target" id="guide-scholarship"{% if nav_show_scholarship_banner or request.GET.intent == 'scholarship' %} open{% endif %}>
+
+                        <summary class="country-page__trigger">
+
+                            <span class="country-page__trigger-text">{{ country_guide_questions.guide_scholarship|default:"بورسیه" }}</span>
+
+                            <span class="country-page__chevron" aria-hidden="true"></span>
+
+                        </summary>
+
+                        {% with qa=country_qa_by_anchor.guide_scholarship %}
+
+                        {% if qa.show_guide_teaser %}<p class="country-page__guide-answer">{{ qa.short_answer }}</p>{% endif %}
+
+                        {% endwith %}
+
+                        <div class="country-page__answer country-page__rich ck-content">
+
+                            {% if country.scholarship_info %}{{ country.scholarship_info|safe }}{% endif %}
+
+                            {% if scholarship_guide %}
+
+                            <div class="country-page__scholar-preview">
+
+                                {% if scholarship_preview %}
+
+                                <div class="country-page__scholar-grid">
+
+                                    {% for s in scholarship_preview %}
+
+                                    <a href="{{ scholarship_guide.get_absolute_url }}{% if nav_intent %}&amp;intent={{ nav_intent }}{% endif %}#scholarship-{{ s.slug }}"
+
+                                       class="country-page__scholar-card{% if s.is_featured %} country-page__scholar-card--featured{% endif %}">
+
+                                        <strong class="country-page__scholar-card-title">{{ s.name }}</strong>
+
+                                        {% if s.provider %}<span class="country-page__scholar-card-provider">{{ s.provider }}</span>{% endif %}
+
+                                        <span class="country-page__scholar-card-coverage">{{ s.coverage }}</span>
+
+                                    </a>
+
+                                    {% endfor %}
+
+                                </div>
+
+                                {% endif %}
+
+                                <div class="country-page__scholar-actions">
+
+                                    <a href="{{ scholarship_guide.get_absolute_url }}{% if nav_intent %}&amp;intent={{ nav_intent }}{% endif %}" class="country-page__scholar-cta country-page__scholar-cta--primary">راهنمای بورسیه {{ country.name }}</a>
+
+                                    <a href="{% url 'evaluation' %}?target_degree={{ nav_target_degree|default:'bachelor' }}&amp;intent=scholarship" class="country-page__scholar-cta country-page__scholar-cta--ghost">ارزیابی بورسیه</a>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </details>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+
+            <div class="country-page__compare scroll-target" id="country-pros">
+
+                <div class="country-page__compare-col country-page__compare-col--pros">
+
+                    <h3 class="country-page__compare-title">مزایا</h3>
+
+                    <ul class="country-page__compare-list">
+
+                        {% for item in country.get_pros_list %}
+
+                        <li>{{ item }}</li>
+
+                        {% empty %}
+
+                        <li class="country-page__muted">—</li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
+                <div class="country-page__compare-col country-page__compare-col--cons">
+
+                    <h3 class="country-page__compare-title">نکات مهم</h3>
+
+                    <ul class="country-page__compare-list">
+
+                        {% for item in country.get_cons_list %}
+
+                        <li>{{ item }}</li>
+
+                        {% empty %}
+
+                        <li class="country-page__muted">—</li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+
+            {% if universities %}
+
+            <section class="country-page__section scroll-target" id="country-universities" aria-labelledby="country-universities-title">
+
+                <header class="country-page__section-head country-page__section-head--row">
+
+                    <h2 id="country-universities-title" class="country-page__section-title">دانشگاه‌های برتر</h2>
+
+                    <a href="{% url 'schools_list' %}?country={{ country_code }}" class="country-page__more">همه</a>
+
+                </header>
+
+                <div class="country-page__uni-grid">
+
+                    {% for uni in universities %}
+
+                    <article class="uni-card">
+
+                        <a href="{% url 'school_detail' uni.slug %}" class="uni-card__image">
+
+                            {% if uni.image %}
+
+                            <img src="{{ uni.image.url }}" alt="{{ uni.name_fa }}" loading="lazy">
+
+                            {% else %}
+
+                            <img src="{% static 'img/blog/single_blog_4.png' %}" alt="{{ uni.name_fa }}" loading="lazy">
+
+                            {% endif %}
+
+                        </a>
+
+                        <div class="uni-card__body">
+
+                            <h4 class="uni-card__title"><a href="{% url 'school_detail' uni.slug %}">{{ uni.name_fa }}</a></h4>
+
+                            <p class="uni-card__city">{{ uni.city }}</p>
+
+                        </div>
+
+                    </article>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            {% endif %}
+
+
+
+            {% if majors %}
+
+            <section class="country-page__section scroll-target" id="country-majors" aria-labelledby="country-majors-title">
+
+                <header class="country-page__section-head country-page__section-head--row">
+
+                    <h2 id="country-majors-title" class="country-page__section-title">رشته‌های محبوب</h2>
+
+                    <a href="{% url 'majors' %}?country={{ country_code }}" class="country-page__more">همه</a>
+
+                </header>
+
+                <ul class="country-page__tag-grid">
+
+                    {% for major in majors %}
+
+                    <li>
+
+                        <a href="{% url 'major_details' major.slug %}" class="country-page__tag-card">{{ major.title }}</a>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </section>
+
+            {% endif %}
+
+
+
+            {% if courses and has_active_courses %}
+
+            <section class="country-page__section scroll-target" id="country-courses" aria-labelledby="country-courses-title">
+
+                <header class="country-page__section-head country-page__section-head--row">
+
+                    <h2 id="country-courses-title" class="country-page__section-title">دوره‌های مرتبط</h2>
+
+                    <a href="{% url 'courses_list' %}?country={{ country_code }}" class="country-page__more">همه</a>
+
+                </header>
+
+                <ul class="country-page__tag-grid">
+
+                    {% for course in courses %}
+
+                    <li>
+
+                        <a href="{{ course.get_course_url }}" class="country-page__tag-card"{% include "content/_course_link_attrs.html" %}>{{ course.title }}</a>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </section>
+
+            {% endif %}
+
+
+
+            {% if blog_posts %}
+
+            <section class="country-page__section scroll-target" id="country-blog" aria-labelledby="country-blog-title">
+
+                <header class="country-page__section-head country-page__section-head--row">
+
+                    <h2 id="country-blog-title" class="country-page__section-title">مطالب مرتبط</h2>
+
+                    <a href="{% url 'blog' %}?tag={{ country.name }}" class="country-page__more">وبلاگ</a>
+
+                </header>
+
+                <div class="country-page__blog-list">
+
+                    {% for post in blog_posts %}
+
+                    <a href="{% url 'blog_detail' post.slug %}" class="country-page__blog-row">
+
+                        <span class="country-page__blog-row-title">{{ post.title }}</span>
+
+                        <span class="ti-angle-left" aria-hidden="true"></span>
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            {% endif %}
+
+
+
+            <aside class="country-page__cta">
+
+                <div class="country-page__cta-body">
+
+                    <h3 class="country-page__cta-title">برنامه‌ریزی شخصی برای {{ country.name }}</h3>
+
+                    <p class="country-page__cta-text">معدل، زبان، بودجه و هدف شغلی — مسیر مناسب شما را پیشنهاد می‌دهیم.</p>
+
+                </div>
+
+                <div class="country-page__cta-actions">
+
+                    <a href="{% url 'appointment' %}?about=universities&title={{ country.name|urlencode }}" class="country-page__btn country-page__btn--primary">رزرو مشاوره</a>
+
+                    <a href="{% url 'evaluation' %}?country={{ country_code }}" class="country-page__btn country-page__btn--ghost">فرم ارزیابی</a>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script src="{% static 'js/app/pages/country.js' %}" defer></script>
+
+{% endblock %}
+
+

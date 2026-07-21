@@ -76,7 +76,8 @@
 .courses-filter-select {
     display: block;
     width: 100%;
-    height: calc(1.5em + .75rem + 17px);
+    height: var(--control-height);
+    min-height: var(--control-height);
     padding: .375rem .75rem;
     font-size: 1rem;
     font-weight: 400;
@@ -188,7 +189,8 @@
 .schools-filter-input {
     display: block;
     width: 100%;
-    height: calc(1.5em + .75rem + 17px);
+    height: var(--control-height);
+    min-height: var(--control-height);
     padding: .375rem .75rem;
     font-size: 1rem;
     font-weight: 400;
@@ -501,7 +503,15 @@
 }
 .school-detail__card p { text-align: right; }
 .school-detail__card_desc { font-size: 0.875rem; }
-.school-detail__website_link { word-break: break-all; font-size: 0.9rem; }
+.school-detail__website-card .school-detail__card-title { text-align: right; }
+.school-detail__website_link {
+    display: block;
+    direction: ltr;
+    text-align: left;
+    unicode-bidi: plaintext;
+    word-break: break-all;
+    font-size: 0.9rem;
+}
 @media (max-width: 767px) {
     .school-detail__hero-img { height: 220px; }
     .school-detail__hero-body { padding: 1.25rem; }
@@ -736,7 +746,8 @@
 .majors-filter-select {
     display: block;
     width: 100%;
-    height: calc(1.5em + .75rem + 17px);
+    height: var(--control-height);
+    min-height: var(--control-height);
     padding: .375rem .75rem;
     font-size: 1rem;
     font-weight: 400;

@@ -595,7 +595,6 @@ ul.timelist, .timelist li {
 select + .related-widget-wrapper-link,
 .related-widget-wrapper-link + .related-widget-wrapper-link {
     margin-left: 7px;
-    display: none;
 }
 
 /* GIS MAPS */

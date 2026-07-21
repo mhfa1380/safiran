@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app/pages/content.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include "layout/page_hero.html" with hero_title="خطای امنیتی" hero_lead="ارسال فرم به دلیل خطای امنیتی انجام نشد." crumb2_label="خطای امنیتی" %}
+
+<section class="sample-text-area error404_margin">
+    <div class="container box_1170 text-center">
+        <h3 class="text-heading">۴۰۳</h3>
+        <p class="sample-text">
+            لطفاً صفحه را یک‌بار رفرش کنید و دوباره ارسال کنید.
+            اگر مشکل ادامه داشت، احتمالاً صفحه فرم توسط کش مرورگر/CDN ذخیره شده یا آدرس سایت (http/https یا www) با هم متفاوت است.
+        </p>
+        {% if reason %}
+            <p class="sample-text" style="opacity:.8; font-size: 0.95em; margin-top: 12px;">
+                دلیل فنی: {{ reason }}
+            </p>
+        {% endif %}
+        <div class="mt-4 error404_links">
+            <a href="" onclick="window.location.reload(); return false;" class="btn_1">رفرش صفحه</a>
+            <a href="{% url 'contact' %}" class="btn_2 mr-3">تماس با ما</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

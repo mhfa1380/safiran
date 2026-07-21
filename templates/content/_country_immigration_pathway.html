@@ -1,0 +1,81 @@
+{% if immigration_pathway %}
+<section id="country-pathway" class="country-pathway country-page__section scroll-target" aria-labelledby="country-pathway-title">
+    <header class="country-pathway__head">
+        <div>
+            <h2 id="country-pathway-title" class="country-page__section-title">{{ immigration_pathway.headline }}</h2>
+            <p class="country-page__section-lead">{{ immigration_pathway.intro }}</p>
+        </div>
+    </header>
+
+    <div class="country-pathway__meta" aria-label="خلاصه مسیر">
+        <div class="country-pathway__duration">
+            <span class="ti-timer" aria-hidden="true"></span>
+            <span><strong>زمان تقریبی کل مسیر:</strong> {{ immigration_pathway.total_duration }}</span>
+        </div>
+        <ul class="country-pathway__stats">
+            {% for label, value in immigration_pathway.highlight_stats %}
+            <li class="country-pathway__stat">
+                <span class="country-pathway__stat-label">{{ label }}</span>
+                <span class="country-pathway__stat-value">{{ value }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <ol class="country-pathway__track" role="list">
+        {% for step in immigration_pathway.steps %}
+        <li class="country-pathway__step{% if forloop.last %} is-last{% endif %}" role="listitem">
+            <div class="country-pathway__rail" aria-hidden="true">
+                <span class="country-pathway__node">
+                    <span class="{{ step.icon }}" aria-hidden="true"></span>
+                    <span class="country-pathway__phase">{{ step.phase }}</span>
+                </span>
+                {% if not forloop.last %}
+                <span class="country-pathway__connector"></span>
+                {% endif %}
+            </div>
+            <article class="country-pathway__card">
+                <header class="country-pathway__card-head">
+                    <h3 class="country-pathway__title">{{ step.title }}</h3>
+                    <span class="country-pathway__time">
+                        <span class="ti-time" aria-hidden="true"></span>
+                        {{ step.duration }}
+                    </span>
+                </header>
+                <p class="country-pathway__summary">{{ step.summary }}</p>
+                <div class="country-pathway__detail">{{ step.detail|safe }}</div>
+                <p class="country-pathway__service">
+                    <span class="ti-briefcase" aria-hidden="true"></span>
+                    {{ step.service_hint }}
+                </p>
+                {% if step.links %}
+                <nav class="country-pathway__links" aria-label="لینک‌های مرتبط — {{ step.title }}">
+                    {% for link in step.links %}
+                    <a href="{{ link.url }}"
+                       class="country-pathway__link{% if link.variant == 'primary' %} country-pathway__link--primary{% endif %}"
+                       {% if link.jump_id %}data-country-jump="{{ link.jump_id }}"{% endif %}>
+                        {{ link.label }}
+                    </a>
+                    {% endfor %}
+                </nav>
+                {% endif %}
+            </article>
+        </li>
+        {% endfor %}
+    </ol>
+
+    <div class="country-pathway__footer">
+        <p class="country-pathway__note">
+            هر پرونده منحصربه‌فرد است؛ زمان‌بندی‌ها تقریبی‌اند و بر اساس مقطع، زبان و فصل اپلای تغییر می‌کنند.
+            برای برنامه شخصی‌سازی‌شده از
+            <a href="{% url 'evaluation' %}">فرم ارزیابی</a>،
+            <a href="{% url 'services' %}">خدمات با ما</a> و
+            <a href="{% url 'pricing' %}">تعرفه خدمات</a> استفاده کنید.
+        </p>
+        <a href="{{ immigration_pathway.cta_url }}" class="country-page__btn country-page__btn--primary country-pathway__cta">
+            {{ immigration_pathway.cta_label }}
+            <span class="ti-arrow-left" aria-hidden="true"></span>
+        </a>
+    </div>
+</section>
+{% endif %}

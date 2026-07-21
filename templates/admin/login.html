@@ -1,0 +1,105 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/login.css' %}">
+<link rel="stylesheet" href="{% static 'admin/css/admin_login.css' %}">
+<link rel="stylesheet" href="{% static 'css/app/components/form-captcha.css' %}">
+{{ form.media }}
+{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+<script src="{% static 'js/app/form-captcha.js' %}" defer></script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+{% block nav-global %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="admin-login">
+    <div class="admin-login__card">
+        <header class="admin-login__head">
+            <div class="admin-login__logo" aria-hidden="true">
+                <span class="admin-login__logo-icon"></span>
+            </div>
+            <h1 class="admin-login__title">ورود به پنل مدیریت</h1>
+            <p class="admin-login__subtitle">{{ site_header|default:"سفیران آینده روشن" }}</p>
+        </header>
+
+        {% if form.errors and not form.non_field_errors %}
+        <p class="admin-login__error admin-login__error--note">
+            {% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+        </p>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <p class="admin-login__error admin-login__error--note">{{ error }}</p>
+        {% endfor %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <p class="admin-login__error admin-login__error--note">
+            {% blocktranslate trimmed %}
+            You are authenticated as {{ username }}, but are not authorized to
+            access this page. Would you like to login to a different account?
+            {% endblocktranslate %}
+        </p>
+        {% endif %}
+
+        <form action="{{ app_path }}" method="post" id="login-form" class="admin-login__form" novalidate>
+            {% csrf_token %}
+
+            <div class="admin-login__field">
+                <label for="{{ form.username.id_for_label }}" class="admin-login__label">{{ form.username.label }}</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <p class="admin-login__error">{{ form.username.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="admin-login__field">
+                <label for="{{ form.password.id_for_label }}" class="admin-login__label">{{ form.password.label }}</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                <p class="admin-login__error">{{ form.password.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+
+            {% url 'admin_password_reset' as password_reset_url %}
+            {% if password_reset_url %}
+            <p class="admin-login__forgot">
+                <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
+            </p>
+            {% endif %}
+
+            <div class="admin-login__captcha" aria-labelledby="admin-login-captcha-label">
+                <p id="admin-login-captcha-label" class="admin-login__captcha-label">کد امنیتی</p>
+                <p class="admin-login__captcha-question" dir="ltr">{{ captcha_question }}</p>
+                <div class="admin-login__captcha-row">
+                    {{ form.captcha_answer }}
+                </div>
+                {% if form.captcha_answer.errors %}
+                <p class="admin-login__error admin-login__error--captcha">{{ form.captcha_answer.errors.0 }}</p>
+                {% endif %}
+                <p class="admin-login__captcha-hint">کد حروفی بالا را وارد کنید</p>
+            </div>
+
+            <div class="admin-login__submit">
+                <button type="submit" class="admin-login__btn">ورود به داشبورد</button>
+            </div>
+        </form>
+    </div>
+
+    <p class="admin-login__footer">&copy; {{ site_title|default:"سفیران" }} — دسترسی فقط برای پرسنل مجاز</p>
+</div>
+{% endblock %}

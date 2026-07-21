@@ -69,6 +69,7 @@ class Command(BaseCommand):
                 "city": "بابل",
                 "type_title": "فرآیند صدور مجوز موسسات اعزام دانشجو به خارج",
                 "phone": "01132350320",
+                "mobile": "09304785743",
                 "email": "saroshanbbl@gmail.com",
                 "address": "کمربند امیر کلا، جنب موسسه آموزش عالی علوم و فناوری آریان، مجتمع ایرانیکا، طبقه اول",
                 "website": "www.saroshan.ir",
@@ -172,17 +173,10 @@ class Command(BaseCommand):
         self.stdout.write("  Universities: OK")
 
     def _seed_blog_posts(self):
-        posts = [
-            ("news-china-2025", "اخبار پذیرش چین ۱۴۰۴", "خلاصه اخبار پذیرش در چین", "<p>متن اخبار پذیرش چین.</p>", "چین"),
-            ("news-canada-2025", "اخبار ویزای کانادا", "به‌روزرسانی ویزای کانادا", "<p>متن اخبار ویزای کانادا.</p>", "کانادا"),
-            ("services-intro", "معرفی خدمات موسسه", "خدمات موسسه سفیران", "<p>موسسه سفیران آینده روشن خدمات متنوعی ارائه می‌دهد.</p>", "خدمات موسسه"),
-        ]
-        for slug, title, excerpt, content, tag in posts:
-            BlogPost.objects.get_or_create(
-                slug=slug,
-                defaults={"title": title, "excerpt": excerpt, "content": content, "country_tag": tag, "is_published": True},
-            )
-        self.stdout.write("  BlogPosts: OK")
+        from django.core.management import call_command
+
+        call_command("seed_blog_posts", force=True)
+        self.stdout.write("  BlogPosts: OK (full SEO catalog)")
 
     def _seed_sample_requests(self):
         if not ConsultationRequest.objects.exists():

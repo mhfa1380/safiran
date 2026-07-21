@@ -1,0 +1,12 @@
+{% for column in site_nav.footer_columns %}
+<div class="col-6 col-md-4 footer-area__nav-col">
+    <div class="single-footer-widget footer_links">
+        <h4>{{ column.title }}</h4>
+        <ul>
+            {% for link in column.links %}
+            <li><a href="{{ link.url }}">{{ link.label }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endfor %}

@@ -2,31 +2,52 @@
 {% load i18n static %}
 
 {% block branding %}
-<div id="site-name"><a href="{% url 'admin:index' %}">داشبورد مدیریت</a></div>
-{% if user.is_anonymous %}
-  {% include "admin/color_theme_toggle.html" %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">داشبورد مدیریت سفیران</a></h1>
+{% endblock %}
+
+{% block usertools %}
+{% if has_permission %}
+<div id="user-tools" class="safiran-admin-header__tools">
+    <p class="safiran-admin-header__welcome">
+        {% block welcome-msg %}
+        {% translate 'Welcome,' %}
+        <strong>{% firstof user.get_short_name user.get_username %}</strong>
+        {% endblock %}
+    </p>
+    <nav class="safiran-admin-header__actions" aria-label="{% translate 'User tools' %}">
+        {% block userlinks %}
+        {% if site_url %}
+        <a href="{{ site_url }}" class="safiran-admin-header__link">{% translate 'View site' %}</a>
+        {% endif %}
+        {% if user.is_active and user.is_staff %}
+        {% url 'django-admindocs-docroot' as docsroot %}
+        {% if docsroot %}
+        <a href="{{ docsroot }}" class="safiran-admin-header__link">{% translate 'Documentation' %}</a>
+        {% endif %}
+        {% endif %}
+        {% if user.has_usable_password %}
+        <a href="{% url 'admin:password_change' %}" class="safiran-admin-header__link">{% translate 'Change password' %}</a>
+        {% endif %}
+        <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="safiran-admin-header__link safiran-admin-header__link--btn">{% translate 'Log out' %}</button>
+        </form>
+        {% include "admin/color_theme_toggle.html" %}
+        {% endblock %}
+    </nav>
+</div>
 {% endif %}
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/fonts.css' %}">
+<link rel="stylesheet" href="{% static 'admin/css/safiran_admin.css' %}">
 {% endblock %}
 
 {% block extrahead %}{{ block.super }}
 <link rel="icon" href="{% static 'img/favicon.png' %}">
 {% endblock %}
 
-{% block extrastyle %}{{ block.super }}
-<link rel="stylesheet" href="{% static 'admin/css/safiran_admin.css' %}">
-<style>
-.admin-pending-badge {
-    display: inline-block;
-    margin-right: 6px;
-    margin-left: 6px;
-    padding: 2px 8px;
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1.4;
-    color: #fff;
-    background: #ff663b;
-    border-radius: 10px;
-    vertical-align: middle;
-}
-</style>
+{% block responsive %}{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/safiran_admin_header.css' %}">
 {% endblock %}

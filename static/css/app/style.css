@@ -1387,7 +1387,8 @@ ul {
   color: #fff;
   margin-bottom: 0;
   line-height: 1.2;
-    font-family: var(--font-sans);}
+  font-family: var(--font-sans);
+}
 
 @media (min-width: 768px) {
 
@@ -1529,7 +1530,7 @@ ul {
   font-size: 14px;
   line-height: 20px;
   color: #888888;
-  display: inline-flex!important;
+  display: inline-flex !important;
 }
 
 
@@ -2069,7 +2070,7 @@ ul {
   margin-bottom: 20px;
 }
 
-.form-group{
+.form-group {
   direction: rtl;
   text-align: right;
 }
@@ -2799,7 +2800,7 @@ ul {
 
 
 .banner_part .banner_text .btn_1 {
-  box-shadow: 0px 12px 20px 0px rgba(255, 126, 95, 0.15);
+  box-shadow: 0px 12px 20px 0px rgb(95 113 255 / 15%);
   margin-top: 50px;
   padding: 13.5px 45px;
 }
@@ -2894,12 +2895,12 @@ ul {
 
 .banner_part:after {
   position: absolute;
-  top: 163px;
-  width: 32%;
+  top: 99px;
+  width: 28%;
   padding-top: 75%;
   content: "";
   background-image: url(../../img/banner_img.png);
-  left: 10%;
+  left: 12%;
   background-size: contain;
   background-repeat: no-repeat;
 }

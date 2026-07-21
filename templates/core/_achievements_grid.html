@@ -1,0 +1,204 @@
+{% load static %}
+
+{% if search_q and suggestions %}
+
+<section class="faq-page__related" aria-label="تجربه‌های مشابه">
+
+    <h3 class="faq-page__section-title">پیشنهاد بر اساس جستجو</h3>
+
+    <div class="achievements-grid achievements-grid--related">
+
+        {% for item in suggestions %}
+
+        <article class="achievements-card" data-achievement-slug="{{ item.slug }}">
+
+            <a href="{% url 'achievement_detail' achievement_slug=item.slug %}" class="achievements-card__link">
+
+                <div class="achievements-card__content achievements-card__content--compact">
+
+                    <h4 class="achievements-card__name">{{ item.person_name }}</h4>
+
+                    <p class="achievements-card__title">{{ item.person_role|default:item.title }}</p>
+
+                </div>
+
+            </a>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+{% if achievements %}
+
+{% if search_q %}
+
+<section class="faq-page__search-hit" aria-label="نتایج جستجو">
+
+    {% if best_achievement_slug %}
+
+    <h3 class="faq-page__section-title">بهترین تطابق</h3>
+
+    {% else %}
+
+    <h3 class="faq-page__section-title">نتایج جستجو برای «{{ search_q }}»</h3>
+
+    {% endif %}
+
+{% endif %}
+
+<div class="achievements-grid{% if search_q %} achievements-grid--primary{% endif %}" id="achievements-grid-inner">
+
+    {% for item in achievements %}
+
+    <article id="achievement-{{ item.pk }}"
+
+             class="achievements-card{% if best_achievement_slug == item.slug %} is-best-match{% endif %}{% if item.is_featured %} is-featured{% endif %}"
+
+             data-month="{{ item.month_label|default:''|escape }}"
+
+             data-achievement-slug="{{ item.slug }}">
+
+        <a href="{% url 'achievement_detail' achievement_slug=item.slug %}" class="achievements-card__link">
+
+            <div class="achievements-card__visual">
+
+                <img src="{{ item.image.url }}"
+
+                     alt="{{ item.person_name }}"
+
+                     class="achievements-card__img"
+
+                     loading="lazy"
+
+                     width="420"
+
+                     height="280">
+
+                <span class="achievements-card__shade" aria-hidden="true"></span>
+
+                {% if item.month_label or item.is_featured %}
+
+                <div class="achievements-card__tags">
+
+                    {% if item.month_label %}
+
+                    <span class="achievements-card__tag">{{ item.month_label }}</span>
+
+                    {% endif %}
+
+                    {% if item.is_featured %}
+
+                    <span class="achievements-card__tag achievements-card__tag--accent">ویژه</span>
+
+                    {% endif %}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <div class="achievements-card__content">
+
+                <div class="achievements-card__profile">
+
+                    <span class="achievements-card__avatar" aria-hidden="true">{{ item.person_name|slice:":1" }}</span>
+
+                    <div class="achievements-card__identity">
+
+                        <h2 class="achievements-card__name">{{ item.person_name }}</h2>
+
+                        {% if item.person_role %}
+
+                        <p class="achievements-card__role">{{ item.person_role }}</p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <h3 class="achievements-card__title">{{ item.title }}</h3>
+
+                <p class="achievements-card__excerpt">{{ item.description|truncatechars:100 }}</p>
+
+                <span class="achievements-card__cta">
+
+                    <span class="achievements-card__cta-text">خواندن تجربه</span>
+
+                    <span class="achievements-card__cta-icon" aria-hidden="true">
+
+                        <span class="ti-arrow-left"></span>
+
+                    </span>
+
+                </span>
+
+            </div>
+
+        </a>
+
+        {% if item.has_video %}
+
+        <button type="button"
+
+                class="achievements-card__play"
+
+                aria-label="پخش ویدیوی {{ item.person_name }}"
+
+                data-video-type="{% if item.video_file %}file{% else %}embed{% endif %}"
+
+                data-video-src="{% if item.video_file %}{{ item.video_file.url }}{% else %}{{ item.get_video_embed_url }}{% endif %}"
+
+                data-video-title="{{ item.person_name|escape }} — {{ item.title|escape }}">
+
+            <span class="ti-control-play" aria-hidden="true"></span>
+
+        </button>
+
+        {% endif %}
+
+    </article>
+
+    {% endfor %}
+
+</div>
+
+{% if search_q %}
+
+</section>
+
+{% endif %}
+
+{% elif search_q %}
+
+<div class="faq-page__empty">
+
+    <span class="faq-page__empty-icon ti-search" aria-hidden="true"></span>
+
+    <p class="faq-page__empty-text">نتیجه‌ای برای «{{ search_q }}» پیدا نشد.</p>
+
+</div>
+
+{% else %}
+
+<div class="faq-page__empty">
+
+    <span class="faq-page__empty-icon ti-medall" aria-hidden="true"></span>
+
+    <p class="faq-page__empty-text">در این بازه دستاوردی ثبت نشده است.</p>
+
+</div>
+
+{% endif %}
+

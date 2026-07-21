@@ -1,0 +1,15 @@
+[Unit]
+Description=Celery worker for safiran_site (saroshan.ir)
+After=network.target redis-server.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/ezam_daneshjoo/safiran_site
+EnvironmentFile=/root/ezam_daneshjoo/safiran_site/.env
+ExecStart=/root/envs/safiran/bin/celery -A safiran_site worker -l info --concurrency=2
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,131 @@
+{% if filter_message %}
+<div class="svc-filter-status svc-filter-status--inline" role="status">
+    <span class="svc-filter-status__icon ti-info-alt" aria-hidden="true"></span>
+    <span class="svc-filter-status__text">{{ filter_message }}</span>
+</div>
+{% endif %}
+
+{% if search_q and not services_list and suggestions %}
+<section class="faq-page__fallback" aria-label="پیشنهاد خدمات مرتبط">
+    <span class="faq-page__fallback-icon ti-light-bulb" aria-hidden="true"></span>
+    <p class="faq-page__fallback-text">نتیجه‌ای برای «{{ search_q }}» پیدا نشد. شاید این خدمات به دردتان بخورد:</p>
+    <ul class="faq-page__fallback-list">
+        {% for service in suggestions %}
+        <li>
+            <button type="button"
+                    class="faq-page__fallback-btn"
+                    data-svc-jump="{{ service.slug }}"
+                    data-service-id="{{ service.id }}">
+                {{ service.title }}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if filter_mode == "needs" and not services_list and not suggestions and selected_need_ids %}
+<div class="faq-page__empty">
+    <span class="faq-page__empty-icon ti-search" aria-hidden="true"></span>
+    <p class="faq-page__empty-text">برای نیاز انتخاب‌شده خدمتی پیدا نشد. نیاز دیگری انتخاب کنید یا در جستجو عبارت دیگری امتحان کنید.</p>
+</div>
+{% endif %}
+
+{% if search_q and services_list %}
+<section class="faq-page__search-hit" aria-label="نتیجه جستجو">
+    <h3 class="faq-page__section-title">{% if filter_mode == "needs_and_query" %}بهترین تطابق{% else %}نتیجه جستجو برای «{{ search_q }}»{% endif %}</h3>
+    <div class="services-grid services-grid--primary">
+        {% for service in services_list %}
+        {% include "core/_service_card.html" with service=service is_best_match=True is_open=forloop.first %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if search_q and suggestions %}
+<section class="faq-page__related" aria-label="خدمات مرتبط">
+    <h3 class="faq-page__section-title">خدمات مرتبط</h3>
+    <div class="services-grid services-grid--related">
+        {% for service in suggestions %}
+        {% include "core/_service_card.html" with service=service %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if filter_mode == "needs" and services_list and not search_q %}
+<section class="faq-page__search-hit" aria-label="خدمات پیشنهادی بر اساس نیاز">
+    <h3 class="faq-page__section-title">خدمات پیشنهادی برای نیاز شما</h3>
+    <div class="services-grid services-grid--primary">
+        {% for service in services_list %}
+        {% include "core/_service_card.html" with service=service is_best_match=forloop.first is_open=forloop.first %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if filter_mode == "needs" and suggestions and not search_q %}
+<section class="faq-page__related" aria-label="خدمات تکمیلی">
+    <h3 class="faq-page__section-title">خدمات تکمیلی مرتبط</h3>
+    <div class="services-grid services-grid--related">
+        {% for service in suggestions %}
+        {% include "core/_service_card.html" with service=service %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if services_list and not search_q and filter_mode != "needs" %}
+    {% regroup services_list by category as service_groups %}
+    {% for group in service_groups %}
+    <section class="faq-page__group services-page__group" {% if group.grouper %}aria-labelledby="svc-cat-{{ group.grouper.slug }}"{% endif %}>
+        {% if group.grouper and not active_category_slug %}
+        <header class="faq-page__group-head">
+            {% if group.grouper.icon %}
+            <span class="faq-page__group-icon {{ group.grouper.icon }}" aria-hidden="true"></span>
+            {% endif %}
+            <div>
+                <h3 id="svc-cat-{{ group.grouper.slug }}" class="faq-page__group-title">{{ group.grouper.name }}</h3>
+                {% if group.grouper.description %}
+                <p class="faq-page__group-desc">{{ group.grouper.description }}</p>
+                {% endif %}
+            </div>
+        </header>
+        {% endif %}
+
+        <div class="services-grid">
+            {% for service in group.list %}
+            {% include "core/_service_card.html" with service=service %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+{% endif %}
+
+{% if services_list or suggestions %}
+<aside class="faq-page__cta">
+    <div class="faq-page__cta-body">
+        <h3 class="faq-page__cta-title">نیاز به راهنمایی برای انتخاب خدمت دارید؟</h3>
+        <p class="faq-page__cta-text">کارشناسان ما آماده مشاوره رایگان و معرفی مسیر مناسب پرونده شما هستند.</p>
+    </div>
+    <div class="faq-page__cta-actions">
+        <a href="{% url 'appointment' %}" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+        <a href="{% url 'pricing' %}" class="faq-page__btn faq-page__btn--ghost">تعرفه خدمات</a>
+        <a href="{% url 'contact' %}" class="faq-page__btn faq-page__btn--ghost">تماس با ما</a>
+    </div>
+</aside>
+{% endif %}
+
+{% if not services_list and not suggestions and filter_mode != "needs" %}
+<div class="faq-page__empty">
+    <span class="faq-page__empty-icon ti-briefcase" aria-hidden="true"></span>
+    <p class="faq-page__empty-text">
+        {% if search_q %}
+            نتیجه‌ای برای «{{ search_q }}» یافت نشد. عبارت دیگری جستجو کنید یا نیاز خود را تیک بزنید.
+        {% else %}
+            در این دسته هنوز خدمتی ثبت نشده است.
+        {% endif %}
+    </p>
+    <a href="{% url 'contact' %}" class="faq-page__btn faq-page__btn--primary">تماس با پشتیبانی</a>
+</div>
+{% endif %}

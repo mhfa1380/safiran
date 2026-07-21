@@ -3,25 +3,7 @@
  * شامل: فونت‌ها، بدنه، نوبار، فوتر، دکمه‌ها و کلاس‌های کمکی
  */
 
-/* ========== Fonts (لوکال - دو فونت) ==========
- * IRANSans: نوبار، متن، فوتر، دکمه‌ها (ساده و خوانا)
- * Lalezar: عناوین h1-h6، بنر (نمایشی و متمایز)
- */
-@font-face {
-  font-family: IRANSans;
-  src: url("../../fonts/IRANSansWeb.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: Lalezar;
-  src: url("../../fonts/Lalezar-Regular.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
+/* فونت‌ها: static/css/app/fonts.css */
 
 /* ========== Body & Base ========== */
 body {
@@ -43,10 +25,7 @@ a:focus {
   text-decoration: underline;
 }
 
-/* لینک‌های breadcrumb: حفظ رنگ متن فعلی */
-.breadcrumb_iner_item p a {
-  color: inherit;
-}
+/* breadcrumb قدیمی — جایگزین: layout/page_hero.html */
 
 img {
   max-width: 100%;
@@ -85,20 +64,69 @@ input:focus {
   .single_padding_top { padding-top: 70px !important; }
 }
 
-/* ========== Typography (عناوین: فونت نمایشی) ========== */
+/* ========== Typography ========== */
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-heading);
   font-family: var(--font-display);
+  font-weight: 700;
   direction: rtl;
+}
+
+h1 { font-size: clamp(1.5rem, 4vw, 2rem); }
+h2 { font-size: clamp(1.25rem, 3vw, 1.65rem); }
+h3 { font-size: 1.15rem; font-weight: 600; }
+h4, h5, h6 { font-size: 1rem; font-weight: 600; }
+
+/* کنترل‌های فرم — ارتفاع یکسان در کل سایت */
+select:not([multiple]):not([size]) {
+  height: var(--control-height);
+  min-height: var(--control-height);
+  box-sizing: border-box;
+  line-height: 1.5;
+  padding: 0.375rem 0.75rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="password"],
+.form-control:not(textarea) {
+  height: var(--control-height);
+  min-height: var(--control-height);
+  box-sizing: border-box;
+}
+
+p,
+li,
+label,
+input,
+textarea,
+select,
+button,
+.btn_1,
+.btn_2,
+.btn_3,
+.btn_4,
+.form-control {
+  font-family: var(--font-sans);
 }
 
 p {
   color: var(--color-text);
-  font-family: var(--font-sans);
-  line-height: 1.929;
-  font-size: 14px;
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-base);
   margin-bottom: 0;
   direction: rtl;
+}
+
+.font-display,
+.page-hero__title,
+.breadcrumb_iner_title,
+.banner_text_iner h1 {
+  font-family: var(--font-display);
 }
 
 /* ========== Buttons ========== */
@@ -173,7 +201,7 @@ p {
 }
 
 .main_menu .navbar-brand { padding: 0 !important; }
-.main_menu .navbar { padding: 12px 0; }
+.main_menu .navbar { padding: 10px 0; }
 
 .logohead {
   width: 130px;
@@ -186,6 +214,16 @@ p {
   text-align: center;
   justify-content: center;
   max-width: 100%;
+}
+
+.main_menu.site-header .main-menu-item {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.main_menu,
+.main_menu .main-menu-item ul li .nav-link {
+  font-family: var(--font-sans);
 }
 
 .main_menu .main-menu-item ul li .nav-link {
@@ -232,26 +270,53 @@ p {
   position: fixed;
   z-index: 9999 !important;
   width: 100%;
-  background-color: var(--color-bg);
-  box-shadow: var(--shadow-md);
+  background-color: #fff;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.05);
   top: 0;
 }
 
 .menu_fixed .main-menu-item ul li .nav-link { color: #000; }
 
-@media (max-width: 991px) {
+/* صفحات داخلی (دارای page-hero): نوبار از ابتدا سفید و ثابت مثل حالت اسکرول */
+body:has(.page-hero) .main_menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-md);
+}
+
+body:has(.page-hero) .main_menu .main-menu-item ul li .nav-link {
+  color: var(--color-text-dark);
+}
+
+body:has(.page-hero) .main_menu .main-menu-item ul li .nav-link:hover {
+  color: var(--color-accent-hover);
+}
+
+body:has(.page-hero) #main-content {
+  padding-top: var(--site-header-height);
+}
+
+@media (max-width: 1199.98px) {
+  body:has(.page-hero) #main-content {
+    padding-top: calc(var(--site-header-height, 52px) + var(--site-header-mobile-search, 0px));
+  }
+
   .main_menu .navbar { padding: 10px 0; }
   .logohead { width: 100px; max-height: 40px; }
-  .main_menu .main-menu-item .nav-item { padding: 10px 20px !important; }
-  .main_menu .main-menu-item .nav-item a { padding: 10px 20px !important; }
-  .main_menu .dropdown-menu .dropdown-item { padding: 10px 24px !important; }
+  .main_menu:not(.site-header) .main-menu-item .nav-item { padding: 10px 20px !important; }
+  .main_menu:not(.site-header) .main-menu-item .nav-item a { padding: 10px 20px !important; }
+  .main_menu:not(.site-header) .dropdown-menu .dropdown-item { padding: 10px 24px !important; }
 }
 
 @media (max-width: 576px) {
   .logohead { width: 90px; max-height: 36px; }
 }
 
-[dir="rtl"] .main_menu .main-menu-item { text-align: right !important; }
+[dir="rtl"] .main_menu:not(.site-header) .main-menu-item { text-align: right !important; }
 
 /* ========== Footer (فونت ساده) ========== */
 .footer-area {
@@ -339,6 +404,58 @@ p {
 .footer-area .footer_links ul li a:hover { color: var(--color-accent); }
 .footer-area .contact_info { direction: rtl; text-align: justify; }
 .footer-area .footer-text a.fediya-link { color: rgb(16, 16, 121); }
+
+/* دسکتاپ: همه ستون‌ها در یک ردیف (جمع bootstrap قبلاً ۱۳ بود) */
+@media (min-width: 992px) {
+  .footer-area > .container > .footer-area__main {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 0 1.25rem;
+  }
+
+  .footer-area > .container > .footer-area__main > [class*="col-"] {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    width: auto;
+    margin-bottom: 0;
+  }
+
+  .footer-area > .container > .footer-area__main > .footer-area__brand {
+    flex: 1.15 1 11rem;
+  }
+
+  .footer-area > .container > .footer-area__main > .footer-area__contact {
+    flex: 1.2 1 12rem;
+  }
+
+  .footer-area > .container > .footer-area__main > .footer-area__nav {
+    flex: 1.05 1 9.5rem;
+  }
+
+  .footer-area .single-footer-widget h4 {
+    font-size: clamp(15px, 1.15vw, 20px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .footer-area .footer_links ul li a {
+    white-space: nowrap;
+    font-size: clamp(12px, 0.82vw, 14px);
+  }
+
+  .footer-area .copyright_part_text {
+    margin-top: 2rem;
+  }
+
+  .footer-area .copyright_part_text .copyright {
+    white-space: nowrap;
+    font-size: clamp(12px, 0.9vw, var(--font-size-lg));
+    line-height: 1.6;
+  }
+}
 
 @media (max-width: 991px) {
   .footer-area { padding: 70px 0 30px; }

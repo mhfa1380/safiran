@@ -1,0 +1,18 @@
+<div class="eval_progress-panel {{ panel_class|default:"" }}"{% if panel_id %} id="{{ panel_id }}"{% endif %} aria-live="polite">
+    <div class="eval_sidebar-progress__head">
+        <span class="eval_sidebar-step" data-eval-step-label>مرحله ۱ از ۴</span>
+        <span class="eval_sidebar-progress__pct" data-eval-percent>۲۵٪</span>
+    </div>
+    <div class="eval_sidebar-progress__track">
+        <div class="eval_sidebar-progress__bar" data-eval-progress-bar role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25"></div>
+    </div>
+    <p class="eval_sidebar-progress__remain" data-eval-remain>۷۵٪ تا پایان فرم</p>
+    <p class="eval_progress-validation" data-eval-validation hidden role="alert"></p>
+    <p class="eval_progress-hint" data-eval-hint>نام و شماره تماس را وارد کنید</p>
+    <ol class="eval_sidebar-wizard eval_step-nav" data-eval-step-nav aria-label="مراحل فرم">
+        <li class="is-active" data-step="1"><span>۱</span> اطلاعات شخصی</li>
+        <li data-step="2"><span>۲</span> سوابق تحصیلی</li>
+        <li data-step="3"><span>۳</span> آزمون زبان</li>
+        <li data-step="4"><span>۴</span> اولویت‌ها</li>
+    </ol>
+</div>

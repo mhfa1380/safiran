@@ -1,33 +1,129 @@
-{% if faqs %}
-    <div class="faq_accordion">
+{% if search_q and not faqs and suggestions %}
+<section class="faq-page__fallback" aria-label="پیشنهاد سوالات مرتبط">
+    <span class="faq-page__fallback-icon ti-light-bulb" aria-hidden="true"></span>
+    <p class="faq-page__fallback-text">نتیجه‌ای برای «{{ search_q }}» پیدا نشد. شاید این سوالات به دردتان بخورد:</p>
+    <ul class="faq-page__fallback-list">
+        {% for faq in suggestions %}
+        <li>
+            <button type="button"
+                    class="faq-page__fallback-btn"
+                    data-faq-jump="{{ faq.slug }}"
+                    data-faq-id="{{ faq.id }}">
+                {{ faq.question }}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if search_q and faqs %}
+<section class="faq-page__search-hit" aria-label="نتیجه جستجو">
+    <h3 class="faq-page__section-title">نتیجه جستجو برای «{{ search_q }}»</h3>
+    <div class="faq-page__accordion faq-page__accordion--primary">
         {% for faq in faqs %}
-            <div class="faq_item{% if forloop.first %} active{% endif %}">
-                <button type="button" class="faq_trigger" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" data-faq-toggle>
-                    <span>{{ faq.question }}</span>
-                    <span class="faq_icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq_body">
-                    <div class="faq_content">
-                        {{ faq.answer|linebreaks }}
-                    </div>
-                </div>
-            </div>
+        <details class="faq-page__item is-best-match is-open"
+                 id="faq-{{ faq.slug }}"
+                 data-faq-id="{{ faq.id }}"
+                 data-faq-slug="{{ faq.slug }}">
+            <summary class="faq-page__trigger">
+                <span class="faq-page__match-badge">بهترین تطابق</span>
+                <span class="faq-page__trigger-text">{{ faq.question }}</span>
+                {% if faq.category %}
+                <span class="faq-page__tag">{{ faq.category.name }}</span>
+                {% endif %}
+                <span class="faq-page__chevron" aria-hidden="true"></span>
+            </summary>
+            {% include "core/_faq_answer.html" %}
+        </details>
         {% endfor %}
     </div>
-    <div class="faq_cta">
-        پاسخ سوال خود را پیدا نکردید؟
-        <a href="{% url 'evaluation' %}">فرم ارزیابی</a>،
-        <a href="{% url 'contact' %}">تماس با ما</a> یا
-        <a href="{% url 'appointment' %}">رزرو مشاوره</a>
+</section>
+{% endif %}
+
+{% if search_q and suggestions %}
+<section class="faq-page__related" aria-label="سوالات مرتبط">
+    <h3 class="faq-page__section-title">سوالات مرتبط</h3>
+    <div class="faq-page__accordion faq-page__accordion--related">
+        {% for faq in suggestions %}
+        <details class="faq-page__item"
+                 id="faq-related-{{ faq.slug }}"
+                 data-faq-id="{{ faq.id }}"
+                 data-faq-slug="{{ faq.slug }}">
+            <summary class="faq-page__trigger">
+                <span class="faq-page__trigger-text">{{ faq.question }}</span>
+                {% if faq.category %}
+                <span class="faq-page__tag">{{ faq.category.name }}</span>
+                {% endif %}
+                <span class="faq-page__chevron" aria-hidden="true"></span>
+            </summary>
+            {% include "core/_faq_answer.html" %}
+        </details>
+        {% endfor %}
     </div>
-{% else %}
-    <div class="faq_accordion">
-        <div class="faq_empty">
-            {% if search_q %}
-                نتیجه‌ای برای «{{ search_q }}» یافت نشد. عبارت دیگری جستجو کنید یا با ما تماس بگیرید.
-            {% else %}
-                در حال حاضر سوالی ثبت نشده است. با ما تماس بگیرید.
+</section>
+{% endif %}
+
+{% if faqs and not search_q %}
+    {% regroup faqs by category as faq_groups %}
+    {% for group in faq_groups %}
+    <section class="faq-page__group" {% if group.grouper %}aria-labelledby="faq-cat-{{ group.grouper.slug }}"{% endif %}>
+        {% if group.grouper and not active_category_slug %}
+        <header class="faq-page__group-head">
+            {% if group.grouper.icon %}
+            <span class="faq-page__group-icon {{ group.grouper.icon }}" aria-hidden="true"></span>
             {% endif %}
+            <div>
+                <h3 id="faq-cat-{{ group.grouper.slug }}" class="faq-page__group-title">{{ group.grouper.name }}</h3>
+                {% if group.grouper.description %}
+                <p class="faq-page__group-desc">{{ group.grouper.description }}</p>
+                {% endif %}
+            </div>
+        </header>
+        {% endif %}
+
+        <div class="faq-page__accordion">
+            {% for faq in group.list %}
+            <details class="faq-page__item"
+                     id="faq-{{ faq.slug }}"
+                     data-faq-id="{{ faq.id }}"
+                     data-faq-slug="{{ faq.slug }}">
+                <summary class="faq-page__trigger">
+                    <span class="faq-page__trigger-text">{{ faq.question }}</span>
+                    <span class="faq-page__chevron" aria-hidden="true"></span>
+                </summary>
+                {% include "core/_faq_answer.html" %}
+            </details>
+            {% endfor %}
         </div>
-    </div>
+    </section>
+    {% endfor %}
+{% endif %}
+
+{% if faqs or suggestions %}
+    <aside class="faq-page__cta">
+        <div class="faq-page__cta-body">
+            <h3 class="faq-page__cta-title">پاسخ سوال خود را پیدا نکردید؟</h3>
+            <p class="faq-page__cta-text">کارشناسان ما آماده راهنمایی رایگان در مسیر مهاجرت تحصیلی هستند.</p>
+        </div>
+        <div class="faq-page__cta-actions">
+            <a href="{% url 'appointment' %}" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+            <a href="{% url 'evaluation' %}" class="faq-page__btn faq-page__btn--ghost">فرم ارزیابی</a>
+            <a href="{% url 'contact' %}" class="faq-page__btn faq-page__btn--ghost">تماس با ما</a>
+        </div>
+    </aside>
+{% endif %}
+
+{% if not faqs and not suggestions %}
+<div class="faq-page__empty">
+        <span class="faq-page__empty-icon ti-help" aria-hidden="true"></span>
+        <p class="faq-page__empty-text">
+            {% if search_q %}
+                نتیجه‌ای برای «{{ search_q }}» یافت نشد. عبارت دیگری جستجو کنید یا با مشاوران ما صحبت کنید.
+            {% else %}
+                در این دسته هنوز سوالی ثبت نشده است.
+            {% endif %}
+        </p>
+        <a href="{% url 'contact' %}" class="faq-page__btn faq-page__btn--primary">تماس با پشتیبانی</a>
+</div>
 {% endif %}

@@ -1,0 +1,90 @@
+{% if search_q and not majors_list and suggestions %}
+<section class="faq-page__fallback" aria-label="پیشنهاد رشته‌های مرتبط">
+    <span class="faq-page__fallback-icon ti-light-bulb" aria-hidden="true"></span>
+    <p class="faq-page__fallback-text">نتیجه‌ای برای «{{ search_q }}» پیدا نشد. شاید این رشته‌ها به دردتان بخورد:</p>
+    <ul class="faq-page__fallback-list">
+        {% for major in suggestions %}
+        <li>
+            <button type="button"
+                    class="faq-page__fallback-btn"
+                    data-major-jump="{{ major.slug }}"
+                    data-major-id="{{ major.id }}">
+                {{ major.title }}{% if major.country %} — {{ major.get_country_display }}{% endif %}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if search_q and majors_list %}
+<section class="faq-page__search-hit" aria-label="نتیجه جستجو">
+    <h3 class="faq-page__section-title">{% if suggestions %}بهترین تطابق{% else %}نتیجه جستجو برای «{{ search_q }}»{% endif %}</h3>
+    <div class="majors-grid majors-grid--primary">
+        {% for major in majors_list %}
+        {% include "content/_major_card.html" with major=major is_best_match=forloop.first %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if search_q and suggestions %}
+<section class="faq-page__related" aria-label="رشته‌های مرتبط">
+    <h3 class="faq-page__section-title">رشته‌های مرتبط</h3>
+    <div class="majors-grid majors-grid--related">
+        {% for major in suggestions %}
+        {% include "content/_major_card.html" with major=major %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if majors_list and not search_q %}
+<section class="majors-page__all" aria-label="همه رشته‌ها">
+    {% if majors_total %}
+    <p class="majors-page__count" id="majors-result-count">
+        <span id="majors-shown-count">{{ majors_list|length }}</span>
+        از {{ majors_total }} رشته
+    </p>
+    {% endif %}
+    <div class="majors-grid" id="majors-grid" data-total="{{ majors_total|default:0 }}">
+        {% for major in majors_list %}
+        {% include "content/_major_card.html" with major=major %}
+        {% endfor %}
+    </div>
+    <div id="majors-load-sentinel" class="majors-load-sentinel" aria-hidden="true"{% if not majors_has_more %} hidden{% endif %}></div>
+    <div id="majors-load-more" class="majors-load-more" hidden role="status" aria-live="polite">
+        <span class="majors-load-more__spinner" aria-hidden="true"></span>
+        <span class="majors-load-more__text">در حال بارگذاری رشته‌های بیشتر…</span>
+    </div>
+</section>
+{% endif %}
+
+{% if majors_list or suggestions %}
+<aside class="faq-page__cta{% if majors_has_more %} faq-page__cta--deferred{% endif %}" id="majors-page-cta">
+    <div class="faq-page__cta-body">
+        <h3 class="faq-page__cta-title">در انتخاب رشته مردد هستید؟</h3>
+        <p class="faq-page__cta-text">مشاوران {{ institute.name }} با بررسی شرایط شما، مناسب‌ترین رشته و کشور مقصد را پیشنهاد می‌دهند.</p>
+    </div>
+    <div class="faq-page__cta-actions">
+        <a href="{% url 'appointment' %}?about=majors" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+        <a href="{% url 'evaluation' %}" class="faq-page__btn faq-page__btn--ghost">فرم ارزیابی</a>
+    </div>
+</aside>
+{% endif %}
+
+{% if not majors_list and not suggestions %}
+<div class="faq-page__empty">
+    <span class="faq-page__empty-icon ti-book" aria-hidden="true"></span>
+    <p class="faq-page__empty-text">
+        {% if search_q %}
+            نتیجه‌ای برای «{{ search_q }}» یافت نشد. عبارت دیگری جستجو کنید یا فیلتر کشور را تغییر دهید.
+        {% elif filter_country %}
+            در حال حاضر رشته‌ای برای کشور انتخاب‌شده ثبت نشده است.
+        {% else %}
+            در حال حاضر رشته‌ای در سیستم ثبت نشده است.
+        {% endif %}
+    </p>
+    <a href="{% url 'appointment' %}?about=majors" class="faq-page__btn faq-page__btn--primary">رزرو مشاوره</a>
+</div>
+{% endif %}

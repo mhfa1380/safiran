@@ -1,0 +1,108 @@
+/* کپچای حروفی — مشترک بین تماس، رزرو مشاوره و ارزیابی */
+.form-captcha {
+    margin: 0.85rem 0 0;
+}
+
+.form-captcha__label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--color-heading);
+}
+
+.form-captcha__req {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+.form-captcha__row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.form-captcha__q {
+    flex-shrink: 0;
+    padding: 0.48rem 0.85rem;
+    border-radius: var(--radius-sm);
+    background: rgba(12, 46, 96, 0.06);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.35;
+    letter-spacing: 0.22em;
+    user-select: none;
+    cursor: pointer;
+    border: 1px dashed rgba(12, 46, 96, 0.2);
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.form-captcha__q:hover,
+.form-captcha__q:focus-visible {
+    background: rgba(12, 46, 96, 0.1);
+    border-color: rgba(12, 46, 96, 0.35);
+    outline: none;
+}
+
+.form-captcha__q:active {
+    transform: scale(0.98);
+}
+
+.form-captcha--refreshed .form-captcha__q {
+    animation: form-captcha-flash 0.45s ease;
+}
+
+@keyframes form-captcha-flash {
+    0% {
+        background: rgba(46, 101, 165, 0.2);
+    }
+    100% {
+        background: rgba(12, 46, 96, 0.06);
+    }
+}
+
+.form-captcha__input {
+    flex: 1 1 7rem;
+    min-width: 0;
+}
+
+.form-captcha__input .form-control,
+.form-captcha__control {
+    width: 100%;
+    max-width: 9rem;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    text-align: center;
+    direction: ltr;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 600;
+}
+
+.form-captcha__input .form-control:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(12, 46, 96, 0.1);
+}
+
+.form-captcha__error {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    color: #dc2626;
+}
+
+@media (max-width: 575.98px) {
+    .form-captcha__row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-captcha__input .form-control {
+        max-width: none;
+    }
+}

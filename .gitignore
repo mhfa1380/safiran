@@ -12,9 +12,16 @@ env/
 *.log
 db.sqlite3
 db.sqlite3-journal
+db.sqlite3-shm
+db.sqlite3-wal
 staticfiles/
 media/
 local_settings.py
+.env
+.env.local
+
+# اسکریپت‌های یک‌بار مصرف / ابزار موقت
+tools/
 
 # IDE
 .idea/

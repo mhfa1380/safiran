@@ -1,0 +1,21 @@
+{% if ai_qa_blocks %}
+<section class="ai-qa-section scroll-target" id="{{ ai_qa_section_id|default:'page-qa' }}" dir="rtl" lang="fa" aria-labelledby="{{ ai_qa_section_id|default:'page-qa' }}-title">
+    <header class="ai-qa-section__head">
+        <h2 class="ai-qa-section__title" id="{{ ai_qa_section_id|default:'page-qa' }}-title">{{ ai_qa_title }}</h2>
+        {% if ai_qa_lead %}
+        <p class="ai-qa-section__lead">{{ ai_qa_lead }}</p>
+        {% endif %}
+    </header>
+    <div class="ai-qa-section__list">
+        {% for block in ai_qa_blocks %}
+        <article class="ai-qa-section__item">
+            <h3 class="ai-qa-section__question">{{ block.question }}</h3>
+            <p class="ai-qa-section__answer">{{ block.short_answer }}</p>
+            {% if block.anchor %}
+            <a href="#{{ block.anchor }}" class="ai-qa-section__more">مطالعهٔ کامل</a>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

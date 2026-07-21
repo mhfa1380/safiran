@@ -1,0 +1,71 @@
+.nav-degree-banner {
+  margin: 0 0 1.5rem;
+  direction: rtl;
+  text-align: right;
+}
+
+.nav-degree-banner__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.25rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(12, 46, 96, 0.06), rgba(201, 162, 39, 0.12));
+  border: 1px solid rgba(12, 46, 96, 0.1);
+}
+
+.nav-degree-banner__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: right;
+}
+
+.nav-degree-banner__eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-accent-hover, #a8841f);
+}
+
+.nav-degree-banner__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-text-dark, #0f2137);
+}
+
+.nav-degree-banner__lead {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: #555;
+  max-width: 42rem;
+}
+
+.nav-degree-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.nav-degree-banner__cta,
+.nav-degree-banner__cta-secondary {
+  white-space: nowrap;
+  font-size: 0.85rem;
+  padding: 0.55rem 1rem;
+}
+
+@media (max-width: 575px) {
+  .nav-degree-banner__inner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: right;
+  }
+
+  .nav-degree-banner__actions {
+    justify-content: flex-start;
+  }
+}

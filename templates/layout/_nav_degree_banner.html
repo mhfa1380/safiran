@@ -1,0 +1,15 @@
+{% if nav_show_scholarship_banner and nav_degree_level %}
+<div class="nav-degree-banner" id="navDegreeBanner" role="region" aria-label="راهنمای بورسیه" dir="rtl" lang="fa">
+    <div class="nav-degree-banner__inner">
+        <div class="nav-degree-banner__text">
+            <p class="nav-degree-banner__eyebrow">پیشنهاد هوشمند بورسیه</p>
+            <h2 class="nav-degree-banner__title">مسیر {{ nav_degree_level.label }} و بورسیه</h2>
+            <p class="nav-degree-banner__lead">{{ nav_degree_level.scholarship_line }}</p>
+        </div>
+        <div class="nav-degree-banner__actions">
+            <a href="{% url 'evaluation' %}?target_degree={{ nav_target_degree }}&amp;intent=scholarship" class="btn_1 nav-degree-banner__cta">ارزیابی و پیشنهاد بورسیه</a>
+            <a href="{% url 'appointment' %}?about=scholarship" class="btn_2 nav-degree-banner__cta-secondary">مشاوره بورسیه</a>
+        </div>
+    </div>
+</div>
+{% endif %}

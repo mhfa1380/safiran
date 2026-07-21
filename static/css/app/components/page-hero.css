@@ -1,0 +1,136 @@
+/**
+ * هدر صفحات داخلی (جایگزین breadcrumb قدیمی)
+ */
+
+.page-hero {
+    position: relative;
+    padding: 2rem 0 2.5rem;
+    color: var(--color-on-primary);
+    background: linear-gradient(
+        125deg,
+        var(--color-primary-darker) 0%,
+        var(--color-primary) 42%,
+        var(--color-primary-light) 100%
+    );
+    overflow: hidden;
+    text-align: right;
+    direction: rtl;
+}
+
+.page-hero__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 70% 90% at 100% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 70% at 0% 100%, rgba(var(--color-accent-rgb), 0.18) 0%, transparent 50%);
+}
+
+.page-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.page-hero__nav {
+    margin-bottom: 0.85rem;
+}
+
+.page-hero__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.35rem 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.page-hero__crumb {
+    display: inline-flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.page-hero__crumb:not(:last-child)::after {
+    content: "/";
+    margin-inline: 0.45rem;
+    opacity: 0.55;
+    font-weight: 300;
+}
+
+.page-hero__crumb a {
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+    transition: color 0.2s, opacity 0.2s;
+}
+
+.page-hero__crumb a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.page-hero__crumb [aria-current="page"],
+.page-hero__crumb span[itemprop="name"]:only-child {
+    color: #fff;
+    font-weight: 600;
+}
+
+.page-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 4.5vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-on-primary);
+    text-wrap: balance;
+    direction: rtl;
+}
+
+.page-hero__lead {
+    margin: 0.75rem 0 0;
+    max-width: 90%;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.page-hero--compact {
+    padding: 1.35rem 0 1.5rem;
+}
+
+.page-hero--compact .page-hero__nav {
+    margin-bottom: 0.6rem;
+}
+
+.page-hero--compact .page-hero__title {
+    font-size: clamp(1.25rem, 3.8vw, 1.75rem);
+}
+
+.page-hero--compact .page-hero__lead {
+    margin-top: 0.5rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+}
+
+@media (max-width: 767.98px) {
+    .page-hero {
+        padding: 1.65rem 0 1.85rem;
+    }
+
+    .page-hero--compact {
+        padding: 1.15rem 0 1.35rem;
+    }
+
+    .page-hero__crumbs {
+        font-size: 0.78rem;
+    }
+
+    .page-hero__lead {
+        font-size: 0.88rem;
+    }
+}
