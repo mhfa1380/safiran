@@ -287,44 +287,65 @@ def setup_demo_users() -> dict[str, str]:
     manager_group, staff_group = ensure_panel_groups()
     password = "Safiran@1405"
 
-    manager, created_m = User.objects.get_or_create(
-        username="panel_manager",
-        defaults={
+    accounts = [
+        {
+            "username": "panel_manager",
+            "password": password,
             "first_name": "امید",
-            "last_name": "",
-            "is_staff": True,
             "email": "manager@panel.local",
+            "group": manager_group,
         },
-    )
-    manager.first_name = "امید"
-    manager.last_name = ""
-    manager.set_password(password)
-    manager.is_staff = True
-    manager.save()
-    manager.groups.set([manager_group])
-
-    staff, created_s = User.objects.get_or_create(
-        username="panel_staff",
-        defaults={
+        {
+            "username": "panel_staff",
+            "password": password,
             "first_name": "متین",
-            "last_name": "",
-            "is_staff": True,
             "email": "staff@panel.local",
+            "group": staff_group,
         },
-    )
-    staff.first_name = "متین"
-    staff.last_name = ""
-    staff.set_password(password)
-    staff.is_staff = True
-    staff.save()
-    staff.groups.set([staff_group])
+        {
+            "username": "omid",
+            "password": "Mwz5c2GA^ya%XX1Lhh",
+            "first_name": "امید",
+            "email": "omid@panel.local",
+            "group": manager_group,
+        },
+        {
+            "username": "matin",
+            "password": "$E_6HQN$9JUv1v8pd!",
+            "first_name": "متین",
+            "email": "matin@panel.local",
+            "group": staff_group,
+        },
+    ]
+
+    created_flags: dict[str, str] = {}
+    for acc in accounts:
+        user, created = User.objects.get_or_create(
+            username=acc["username"],
+            defaults={
+                "first_name": acc["first_name"],
+                "last_name": "",
+                "is_staff": True,
+                "email": acc["email"],
+            },
+        )
+        user.first_name = acc["first_name"]
+        user.last_name = ""
+        user.is_active = True
+        user.is_staff = True
+        user.set_password(acc["password"])
+        user.save()
+        user.groups.set([acc["group"]])
+        created_flags[acc["username"]] = str(created)
 
     return {
-        "manager_username": "panel_manager",
-        "staff_username": "panel_staff",
-        "password": password,
-        "manager_created": str(created_m),
-        "staff_created": str(created_s),
+        "manager_username": "omid",
+        "staff_username": "matin",
+        "password": "(see docs)",
+        "fallback_manager": "panel_manager",
+        "fallback_staff": "panel_staff",
+        "fallback_password": password,
+        **{f"created_{k}": v for k, v in created_flags.items()},
     }
 
 

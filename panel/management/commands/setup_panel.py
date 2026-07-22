@@ -13,8 +13,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         creds = setup_demo_users()
         self.stdout.write(self.style.SUCCESS("Panel users ready:"))
-        self.stdout.write(f"  manager: {creds['manager_username']} / {creds['password']}")
-        self.stdout.write(f"  staff:   {creds['staff_username']} / {creds['password']}")
+        self.stdout.write(f"  manager: {creds.get('manager_username')} (also panel_manager)")
+        self.stdout.write(f"  staff:   {creds.get('staff_username')} (also panel_staff)")
+        self.stdout.write(f"  fallback password: {creds.get('fallback_password')}")
         if not options["skip_sync"]:
             stats = sync_leads_to_cases(limit=options["limit"])
             self.stdout.write(
