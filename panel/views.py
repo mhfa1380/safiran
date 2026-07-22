@@ -25,7 +25,7 @@ from panel.forms import (
     StageChangeForm,
 )
 from panel.models import CaseAppointment, CaseDocument, CaseEvent, CustomerCase
-from panel.ai import ai_enabled, analyze_case, assist_call_log, draft_whatsapp
+from panel.ai import ai_enabled, analyze_case, assist_call_log
 from panel.services import (
     STAGE_SCRIPTS,
     apply_call_event,
@@ -367,9 +367,6 @@ def case_ai(request, pk: int):
                 contact_result=request.POST.get("contact_result") or "",
                 draft_notes=request.POST.get("draft_notes") or "",
             )
-            return JsonResponse({"ok": True, **payload})
-        if action == "whatsapp":
-            payload = draft_whatsapp(case)
             return JsonResponse({"ok": True, **payload})
         force = (request.POST.get("force") or "").strip() in ("1", "true", "yes")
         payload = analyze_case(case, force=force)

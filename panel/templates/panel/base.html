@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" href="{% static 'panel/favicon-48.png' %}" sizes="48x48">
   <link rel="apple-touch-icon" href="{% static 'panel/apple-touch-icon.png' %}">
   <link rel="stylesheet" href="{% static 'css/app/fonts.css' %}">
-  <link rel="stylesheet" href="{% static 'panel/panel.css' %}?v=27">
+  <link rel="stylesheet" href="{% static 'panel/panel.css' %}?v=28">
 </head>
 <body class="pnl-body {% block body_class %}{% endblock %}">
 {% if request.user.is_authenticated %}
@@ -164,7 +164,7 @@
 {% endif %}
 
 {% block sheets %}{% endblock %}
-<script src="{% static 'panel/panel.js' %}?v=10"></script>
+<script src="{% static 'panel/panel.js' %}?v=11"></script>
 
 {% else %}
   {% block auth_content %}{% endblock %}

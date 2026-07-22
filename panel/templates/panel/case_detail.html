@@ -74,23 +74,16 @@
   <header class="pnl-ai-h">
     <div>
       <p class="pnl-ai-kicker">هوش مصنوعی</p>
-      <h3>تحلیل و اسکریپت تماس</h3>
+      <h3>تحلیل و سوال‌های تماس</h3>
     </div>
     <div class="pnl-ai-actions">
       <button type="button" class="pnl-btn" id="pnlAiRun" {% if not ai_enabled %}disabled title="کلید MiMo تنظیم نشده"{% endif %}>
-        {% if ai_payload.script_lines %}بازنویسی{% else %}تحلیل هوشمند{% endif %}
+        {% if ai_payload.script_lines %}بازنویسی سوال‌ها{% else %}سوال‌های تماس{% endif %}
       </button>
-      <button type="button" class="pnl-btn soft" id="pnlAiCopy" {% if not ai_payload.script_lines %}hidden{% endif %}>کپی اسکریپت</button>
-      <button type="button" class="pnl-btn secondary" id="pnlAiWa" {% if not ai_enabled %}disabled{% endif %}>پیش‌نویس واتساپ</button>
+      <button type="button" class="pnl-btn soft" id="pnlAiCopy" {% if not ai_payload.script_lines %}hidden{% endif %}>کپی سوال‌ها</button>
     </div>
   </header>
   <div class="pnl-ai-status" id="pnlAiStatus" hidden></div>
-  <div class="pnl-ai-wa" id="pnlAiWaBox" hidden>
-    <div class="pnl-ai-wa-item"><span>کوتاه</span><p id="pnlAiWaShort"></p><button type="button" class="pnl-btn soft" data-copy-wa="pnlAiWaShort">کپی</button></div>
-    <div class="pnl-ai-wa-item"><span>رسمی</span><p id="pnlAiWaFormal"></p><button type="button" class="pnl-btn soft" data-copy-wa="pnlAiWaFormal">کپی</button></div>
-    <div class="pnl-ai-wa-item"><span>عدم پاسخ</span><p id="pnlAiWaNo"></p><button type="button" class="pnl-btn soft" data-copy-wa="pnlAiWaNo">کپی</button></div>
-    {% if wa_href %}<a class="pnl-btn" id="pnlAiWaOpen" href="{{ wa_href }}" target="_blank" rel="noopener">باز کردن واتساپ</a>{% endif %}
-  </div>
   <div class="pnl-ai-body" id="pnlAiBody" {% if not ai_payload.profile and not ai_payload.script_lines %}hidden{% endif %}>
     <p class="pnl-ai-profile" id="pnlAiProfile">{% if ai_payload.profile %}{{ ai_payload.profile }}{% endif %}</p>
     <div class="pnl-ai-grid">
@@ -113,7 +106,7 @@
     </div>
     <div class="pnl-ai-script-wrap">
       <div class="pnl-ai-script-h">
-        <h4>اسکریپت این مرحله</h4>
+        <h4>در این تماس چه بپرس؟</h4>
         <span id="pnlAiTone">{% if ai_payload.tone %}لحن: {{ ai_payload.tone }}{% endif %}</span>
       </div>
       <ol class="pnl-ai-script" id="pnlAiScript">
@@ -124,7 +117,7 @@
   {% if not ai_enabled %}
   <p class="pnl-ai-hint">برای فعال‌سازی، <code>MIMO_API_KEY</code> را در فایل .env بگذارید.</p>
   {% elif not ai_payload.script_lines %}
-  <p class="pnl-ai-hint">با یک کلیک، فرم ارزیابی و تاریخچه را خلاصه می‌کند و اسکریپت شخصی این مرحله را می‌نویسد.</p>
+  <p class="pnl-ai-hint">با یک کلیک، فرم مشتری را می‌خواند و لیست سوال‌هایی می‌دهد که در تماس باید بپرسید.</p>
   {% endif %}
 </section>
 

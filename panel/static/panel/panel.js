@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
       if (copyBtn) copyBtn.hidden = !(data.script_lines && data.script_lines.length);
-      if (runBtn) runBtn.textContent = "بازنویسی";
+      if (runBtn) runBtn.textContent = "بازنویسی سوال‌ها";
       persianizeTextNodes(aiBox);
     }
 
@@ -496,7 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       aiBox.classList.add("is-loading");
-      setStatus("در حال تحلیل فرم و نوشتن اسکریپت…");
+      setStatus("در حال ساخت سوال‌های تماس…");
       try {
         const body = new URLSearchParams();
         body.set("force", force ? "1" : "0");
@@ -515,11 +515,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         renderAi(data);
         if (data.fallback) {
-          setStatus(data.error || "حالت پشتیبان: اسکریپت ثابت مرحله.", true);
+          setStatus(data.error || "حالت پشتیبان: سوال‌های ثابت مرحله.", true);
         } else if (data.cached) {
           setStatus("از کش قبلی بارگذاری شد.");
         } else {
-          setStatus("تحلیل آماده است.");
+          setStatus("سوال‌های تماس آماده است.");
         }
       } catch (err) {
         setStatus(err.message || "خطا", true);
@@ -535,52 +535,11 @@ document.addEventListener("DOMContentLoaded", () => {
         .filter(Boolean);
       if (!lines.length) return;
       try {
-        await navigator.clipboard.writeText(lines.join("\n"));
-        setStatus("اسکریپت کپی شد.");
+        await navigator.clipboard.writeText(lines.map((l, i) => `${i + 1}. ${l}`).join("\n"));
+        setStatus("سوال‌ها کپی شد.");
       } catch (_) {
         setStatus("کپی نشد؛ دستی انتخاب کنید.", true);
       }
-    });
-
-    const waBtn = document.getElementById("pnlAiWa");
-    const waBox = document.getElementById("pnlAiWaBox");
-    waBtn?.addEventListener("click", async () => {
-      if (aiBox.dataset.aiEnabled !== "1") {
-        setStatus("کلید MiMo تنظیم نشده است.", true);
-        return;
-      }
-      aiBox.classList.add("is-loading");
-      setStatus("در حال نوشتن پیش‌نویس واتساپ…");
-      try {
-        const data = await postCaseAi(aiBox.dataset.aiUrl, { action: "whatsapp" });
-        const shortEl = document.getElementById("pnlAiWaShort");
-        const formalEl = document.getElementById("pnlAiWaFormal");
-        const noEl = document.getElementById("pnlAiWaNo");
-        if (shortEl) shortEl.textContent = data.short || "";
-        if (formalEl) formalEl.textContent = data.formal || "";
-        if (noEl) noEl.textContent = data.no_answer || "";
-        if (waBox) waBox.hidden = false;
-        setStatus(data.fallback ? "پیش‌نویس پیش‌فرض آماده شد." : "پیش‌نویس واتساپ آماده است.");
-        persianizeTextNodes(waBox);
-      } catch (err) {
-        setStatus(err.message || "خطا", true);
-      } finally {
-        aiBox.classList.remove("is-loading");
-      }
-    });
-
-    document.querySelectorAll("[data-copy-wa]").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const el = document.getElementById(btn.dataset.copyWa);
-        const text = el?.textContent?.trim() || "";
-        if (!text) return;
-        try {
-          await navigator.clipboard.writeText(text);
-          setStatus("پیام کپی شد.");
-        } catch (_) {
-          setStatus("کپی نشد.", true);
-        }
-      });
     });
   }
 });
