@@ -4,124 +4,123 @@
 {% block page_title %}مسیر مشتری{% endblock %}
 {% block body_class %}pnl-page-flow{% endblock %}
 {% block content %}
-<section class="pnl-flow-hero">
-  <div>
-    <p class="pnl-flow-kicker">نمای کانبان مسیر ۰ تا ۱۰۰</p>
-    <h2>کجا ایستاده‌اند؟ چه کاری مانده؟</h2>
-    <p class="pnl-muted">هر ستون یک مرحله است. کارت‌های قرمز عقب‌افتاده، نارنجی موعد امروز، و تیک‌ها وضعیت چک‌لیست مدارک را نشان می‌دهند.</p>
-  </div>
-  <div class="pnl-flow-summary">
-    <div><strong class="n">{{ board.summary.total|persian_numbers }}</strong><span>در برد</span></div>
-    <div><strong class="n is-overdue">{{ board.summary.overdue|persian_numbers }}</strong><span>عقب‌افتاده</span></div>
-    <div><strong class="n is-today">{{ board.summary.today|persian_numbers }}</strong><span>امروز</span></div>
-    <div><strong class="n is-ok">{{ board.summary.check_done|persian_numbers }}</strong><span>آیتم انجام‌شده</span></div>
-    <div><strong class="n is-todo">{{ board.summary.check_todo|persian_numbers }}</strong><span>آیتم مانده</span></div>
-  </div>
-</section>
+<div class="pnl-flow">
 
-<nav class="pnl-chip-scroll pnl-flow-filters" aria-label="فیلتر Flow">
-  <a class="pnl-pill {% if scope == 'open' %}is-on{% endif %}" href="?scope=open">بازها</a>
-  <a class="pnl-pill {% if scope == 'mine' %}is-on{% endif %}" href="?scope=mine">مال من</a>
-  <a class="pnl-pill {% if scope == 'overdue' %}is-on{% endif %}" href="?scope=overdue">عقب‌افتاده</a>
-  <a class="pnl-pill {% if scope == 'waiting' %}is-on{% endif %}" href="?scope=waiting">منتظر مشتری</a>
-  <a class="pnl-pill {% if scope == 'all' %}is-on{% endif %}" href="?scope=all">همه + بسته</a>
-</nav>
-
-<ol class="pnl-flow-legend" aria-label="راهنمای مسیر">
-  {% for s in board.pipeline_labels %}
-  <li>
-    <span class="pnl-flow-dot"></span>
-    <em>{{ s.label }}</em>
-    <small>{{ s.pct|persian_numbers }}٪</small>
-  </li>
-  {% endfor %}
-</ol>
-
-<div class="pnl-flow-board" role="list">
-  {% for col in board.columns %}
-  <section class="pnl-flow-col {% if col.is_won %}is-won{% elif col.is_lost %}is-lost{% elif col.is_end %}is-end{% endif %}" role="listitem" data-stage="{{ col.key }}">
-    <header class="pnl-flow-col-h">
-      <div>
-        <strong>{{ col.label }}</strong>
-        <span class="pnl-flow-pct">{{ col.pct|persian_numbers }}٪</span>
-      </div>
-      <div class="pnl-flow-col-meta">
-        <span class="pnl-chip">{{ col.count|persian_numbers }}</span>
-        {% if col.overdue %}<span class="pnl-chip overdue">{{ col.overdue|persian_numbers }} عقب</span>{% endif %}
-        {% if col.today %}<span class="pnl-chip today">{{ col.today|persian_numbers }} امروز</span>{% endif %}
-      </div>
-    </header>
-    <div class="pnl-flow-col-b">
-      {% for item in col.cards %}
-      {% with c=item.case %}
-      <article class="pnl-flow-card badge-{{ item.badge }}">
-        <a class="pnl-flow-card-main" href="{% url 'panel:case_detail' c.pk %}">
-          <div class="pnl-flow-card-top">
-            <strong>{{ c.customer.full_name }}</strong>
-            <span class="pnl-chip {{ item.badge }}">
-              {% if item.badge == 'overdue' %}عقب‌افتاده
-              {% elif item.badge == 'today' %}امروز
-              {% elif item.badge == 'new' %}جدید
-              {% elif item.badge == 'closed' %}بسته
-              {% elif c.status == 'waiting' %}منتظر
-              {% else %}فعال{% endif %}
-            </span>
-          </div>
-          <div class="pnl-flow-card-meta">
-            <span>{{ c.customer.phone_display|default:c.customer.phone_normalized|persian_numbers }}</span>
-            <span>{{ c.case_code|persian_numbers }}</span>
-          </div>
-          {% if item.assignee %}
-          <div class="pnl-flow-assignee">{{ item.assignee }}</div>
-          {% else %}
-          <div class="pnl-flow-assignee is-empty">بدون مسئول</div>
-          {% endif %}
-          {% if item.check.has_checklist %}
-          <div class="pnl-flow-check">
-            <div class="pnl-flow-check-bar"><span style="width:{{ item.check.pct }}%"></span></div>
-            <div class="pnl-flow-check-meta">
-              <span class="is-ok">✓ {{ item.check.done|persian_numbers }} انجام‌شده</span>
-              <span class="is-todo">○ {{ item.check.todo_labels|length|persian_numbers }} مانده از {{ item.check.total|persian_numbers }}</span>
-            </div>
-            {% if item.check.todo_labels %}
-            <ul class="pnl-flow-todos">
-              {% for t in item.check.todo_labels %}
-              <li><span class="pnl-flow-x">○</span> {{ t }}</li>
-              {% endfor %}
-            </ul>
-            {% else %}
-            <div class="pnl-flow-alldone">✓ چک‌لیست این مرحله کامل است</div>
-            {% endif %}
-          </div>
-          {% else %}
-          <div class="pnl-flow-stage-hint">پیشرفت مسیر: {{ c.progress|persian_numbers }}٪</div>
-          {% endif %}
-          {% if c.next_follow_up_at %}
-          <div class="pnl-flow-due">موعد {{ c.next_follow_up_at|jalali }}</div>
-          {% endif %}
-        </a>
-        {% if c.status != 'closed_lost' and c.status != 'closed_won' %}
-        <div class="pnl-flow-card-actions">
-          <a class="pnl-btn soft icon" href="tel:{{ c.customer.phone_display|default:c.customer.phone_normalized }}" title="زنگ">☎</a>
-          <button
-            type="button"
-            class="pnl-btn pnl-quick-call"
-            data-case-id="{{ c.pk }}"
-            data-case-name="{{ c.customer.full_name }}"
-            data-case-phone="{{ c.customer.phone_display|default:c.customer.phone_normalized }}"
-          >تماس</button>
-        </div>
-        {% endif %}
-      </article>
-      {% endwith %}
-      {% empty %}
-      <div class="pnl-flow-empty">خالی</div>
-      {% endfor %}
-      {% if col.more %}
-      <a class="pnl-flow-more" href="{% url 'panel:case_list' %}?stage={{ col.key }}">+ {{ col.more|persian_numbers }} مورد دیگر در این مرحله</a>
-      {% endif %}
+  <header class="pnl-flow-hero">
+    <div class="pnl-flow-hero-copy">
+      <p class="pnl-flow-kicker">کانبان مسیر ۰ تا ۱۰۰</p>
+      <h2>مسیر مشتری</h2>
+      <p class="pnl-flow-sub">ستون‌ها را افقی اسکرول کنید. کارت‌های فشرده برای صف‌های شلوغ.</p>
     </div>
-  </section>
-  {% endfor %}
+    <div class="pnl-flow-summary" aria-label="خلاصه برد">
+      <div><strong class="n">{{ board.summary.total|persian_numbers }}</strong><span>در برد</span></div>
+      <div><strong class="n is-overdue">{{ board.summary.overdue|persian_numbers }}</strong><span>عقب‌افتاده</span></div>
+      <div><strong class="n is-today">{{ board.summary.today|persian_numbers }}</strong><span>امروز</span></div>
+      <div><strong class="n is-ok">{{ board.summary.check_done|persian_numbers }}</strong><span>انجام‌شده</span></div>
+      <div><strong class="n is-todo">{{ board.summary.check_todo|persian_numbers }}</strong><span>مانده</span></div>
+    </div>
+  </header>
+
+  <div class="pnl-flow-toolbar">
+    <nav class="pnl-flow-filters" aria-label="فیلتر Flow">
+      <a class="pnl-pill {% if scope == 'open' %}is-on{% endif %}" href="?scope=open">بازها</a>
+      <a class="pnl-pill {% if scope == 'mine' %}is-on{% endif %}" href="?scope=mine">مال من</a>
+      <a class="pnl-pill {% if scope == 'overdue' %}is-on{% endif %}" href="?scope=overdue">عقب‌افتاده</a>
+      <a class="pnl-pill {% if scope == 'waiting' %}is-on{% endif %}" href="?scope=waiting">منتظر مشتری</a>
+      <a class="pnl-pill {% if scope == 'all' %}is-on{% endif %}" href="?scope=all">همه + بسته</a>
+    </nav>
+    <ol class="pnl-flow-legend" aria-label="راهنمای مسیر">
+      {% for s in board.pipeline_labels %}
+      <li>
+        <span class="pnl-flow-dot" aria-hidden="true"></span>
+        <em>{{ s.label }}</em>
+        <small>{{ s.pct|persian_numbers }}٪</small>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+
+  <div class="pnl-flow-board" role="list">
+    {% for col in board.columns %}
+    <section class="pnl-flow-col {% if col.is_won %}is-won{% elif col.is_lost %}is-lost{% elif col.is_end %}is-end{% endif %}" role="listitem" data-stage="{{ col.key }}">
+      <header class="pnl-flow-col-h">
+        <div class="pnl-flow-col-title">
+          <strong>{{ col.label }}</strong>
+          <span class="pnl-flow-pct">{{ col.pct|persian_numbers }}٪</span>
+        </div>
+        <div class="pnl-flow-col-meta">
+          <span class="pnl-flow-count">{{ col.count|persian_numbers }}</span>
+          {% if col.overdue %}<span class="pnl-chip overdue">{{ col.overdue|persian_numbers }} عقب</span>{% endif %}
+          {% if col.today %}<span class="pnl-chip today">{{ col.today|persian_numbers }} امروز</span>{% endif %}
+        </div>
+      </header>
+      <div class="pnl-flow-col-b">
+        {% for item in col.cards %}
+        {% with c=item.case %}
+        <article class="pnl-flow-card badge-{{ item.badge }}">
+          <a class="pnl-flow-card-main" href="{% url 'panel:case_detail' c.pk %}">
+            <div class="pnl-flow-card-top">
+              <strong>{{ c.customer.full_name }}</strong>
+              <span class="pnl-chip {{ item.badge }}">
+                {% if item.badge == 'overdue' %}عقب
+                {% elif item.badge == 'today' %}امروز
+                {% elif item.badge == 'new' %}جدید
+                {% elif item.badge == 'closed' %}بسته
+                {% elif c.status == 'waiting' %}منتظر
+                {% else %}فعال{% endif %}
+              </span>
+            </div>
+            <div class="pnl-flow-card-meta">
+              <span dir="ltr">{{ c.customer.phone_display|default:c.customer.phone_normalized|persian_numbers }}</span>
+              {% if item.assignee %}
+              <span class="pnl-flow-who">{{ item.assignee }}</span>
+              {% else %}
+              <span class="pnl-flow-who is-empty">بدون مسئول</span>
+              {% endif %}
+            </div>
+            {% if item.check.has_checklist %}
+            <div class="pnl-flow-check">
+              <div class="pnl-flow-check-bar" aria-hidden="true"><span style="width:{{ item.check.pct }}%"></span></div>
+              <div class="pnl-flow-check-meta">
+                <span>{{ item.check.done|persian_numbers }}/{{ item.check.total|persian_numbers }}</span>
+                {% if item.check.todo_labels %}
+                <span class="is-todo">{{ item.check.todo_labels|length|persian_numbers }} مانده</span>
+                {% else %}
+                <span class="is-ok">کامل</span>
+                {% endif %}
+              </div>
+            </div>
+            {% else %}
+            <div class="pnl-flow-stage-hint">پیشرفت {{ c.progress|persian_numbers }}٪</div>
+            {% endif %}
+            {% if c.next_follow_up_at %}
+            <div class="pnl-flow-due">موعد {{ c.next_follow_up_at|jalali }}</div>
+            {% endif %}
+          </a>
+          {% if c.status != 'closed_lost' and c.status != 'closed_won' %}
+          <div class="pnl-flow-card-actions">
+            <a class="pnl-btn soft icon" href="tel:{{ c.customer.phone_display|default:c.customer.phone_normalized }}" title="زنگ">☎</a>
+            <button
+              type="button"
+              class="pnl-btn pnl-quick-call"
+              data-case-id="{{ c.pk }}"
+              data-case-name="{{ c.customer.full_name }}"
+              data-case-phone="{{ c.customer.phone_display|default:c.customer.phone_normalized }}"
+            >تماس</button>
+          </div>
+          {% endif %}
+        </article>
+        {% endwith %}
+        {% empty %}
+        <div class="pnl-flow-empty">خالی</div>
+        {% endfor %}
+        {% if col.more %}
+        <a class="pnl-flow-more" href="{% url 'panel:case_list' %}?stage={{ col.key }}">+ {{ col.more|persian_numbers }} مورد دیگر</a>
+        {% endif %}
+      </div>
+    </section>
+    {% endfor %}
+  </div>
+
 </div>
 {% endblock %}

@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.db.models import Count, Q
-from django.http import Http404, HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -25,6 +25,7 @@ from panel.forms import (
     StageChangeForm,
 )
 from panel.models import CaseAppointment, CaseDocument, CaseEvent, CustomerCase
+from panel.ai import ai_enabled, analyze_case, assist_call_log, draft_whatsapp
 from panel.services import (
     STAGE_SCRIPTS,
     apply_call_event,
@@ -310,6 +311,9 @@ def case_detail(request, pk: int):
     documents = case.documents.select_related("uploaded_by")[:30]
     checklist = checklist_for_case(case)
     scripts = STAGE_SCRIPTS.get(case.stage, [])
+    ai_payload = case.ai_payload if isinstance(case.ai_payload, dict) else {}
+    if ai_payload.get("script_lines"):
+        scripts = ai_payload.get("script_lines") or scripts
 
     phone = case.customer.phone_display or case.customer.phone_normalized
     wa = normalize_phone(phone)
@@ -330,6 +334,8 @@ def case_detail(request, pk: int):
             "documents": documents,
             "checklist": checklist,
             "scripts": scripts,
+            "ai_payload": ai_payload,
+            "ai_enabled": ai_enabled(),
             "call_form": call_form,
             "close_form": close_form,
             "stage_form": stage_form,
@@ -344,6 +350,46 @@ def case_detail(request, pk: int):
             "flow_steps": flow_steps_for_case(case),
             "check_progress": checklist_progress_for_case(case),
         },
+    )
+
+
+@panel_login_required
+@require_POST
+def case_ai(request, pk: int):
+    case = get_object_or_404(CustomerCase, pk=pk)
+    if not cases_queryset_for(request.user).filter(pk=case.pk).exists():
+        raise Http404()
+    action = (request.POST.get("action") or "analyze").strip()
+    try:
+        if action == "call_assist":
+            payload = assist_call_log(
+                case,
+                contact_result=request.POST.get("contact_result") or "",
+                draft_notes=request.POST.get("draft_notes") or "",
+            )
+            return JsonResponse({"ok": True, **payload})
+        if action == "whatsapp":
+            payload = draft_whatsapp(case)
+            return JsonResponse({"ok": True, **payload})
+        force = (request.POST.get("force") or "").strip() in ("1", "true", "yes")
+        payload = analyze_case(case, force=force)
+    except Exception as exc:  # noqa: BLE001
+        return JsonResponse({"ok": False, "error": str(exc)}, status=500)
+    generated = payload.get("generated_at")
+    return JsonResponse(
+        {
+            "ok": True,
+            "cached": bool(payload.get("cached")),
+            "fallback": bool(payload.get("fallback")),
+            "error": payload.get("error") or "",
+            "profile": payload.get("profile") or "",
+            "strengths": payload.get("strengths") or [],
+            "risks": payload.get("risks") or [],
+            "next_action": payload.get("next_action") or "",
+            "tone": payload.get("tone") or "",
+            "script_lines": payload.get("script_lines") or [],
+            "generated_at": generated.isoformat() if generated else "",
+        }
     )
 
 
@@ -437,6 +483,7 @@ def case_stage(request, pk: int):
         case.status = CustomerCase.STATUS_CLOSED_WON
         case.closed_at = timezone.now()
     case.apply_stage_progress()
+    case.ai_context_hash = ""
     case.save()
     CaseEvent.objects.create(
         case=case,

@@ -52,7 +52,7 @@
 
 {% if can_edit and case.status != 'closed_lost' and case.status != 'closed_won' %}
 <nav class="pnl-action-dock" aria-label="اقدامات سریع">
-  <button type="button" class="pnl-btn" data-open-sheet="sheetCall">تماس</button>
+  <button type="button" class="pnl-btn" data-open-sheet="sheetCall">گزارش تماس</button>
   <button type="button" class="pnl-btn soft" data-open-sheet="sheetStage">مرحله</button>
   <button type="button" class="pnl-btn soft" data-open-sheet="sheetAppt">جلسه</button>
   <button type="button" class="pnl-btn secondary" data-open-sheet="sheetAssign">تخصیص</button>
@@ -68,14 +68,65 @@
 </nav>
 {% endif %}
 
-{% if scripts %}
-<section class="pnl-card" style="margin-bottom:12px">
-  <div class="pnl-card-h"><span>اسکریپت این مرحله</span></div>
-  <ul class="pnl-script-list">
-    {% for line in scripts %}<li>{{ line }}</li>{% endfor %}
-  </ul>
+<section class="pnl-ai" id="pnlAiBox"
+  data-ai-url="{% url 'panel:case_ai' case.pk %}"
+  data-ai-enabled="{% if ai_enabled %}1{% else %}0{% endif %}">
+  <header class="pnl-ai-h">
+    <div>
+      <p class="pnl-ai-kicker">هوش مصنوعی</p>
+      <h3>تحلیل و اسکریپت تماس</h3>
+    </div>
+    <div class="pnl-ai-actions">
+      <button type="button" class="pnl-btn" id="pnlAiRun" {% if not ai_enabled %}disabled title="کلید MiMo تنظیم نشده"{% endif %}>
+        {% if ai_payload.script_lines %}بازنویسی{% else %}تحلیل هوشمند{% endif %}
+      </button>
+      <button type="button" class="pnl-btn soft" id="pnlAiCopy" {% if not ai_payload.script_lines %}hidden{% endif %}>کپی اسکریپت</button>
+      <button type="button" class="pnl-btn secondary" id="pnlAiWa" {% if not ai_enabled %}disabled{% endif %}>پیش‌نویس واتساپ</button>
+    </div>
+  </header>
+  <div class="pnl-ai-status" id="pnlAiStatus" hidden></div>
+  <div class="pnl-ai-wa" id="pnlAiWaBox" hidden>
+    <div class="pnl-ai-wa-item"><span>کوتاه</span><p id="pnlAiWaShort"></p><button type="button" class="pnl-btn soft" data-copy-wa="pnlAiWaShort">کپی</button></div>
+    <div class="pnl-ai-wa-item"><span>رسمی</span><p id="pnlAiWaFormal"></p><button type="button" class="pnl-btn soft" data-copy-wa="pnlAiWaFormal">کپی</button></div>
+    <div class="pnl-ai-wa-item"><span>عدم پاسخ</span><p id="pnlAiWaNo"></p><button type="button" class="pnl-btn soft" data-copy-wa="pnlAiWaNo">کپی</button></div>
+    {% if wa_href %}<a class="pnl-btn" id="pnlAiWaOpen" href="{{ wa_href }}" target="_blank" rel="noopener">باز کردن واتساپ</a>{% endif %}
+  </div>
+  <div class="pnl-ai-body" id="pnlAiBody" {% if not ai_payload.profile and not ai_payload.script_lines %}hidden{% endif %}>
+    <p class="pnl-ai-profile" id="pnlAiProfile">{% if ai_payload.profile %}{{ ai_payload.profile }}{% endif %}</p>
+    <div class="pnl-ai-grid">
+      <div>
+        <h4>نقاط قوت</h4>
+        <ul id="pnlAiStrengths">
+          {% for s in ai_payload.strengths %}<li>{{ s }}</li>{% empty %}<li class="is-muted">—</li>{% endfor %}
+        </ul>
+      </div>
+      <div>
+        <h4>ریسک‌ها</h4>
+        <ul id="pnlAiRisks">
+          {% for r in ai_payload.risks %}<li>{{ r }}</li>{% empty %}<li class="is-muted">—</li>{% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="pnl-ai-next">
+      <span>اقدام بعدی</span>
+      <strong id="pnlAiNext">{{ ai_payload.next_action|default:"" }}</strong>
+    </div>
+    <div class="pnl-ai-script-wrap">
+      <div class="pnl-ai-script-h">
+        <h4>اسکریپت این مرحله</h4>
+        <span id="pnlAiTone">{% if ai_payload.tone %}لحن: {{ ai_payload.tone }}{% endif %}</span>
+      </div>
+      <ol class="pnl-ai-script" id="pnlAiScript">
+        {% for line in scripts %}<li>{{ line }}</li>{% endfor %}
+      </ol>
+    </div>
+  </div>
+  {% if not ai_enabled %}
+  <p class="pnl-ai-hint">برای فعال‌سازی، <code>MIMO_API_KEY</code> را در فایل .env بگذارید.</p>
+  {% elif not ai_payload.script_lines %}
+  <p class="pnl-ai-hint">با یک کلیک، فرم ارزیابی و تاریخچه را خلاصه می‌کند و اسکریپت شخصی این مرحله را می‌نویسد.</p>
+  {% endif %}
 </section>
-{% endif %}
 
 <div class="pnl-grid-2">
   <section class="pnl-card">
@@ -108,11 +159,17 @@
     <div class="pnl-card-h"><span>تایم‌لاین</span></div>
     <div class="pnl-card-b pnl-timeline">
       {% for e in events %}
-      <div class="pnl-event">
-        <div class="when">{{ e.created_at|jalali }} · {% if e.created_by %}{{ e.created_by.get_username }}{% else %}سیستم{% endif %}</div>
-        <div class="etype">{{ e.get_event_type_display }}{% if e.contact_result %} — {{ e.get_contact_result_display }}{% endif %}</div>
-        {% if e.notes %}<div>{{ e.notes }}</div>{% endif %}
-        {% if e.next_follow_up_at %}<div class="when">پیگیری بعدی: {{ e.next_follow_up_at|jalali }}</div>{% endif %}
+      <div class="pnl-event {% if e.event_type == 'call' %}pnl-tl-call{% endif %}">
+        <div class="etype">
+          <span>{{ e.get_event_type_display }}</span>
+          {% if e.contact_result %}<span class="pnl-chip {{ e.contact_result }}">{{ e.get_contact_result_display }}</span>{% endif %}
+        </div>
+        {% if e.notes %}<div class="pnl-tl-note">{{ e.notes }}</div>{% endif %}
+        <div class="pnl-tl-meta">
+          {{ e.created_at|jalali }}
+          {% if e.created_by %} · {{ e.created_by.get_full_name|default:e.created_by.username }}{% endif %}
+          {% if e.next_follow_up_at %} · موعد بعدی {{ e.next_follow_up_at|jalali }}{% endif %}
+        </div>
       </div>
       {% empty %}
         <div class="pnl-empty">هنوز رویدادی نیست</div>
@@ -164,17 +221,20 @@
 
 {% block sheets %}
 {% if can_edit and case.status != 'closed_lost' and case.status != 'closed_won' %}
-<dialog class="pnl-sheet" id="sheetCall">
-  <div class="pnl-sheet-panel">
+<dialog class="pnl-sheet pnl-sheet-call" id="sheetCall">
+  <div class="pnl-sheet-panel pnl-call-panel">
     <div class="pnl-sheet-handle"></div>
-    <div class="pnl-sheet-head"><strong>ثبت تماس</strong><button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button></div>
-    <form method="post" action="{% url 'panel:case_call' case.pk %}" class="pnl-sheet-body">
+    <div class="pnl-sheet-head">
+      <div>
+        <p class="pnl-call-kicker">لاگ تماس</p>
+        <strong>ثبت گزارش تماس</strong>
+      </div>
+      <button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button>
+    </div>
+    <form method="post" action="{% url 'panel:case_call' case.pk %}" class="pnl-sheet-body pnl-call-form">
       {% csrf_token %}
-      <div class="pnl-field"><label>نتیجه</label>{{ call_form.contact_result }}</div>
-      <div class="pnl-field"><label>پیگیری بعدی</label>{{ call_form.follow_preset }}</div>
-      <div class="pnl-field"><label>تاریخ شمسی</label>{{ call_form.custom_jalali_date }}</div>
-      <div class="pnl-field"><label>یادداشت</label>{{ call_form.notes }}</div>
-      <button class="pnl-btn" type="submit" style="width:100%">ثبت</button>
+      {% include "panel/_call_log_fields.html" with form=call_form %}
+      <button class="pnl-btn pnl-call-submit" type="submit">ثبت گزارش تماس</button>
     </form>
   </div>
 </dialog>

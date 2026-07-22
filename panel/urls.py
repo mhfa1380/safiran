@@ -22,6 +22,7 @@ urlpatterns = [
     path("settings/", views.settings_view, name="settings"),
     path("help/", views.help_page, name="help"),
     path("cases/<int:pk>/", views.case_detail, name="case_detail"),
+    path("cases/<int:pk>/ai/", views.case_ai, name="case_ai"),
     path("cases/<int:pk>/call/", views.case_call, name="case_call"),
     path("cases/<int:pk>/close/", views.case_close, name="case_close"),
     path("cases/<int:pk>/stage/", views.case_stage, name="case_stage"),

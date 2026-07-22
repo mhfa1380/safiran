@@ -10,7 +10,7 @@
     <div>
       <p class="pnl-set-kicker">اتوماسیون تخصیص</p>
       <h2>تنظیمات</h2>
-      <p class="pnl-set-sub">تخصیص خودکار، توزیع روزانه و وزن پرسنل.</p>
+      <p class="pnl-set-sub">اینجا مشخص می‌کنید پرونده‌های جدید و صف پیگیری چطور بین امید و متین پخش شود.</p>
     </div>
     <div class="pnl-set-head-actions">
       <a class="pnl-btn soft" href="{% url 'panel:manage' %}">مدیریت تیم</a>
@@ -65,7 +65,7 @@
             <span class="pnl-set-switch-ctrl">{{ form.auto_assign_enabled }}</span>
             <span class="pnl-set-switch-copy">
               <strong>{{ form.auto_assign_enabled.label }}</strong>
-              <small>پرونده تازه بدون مسئول، خودکار به پرسنل فعال می‌رود.</small>
+              <small>پروندهٔ تازه بدون مسئول، خودکار به یکی از افراد فعال (مثل متین) داده می‌شود.</small>
             </span>
           </label>
 
@@ -85,7 +85,7 @@
             <span class="pnl-set-switch-ctrl">{{ form.daily_followup_enabled }}</span>
             <span class="pnl-set-switch-copy">
               <strong>{{ form.daily_followup_enabled.label }}</strong>
-              <small>با باز شدن داشبورد مدیر، روزی یک‌بار صف پخش می‌شود.</small>
+              <small>وقتی امید داشبورد را باز کند، روزی یک‌بار صف پیگیری بین افراد فعال پخش می‌شود.</small>
             </span>
           </label>
 
@@ -106,7 +106,7 @@
           <span>وزن و نوبت</span>
         </header>
         <div class="pnl-set-staff">
-          <p class="pnl-set-hint pnl-set-hint-pad">فعال = شرکت در نوبت خودکار. وزن بالاتر = سهم بیشتر.</p>
+          <p class="pnl-set-hint pnl-set-hint-pad">فعال = در نوبت خودکار شرکت می‌کند. وزن بالاتر = سهم بیشتر (مثلاً متین با وزن ۲ دو برابر امید با وزن ۱ پرونده می‌گیرد).</p>
           {% for p in profiles %}
           <article class="pnl-set-staff-row">
             <div class="pnl-set-staff-main">

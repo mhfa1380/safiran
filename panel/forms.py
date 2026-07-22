@@ -31,27 +31,32 @@ class QuickCallForm(forms.Form):
     contact_result = forms.ChoiceField(
         label="نتیجه تماس",
         choices=CaseEvent.CONTACT_RESULT_CHOICES,
-        widget=forms.Select(attrs={"class": "pnl-input"}),
+        initial=CaseEvent.CONTACT_ANSWERED,
+        widget=forms.RadioSelect(attrs={"class": "pnl-call-radio"}),
     )
     notes = forms.CharField(
-        label="یادداشت",
+        label="گزارش تماس",
         required=False,
         widget=forms.Textarea(
-            attrs={"class": "pnl-input", "rows": 2, "placeholder": "خلاصه مکالمه…"}
+            attrs={
+                "class": "pnl-input pnl-call-textarea",
+                "rows": 4,
+                "placeholder": "چی گفته شد؟ مثلاً: کانادا کارشناسی، آیلتس ۶، بودجه متوسط، فردا مدارک می‌فرستد…",
+            }
         ),
     )
     follow_preset = forms.ChoiceField(
         label="پیگیری بعدی",
         choices=[
-            ("today_evening", "امروز (چند ساعت بعد)"),
+            ("today_evening", "امروز عصر"),
             ("tomorrow", "فردا"),
-            ("3days", "۳ روز دیگر"),
-            ("1week", "یک هفته"),
-            ("custom", "تاریخ شمسی دلخواه"),
+            ("3days", "۳ روز"),
+            ("1week", "۱ هفته"),
+            ("custom", "تاریخ دلخواه"),
             ("none", "بدون موعد"),
         ],
         initial="tomorrow",
-        widget=forms.Select(attrs={"class": "pnl-input"}),
+        widget=forms.RadioSelect(attrs={"class": "pnl-call-radio"}),
     )
     custom_jalali_date = forms.CharField(
         label="تاریخ شمسی پیگیری",
@@ -61,6 +66,7 @@ class QuickCallForm(forms.Form):
                 "class": "pnl-input",
                 "placeholder": "1405/04/31",
                 "dir": "ltr",
+                "inputmode": "numeric",
             }
         ),
     )

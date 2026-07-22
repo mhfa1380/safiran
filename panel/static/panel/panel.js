@@ -62,18 +62,120 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function wireCustomDate(root) {
     if (!root) return;
-    const preset = root.querySelector("#id_follow_preset, select[name='follow_preset']");
     const custom = root.querySelector("#id_custom_jalali_date, input[name='custom_jalali_date']");
-    if (!preset || !custom) return;
-    const field = custom.closest(".pnl-field");
+    if (!custom) return;
+    const field = custom.closest(".pnl-call-custom-date, .pnl-field");
+    const radios = root.querySelectorAll("input[name='follow_preset']");
+    const select = root.querySelector("select[name='follow_preset']");
     const sync = () => {
-      if (field) field.classList.toggle("is-hidden", preset.value !== "custom");
+      let val = "";
+      if (radios.length) {
+        const checked = root.querySelector("input[name='follow_preset']:checked");
+        val = checked ? checked.value : "";
+      } else if (select) {
+        val = select.value;
+      }
+      if (field) field.classList.toggle("is-hidden", val !== "custom");
     };
-    preset.addEventListener("change", sync);
+    radios.forEach((r) => r.addEventListener("change", sync));
+    if (select) select.addEventListener("change", sync);
     sync();
   }
 
   document.querySelectorAll("form, dialog").forEach((node) => wireCustomDate(node));
+
+  // Quick note chips → append to call report textarea
+  document.querySelectorAll(".pnl-call-note-chip").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const form = btn.closest("form");
+      const ta = form?.querySelector("textarea[name='notes']");
+      if (!ta) return;
+      const chunk = (btn.dataset.note || "").trim();
+      if (!chunk) return;
+      const cur = ta.value.trim();
+      ta.value = cur ? `${cur}\n${chunk}` : chunk;
+      ta.focus();
+      ta.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  });
+
+  function csrfToken() {
+    return (
+      document.querySelector("input[name=csrfmiddlewaretoken]")?.value
+      || document.cookie.match(/csrftoken=([^;]+)/)?.[1]
+      || ""
+    );
+  }
+
+  function caseAiUrlFromForm(form) {
+    const action = form?.getAttribute("action") || "";
+    const m = action.match(/\/panel\/cases\/(\d+)\/call\/?/);
+    return m ? `/panel/cases/${m[1]}/ai/` : "";
+  }
+
+  async function postCaseAi(url, fields) {
+    const body = new URLSearchParams(fields || {});
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfToken(),
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: body.toString(),
+      credentials: "same-origin",
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || "خطای AI");
+    return data;
+  }
+
+  document.querySelectorAll("[data-ai-assist]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const form = btn.closest("form");
+      if (!form) return;
+      const url = caseAiUrlFromForm(form);
+      if (!url) {
+        alert("ابتدا پرونده را انتخاب کنید.");
+        return;
+      }
+      const result = form.querySelector("input[name='contact_result']:checked")?.value || "answered";
+      const notes = form.querySelector("textarea[name='notes']")?.value || "";
+      const hint = form.querySelector("[data-ai-hint]");
+      btn.disabled = true;
+      if (hint) {
+        hint.hidden = false;
+        hint.textContent = "AI در حال پیشنهاد گزارش و موعد…";
+      }
+      try {
+        const data = await postCaseAi(url, {
+          action: "call_assist",
+          contact_result: result,
+          draft_notes: notes,
+        });
+        const ta = form.querySelector("textarea[name='notes']");
+        if (ta && data.notes) ta.value = data.notes;
+        const follow = data.follow_preset;
+        if (follow) {
+          const radio = form.querySelector(`input[name='follow_preset'][value='${follow}']`);
+          if (radio) {
+            radio.checked = true;
+            radio.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+        }
+        if (hint) {
+          const tip = (data.tips && data.tips[0]) || data.follow_reason || "پیشنهاد آماده شد.";
+          hint.textContent = tip;
+        }
+      } catch (err) {
+        if (hint) {
+          hint.hidden = false;
+          hint.textContent = err.message || "خطا";
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
 
   const quickDialog = document.getElementById("pnlQuickCall");
   const quickForm = document.getElementById("pnlQuickCallForm");
@@ -331,5 +433,154 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", () => setFuTab(btn.dataset.fuTab));
     });
     setFuTab(initial);
+  }
+
+  // Case AI analyze / personalized script
+  const aiBox = document.getElementById("pnlAiBox");
+  if (aiBox) {
+    const runBtn = document.getElementById("pnlAiRun");
+    const copyBtn = document.getElementById("pnlAiCopy");
+    const statusEl = document.getElementById("pnlAiStatus");
+    const bodyEl = document.getElementById("pnlAiBody");
+    const csrf = document.querySelector("input[name=csrfmiddlewaretoken]")?.value
+      || document.cookie.match(/csrftoken=([^;]+)/)?.[1]
+      || "";
+
+    function setStatus(text, isError) {
+      if (!statusEl) return;
+      statusEl.hidden = !text;
+      statusEl.textContent = text || "";
+      statusEl.classList.toggle("is-error", !!isError);
+    }
+
+    function fillList(ul, items) {
+      if (!ul) return;
+      ul.innerHTML = "";
+      const list = (items && items.length) ? items : ["—"];
+      list.forEach((item, idx) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        if (!items || !items.length) li.classList.add("is-muted");
+        ul.appendChild(li);
+      });
+    }
+
+    function renderAi(data) {
+      if (bodyEl) bodyEl.hidden = false;
+      const profile = document.getElementById("pnlAiProfile");
+      const next = document.getElementById("pnlAiNext");
+      const tone = document.getElementById("pnlAiTone");
+      const script = document.getElementById("pnlAiScript");
+      if (profile) profile.textContent = data.profile || "";
+      if (next) next.textContent = data.next_action || "";
+      if (tone) tone.textContent = data.tone ? `لحن: ${data.tone}` : "";
+      fillList(document.getElementById("pnlAiStrengths"), data.strengths || []);
+      fillList(document.getElementById("pnlAiRisks"), data.risks || []);
+      if (script) {
+        script.innerHTML = "";
+        (data.script_lines || []).forEach((line) => {
+          const li = document.createElement("li");
+          li.textContent = line;
+          script.appendChild(li);
+        });
+      }
+      if (copyBtn) copyBtn.hidden = !(data.script_lines && data.script_lines.length);
+      if (runBtn) runBtn.textContent = "بازنویسی";
+      persianizeTextNodes(aiBox);
+    }
+
+    async function runAi(force) {
+      if (!aiBox.dataset.aiUrl) return;
+      if (aiBox.dataset.aiEnabled !== "1") {
+        setStatus("کلید MiMo تنظیم نشده است.", true);
+        return;
+      }
+      aiBox.classList.add("is-loading");
+      setStatus("در حال تحلیل فرم و نوشتن اسکریپت…");
+      try {
+        const body = new URLSearchParams();
+        body.set("force", force ? "1" : "0");
+        const res = await fetch(aiBox.dataset.aiUrl, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrf,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: body.toString(),
+          credentials: "same-origin",
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || "خطا در تحلیل");
+        }
+        renderAi(data);
+        if (data.fallback) {
+          setStatus(data.error || "حالت پشتیبان: اسکریپت ثابت مرحله.", true);
+        } else if (data.cached) {
+          setStatus("از کش قبلی بارگذاری شد.");
+        } else {
+          setStatus("تحلیل آماده است.");
+        }
+      } catch (err) {
+        setStatus(err.message || "خطا", true);
+      } finally {
+        aiBox.classList.remove("is-loading");
+      }
+    }
+
+    runBtn?.addEventListener("click", () => runAi(true));
+    copyBtn?.addEventListener("click", async () => {
+      const lines = [...(document.querySelectorAll("#pnlAiScript li") || [])]
+        .map((li) => li.textContent.trim())
+        .filter(Boolean);
+      if (!lines.length) return;
+      try {
+        await navigator.clipboard.writeText(lines.join("\n"));
+        setStatus("اسکریپت کپی شد.");
+      } catch (_) {
+        setStatus("کپی نشد؛ دستی انتخاب کنید.", true);
+      }
+    });
+
+    const waBtn = document.getElementById("pnlAiWa");
+    const waBox = document.getElementById("pnlAiWaBox");
+    waBtn?.addEventListener("click", async () => {
+      if (aiBox.dataset.aiEnabled !== "1") {
+        setStatus("کلید MiMo تنظیم نشده است.", true);
+        return;
+      }
+      aiBox.classList.add("is-loading");
+      setStatus("در حال نوشتن پیش‌نویس واتساپ…");
+      try {
+        const data = await postCaseAi(aiBox.dataset.aiUrl, { action: "whatsapp" });
+        const shortEl = document.getElementById("pnlAiWaShort");
+        const formalEl = document.getElementById("pnlAiWaFormal");
+        const noEl = document.getElementById("pnlAiWaNo");
+        if (shortEl) shortEl.textContent = data.short || "";
+        if (formalEl) formalEl.textContent = data.formal || "";
+        if (noEl) noEl.textContent = data.no_answer || "";
+        if (waBox) waBox.hidden = false;
+        setStatus(data.fallback ? "پیش‌نویس پیش‌فرض آماده شد." : "پیش‌نویس واتساپ آماده است.");
+        persianizeTextNodes(waBox);
+      } catch (err) {
+        setStatus(err.message || "خطا", true);
+      } finally {
+        aiBox.classList.remove("is-loading");
+      }
+    });
+
+    document.querySelectorAll("[data-copy-wa]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const el = document.getElementById(btn.dataset.copyWa);
+        const text = el?.textContent?.trim() || "";
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+          setStatus("پیام کپی شد.");
+        } catch (_) {
+          setStatus("کپی نشد.", true);
+        }
+      });
+    });
   }
 });

@@ -163,6 +163,18 @@ class CustomerCase(models.Model):
         blank=True,
         help_text="کلید آیتم → True/False",
     )
+    ai_payload = models.JSONField(
+        "خروجی هوش مصنوعی",
+        default=dict,
+        blank=True,
+        help_text="خلاصه تحلیل + اسکریپت شخصی‌سازی‌شده",
+    )
+    ai_context_hash = models.CharField(
+        "هش زمینه AI", max_length=64, blank=True, default=""
+    )
+    ai_generated_at = models.DateTimeField(
+        "زمان تولید AI", null=True, blank=True
+    )
 
     evaluation = models.ForeignKey(
         "core.EvaluationRequest",

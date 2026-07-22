@@ -1,0 +1,49 @@
+{# Shared call-log fields — expects `form` = QuickCallForm #}
+<div class="pnl-call-log">
+  <div class="pnl-call-section">
+    <div class="pnl-call-label">نتیجه تماس</div>
+    <div class="pnl-call-chips" role="radiogroup" aria-label="نتیجه تماس">
+      {% for radio in form.contact_result %}
+      <label class="pnl-call-chip tone-{{ radio.data.value }}">
+        {{ radio.tag }}
+        <span>{{ radio.choice_label }}</span>
+      </label>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="pnl-call-section">
+    <div class="pnl-call-label">پیگیری بعدی</div>
+    <div class="pnl-call-chips pnl-call-chips-follow" role="radiogroup" aria-label="پیگیری بعدی">
+      {% for radio in form.follow_preset %}
+      <label class="pnl-call-chip">
+        {{ radio.tag }}
+        <span>{{ radio.choice_label }}</span>
+      </label>
+      {% endfor %}
+    </div>
+    <div class="pnl-field pnl-call-custom-date {% if form.follow_preset.value != 'custom' %}is-hidden{% endif %}">
+      <label for="{{ form.custom_jalali_date.id_for_label }}">تاریخ شمسی موعد</label>
+      {{ form.custom_jalali_date }}
+    </div>
+  </div>
+
+  <div class="pnl-call-section">
+    <div class="pnl-call-label-row">
+      <div class="pnl-call-label">گزارش تماس — چی گفته شد؟</div>
+      <button type="button" class="pnl-btn soft pnl-call-ai-assist" data-ai-assist {% if not panel_ai_enabled %}disabled title="AI غیرفعال"{% endif %}>پیشنهاد AI</button>
+    </div>
+    <div class="pnl-call-note-chips" aria-label="یادداشت سریع">
+      <button type="button" class="pnl-call-note-chip" data-note="پاسخ داد؛ مسیر کلی توضیح داده شد.">توضیح مسیر</button>
+      <button type="button" class="pnl-call-note-chip" data-note="اطلاعات تحصیلی و زبان پرسیده شد.">سوال تحصیلی</button>
+      <button type="button" class="pnl-call-note-chip" data-note="بودجه و تمکن بررسی شد.">بودجه</button>
+      <button type="button" class="pnl-call-note-chip" data-note="عدم پاسخ؛ پیام واتساپ ارسال شد.">واتساپ</button>
+      <button type="button" class="pnl-call-note-chip" data-note="قرار شد مدارک را بفرستد.">مدارک</button>
+      <button type="button" class="pnl-call-note-chip" data-note="وقت مشاوره تخصصی پیشنهاد شد.">وقت مشاوره</button>
+    </div>
+    <div class="pnl-field pnl-call-notes">
+      {{ form.notes }}
+    </div>
+    <p class="pnl-call-ai-hint" data-ai-hint hidden></p>
+  </div>
+</div>

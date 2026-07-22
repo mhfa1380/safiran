@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" href="{% static 'panel/favicon-48.png' %}" sizes="48x48">
   <link rel="apple-touch-icon" href="{% static 'panel/apple-touch-icon.png' %}">
   <link rel="stylesheet" href="{% static 'css/app/fonts.css' %}">
-  <link rel="stylesheet" href="{% static 'panel/panel.css' %}?v=23">
+  <link rel="stylesheet" href="{% static 'panel/panel.css' %}?v=27">
 </head>
 <body class="pnl-body {% block body_class %}{% endblock %}">
 {% if request.user.is_authenticated %}
@@ -142,29 +142,29 @@
 </nav>
 
 {% if call_form and not hide_global_quick_call %}
-<dialog class="pnl-sheet" id="pnlQuickCall">
-  <div class="pnl-sheet-panel">
+<dialog class="pnl-sheet pnl-sheet-call" id="pnlQuickCall">
+  <div class="pnl-sheet-panel pnl-call-panel">
     <div class="pnl-sheet-handle"></div>
     <div class="pnl-sheet-head">
-      <strong id="pnlQuickTitle">ثبت تماس سریع</strong>
+      <div>
+        <p class="pnl-call-kicker">لاگ تماس</p>
+        <strong id="pnlQuickTitle">ثبت تماس سریع</strong>
+      </div>
       <button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button>
     </div>
-    <form method="post" id="pnlQuickCallForm" class="pnl-sheet-body">
+    <form method="post" id="pnlQuickCallForm" class="pnl-sheet-body pnl-call-form">
       {% csrf_token %}
       <input type="hidden" name="next" id="pnlQuickNext" value="">
-      <p class="pnl-muted" id="pnlQuickMeta"></p>
-      <div class="pnl-field"><label>نتیجه تماس</label>{{ call_form.contact_result }}</div>
-      <div class="pnl-field"><label>پیگیری بعدی</label>{{ call_form.follow_preset }}</div>
-      <div class="pnl-field"><label>تاریخ شمسی</label>{{ call_form.custom_jalali_date }}</div>
-      <div class="pnl-field"><label>یادداشت</label>{{ call_form.notes }}</div>
-      <button class="pnl-btn" type="submit" style="width:100%">ثبت تماس</button>
+      <p class="pnl-call-meta" id="pnlQuickMeta"></p>
+      {% include "panel/_call_log_fields.html" with form=call_form %}
+      <button class="pnl-btn pnl-call-submit" type="submit">ثبت گزارش تماس</button>
     </form>
   </div>
 </dialog>
 {% endif %}
 
 {% block sheets %}{% endblock %}
-<script src="{% static 'panel/panel.js' %}?v=7"></script>
+<script src="{% static 'panel/panel.js' %}?v=10"></script>
 
 {% else %}
   {% block auth_content %}{% endblock %}

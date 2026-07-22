@@ -160,6 +160,7 @@ _TEMPLATES_BASE = {
                 "core.context_processors.seo_context",
                 "core.context_processors.corner_promos_context",
                 "core.context_processors.mhfa_live_context",
+                "panel.context_processors.panel_ai",
         ],
     },
 }
@@ -470,6 +471,15 @@ MHFA_NOTIFY_BLOG_SAVES = os.getenv("MHFA_NOTIFY_BLOG_SAVES", "true").lower() in 
     "yes",
     "on",
 )
+
+# ======================================================
+# PANEL AI (Xiaomi MiMo)
+# ======================================================
+PANEL_AI_ENABLED = _env_bool("PANEL_AI_ENABLED", "1")
+MIMO_API_KEY = os.getenv("MIMO_API_KEY", "").strip()
+MIMO_BASE_URL = os.getenv("MIMO_BASE_URL", "https://api.xiaomimimo.com/v1").rstrip("/")
+MIMO_MODEL = os.getenv("MIMO_MODEL", "mimo-v2.5-pro").strip() or "mimo-v2.5-pro"
+MIMO_TIMEOUT_SECONDS = int(os.getenv("MIMO_TIMEOUT_SECONDS", "30"))
 
 # ======================================================
 # SECURITY HEADERS

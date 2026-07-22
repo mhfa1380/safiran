@@ -290,12 +290,14 @@ def setup_demo_users() -> dict[str, str]:
     manager, created_m = User.objects.get_or_create(
         username="panel_manager",
         defaults={
-            "first_name": "مدیر",
-            "last_name": "پیگیری",
+            "first_name": "امید",
+            "last_name": "",
             "is_staff": True,
             "email": "manager@panel.local",
         },
     )
+    manager.first_name = "امید"
+    manager.last_name = ""
     manager.set_password(password)
     manager.is_staff = True
     manager.save()
@@ -304,12 +306,14 @@ def setup_demo_users() -> dict[str, str]:
     staff, created_s = User.objects.get_or_create(
         username="panel_staff",
         defaults={
-            "first_name": "پرسنل",
-            "last_name": "پیگیری",
+            "first_name": "متین",
+            "last_name": "",
             "is_staff": True,
             "email": "staff@panel.local",
         },
     )
+    staff.first_name = "متین"
+    staff.last_name = ""
     staff.set_password(password)
     staff.is_staff = True
     staff.save()
