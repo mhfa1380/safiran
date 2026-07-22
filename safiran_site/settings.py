@@ -73,6 +73,10 @@ if DEBUG:
     _local_origins = [
         "http://127.0.0.1",
         "http://localhost",
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8001",
+        "http://localhost:8001",
         "http://127.0.0.1:1225",
         "http://localhost:1225",
     ]
@@ -103,6 +107,7 @@ INSTALLED_APPS = [
     "core.admin_content",
     "core.admin_universities",
     "core.admin_requests",
+    "panel.apps.PanelConfig",
 ]
 
 # ======================================================

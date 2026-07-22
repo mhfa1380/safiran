@@ -1,0 +1,26 @@
+{% extends "panel/base.html" %}
+{% block title %}ورود{% endblock %}
+{% block auth_content %}
+<div class="pnl-login-wrap">
+  <div class="pnl-login-card">
+    <div class="pnl-brand-mark" aria-hidden="true">س</div>
+    <h1>ورود به پنل پیگیری</h1>
+    <p>فضای کاری مدیر و پرسنل کال‌سنتر سفیران — سریع، مرتب، شمسی.</p>
+    <form method="post" action="">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="pnl-error">{{ form.non_field_errors|striptags }}</div>
+      {% endif %}
+      <div class="pnl-field">
+        <label for="id_username">نام کاربری</label>
+        {{ form.username }}
+      </div>
+      <div class="pnl-field">
+        <label for="id_password">رمز عبور</label>
+        {{ form.password }}
+      </div>
+      <button class="pnl-btn" type="submit" style="width:100%">ورود به پنل</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

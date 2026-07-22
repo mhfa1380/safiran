@@ -1,0 +1,152 @@
+{% extends "panel/base.html" %}
+{% load jalali_filters %}
+{% block title %}تنظیمات{% endblock %}
+{% block page_title %}تنظیمات{% endblock %}
+{% block body_class %}pnl-page-settings{% endblock %}
+{% block content %}
+<div class="pnl-set">
+
+  <header class="pnl-set-head">
+    <div>
+      <p class="pnl-set-kicker">اتوماسیون تخصیص</p>
+      <h2>تنظیمات</h2>
+      <p class="pnl-set-sub">تخصیص خودکار، توزیع روزانه و وزن پرسنل.</p>
+    </div>
+    <div class="pnl-set-head-actions">
+      <a class="pnl-btn soft" href="{% url 'panel:manage' %}">مدیریت تیم</a>
+      <a class="pnl-btn secondary" href="{% url 'panel:report' %}">گزارش</a>
+    </div>
+  </header>
+
+  <section class="pnl-set-kpis" aria-label="وضعیت">
+    <a class="pnl-set-kpi is-warn" href="{% url 'panel:case_list' %}?scope=unassigned">
+      <span>بدون مسئول</span>
+      <strong>{{ unassigned_n|persian_numbers }}</strong>
+    </a>
+    <div class="pnl-set-kpi is-accent">
+      <span>پرسنل فعال</span>
+      <strong>{{ active_count|persian_numbers }}</strong>
+    </div>
+    <div class="pnl-set-kpi">
+      <span>آخرین توزیع</span>
+      <strong class="pnl-set-kpi-sm">{% if settings_obj.last_daily_run_on %}{{ settings_obj.last_daily_run_on|jalali }}{% else %}—{% endif %}</strong>
+    </div>
+    <div class="pnl-set-kpi {% if settings_obj.auto_assign_enabled %}is-ok{% else %}is-muted{% endif %}">
+      <span>تخصیص خودکار</span>
+      <strong class="pnl-set-kpi-sm">{% if settings_obj.auto_assign_enabled %}روشن{% else %}خاموش{% endif %}</strong>
+    </div>
+  </section>
+
+  <div class="pnl-set-actions">
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="run_daily">
+      <button class="pnl-btn" type="submit">اجرای توزیع الان</button>
+    </form>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="assign_unassigned">
+      <button class="pnl-btn secondary" type="submit">تخصیص همهٔ بدون‌مسئول</button>
+    </form>
+  </div>
+
+  <form method="post" class="pnl-set-form">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save">
+
+    <div class="pnl-set-grid">
+      <section class="pnl-set-card">
+        <header class="pnl-set-card-h">
+          <h3>اتوماسیون</h3>
+          <span>قوانین</span>
+        </header>
+        <div class="pnl-set-body">
+          <label class="pnl-set-switch">
+            <span class="pnl-set-switch-ctrl">{{ form.auto_assign_enabled }}</span>
+            <span class="pnl-set-switch-copy">
+              <strong>{{ form.auto_assign_enabled.label }}</strong>
+              <small>پرونده تازه بدون مسئول، خودکار به پرسنل فعال می‌رود.</small>
+            </span>
+          </label>
+
+          <div class="pnl-set-field">
+            <label for="{{ form.auto_assign_mode.id_for_label }}">{{ form.auto_assign_mode.label }}</label>
+            {{ form.auto_assign_mode }}
+          </div>
+          <div class="pnl-set-field">
+            <label for="{{ form.fixed_assignee.id_for_label }}">{{ form.fixed_assignee.label }}</label>
+            {{ form.fixed_assignee }}
+            <p class="pnl-set-hint">فقط وقتی روش «یک نفر ثابت» انتخاب شده باشد.</p>
+          </div>
+
+          <div class="pnl-set-divider"></div>
+
+          <label class="pnl-set-switch">
+            <span class="pnl-set-switch-ctrl">{{ form.daily_followup_enabled }}</span>
+            <span class="pnl-set-switch-copy">
+              <strong>{{ form.daily_followup_enabled.label }}</strong>
+              <small>با باز شدن داشبورد مدیر، روزی یک‌بار صف پخش می‌شود.</small>
+            </span>
+          </label>
+
+          <div class="pnl-set-field">
+            <label for="{{ form.daily_followup_mode.id_for_label }}">{{ form.daily_followup_mode.label }}</label>
+            {{ form.daily_followup_mode }}
+          </div>
+          <div class="pnl-set-field">
+            <label for="{{ form.daily_followup_scope.id_for_label }}">{{ form.daily_followup_scope.label }}</label>
+            {{ form.daily_followup_scope }}
+          </div>
+        </div>
+      </section>
+
+      <section class="pnl-set-card">
+        <header class="pnl-set-card-h">
+          <h3>حساب‌های مسئول</h3>
+          <span>وزن و نوبت</span>
+        </header>
+        <div class="pnl-set-staff">
+          <p class="pnl-set-hint pnl-set-hint-pad">فعال = شرکت در نوبت خودکار. وزن بالاتر = سهم بیشتر.</p>
+          {% for p in profiles %}
+          <article class="pnl-set-staff-row">
+            <div class="pnl-set-staff-main">
+              {% with name=p.user.get_full_name|default:p.user.username %}
+              <span class="pnl-set-avatar" aria-hidden="true">{{ name.0 }}</span>
+              <div>
+                <strong>{{ name }}</strong>
+                <div class="pnl-set-staff-meta">
+                  <span>{{ p.user.username }}</span>
+                  <span>باز {{ p.open_load|persian_numbers }}</span>
+                </div>
+              </div>
+              {% endwith %}
+            </div>
+            <div class="pnl-set-staff-controls">
+              <label class="pnl-set-active {% if p.is_active %}is-on{% endif %}">
+                <input type="checkbox" name="staff_{{ p.user_id }}" {% if p.is_active %}checked{% endif %}>
+                فعال
+              </label>
+              <label class="pnl-set-num">
+                وزن
+                <input class="pnl-input" type="number" min="1" max="10" name="weight_{{ p.user_id }}" value="{{ p.weight }}" dir="ltr">
+              </label>
+              <label class="pnl-set-num">
+                ترتیب
+                <input class="pnl-input" type="number" min="0" name="order_{{ p.user_id }}" value="{{ p.sort_order }}" dir="ltr">
+              </label>
+            </div>
+          </article>
+          {% empty %}
+          <div class="pnl-set-empty">پرسنلی نیست</div>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+
+    <div class="pnl-set-save">
+      <button class="pnl-btn" type="submit">ذخیره تنظیمات</button>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

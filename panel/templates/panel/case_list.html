@@ -1,0 +1,79 @@
+{% extends "panel/base.html" %}
+{% load jalali_filters %}
+{% block title %}{{ scope_label }}{% endblock %}
+{% block page_title %}پرونده‌ها{% endblock %}
+{% block body_class %}pnl-page-cases{% endblock %}
+{% block content %}
+<div class="pnl-cases">
+
+  <header class="pnl-cases-head">
+    <div>
+      <p class="pnl-cases-kicker">لیست پرونده</p>
+      <h2>{{ scope_label }}</h2>
+      <p class="pnl-cases-sub">{{ cases_count|persian_numbers }} مورد در این نما{% if cases_count >= 200 %} · حداکثر ۲۰۰ نمایش{% endif %}</p>
+    </div>
+    <div class="pnl-cases-head-actions">
+      {% if scope == 'unassigned' and is_manager %}
+      <a class="pnl-btn soft" href="{% url 'panel:manage' %}">تخصیص گروهی</a>
+      {% endif %}
+      <a class="pnl-btn" href="{% url 'panel:case_create' %}">+ پرونده</a>
+    </div>
+  </header>
+
+  <nav class="pnl-cases-scopes" aria-label="محدوده">
+    <a class="pnl-cases-chip {% if scope == '' %}is-on{% endif %}" href="?scope=">همه باز</a>
+    <a class="pnl-cases-chip {% if scope == 'today' %}is-on{% endif %}" href="?scope=today">امروز</a>
+    <a class="pnl-cases-chip {% if scope == 'overdue' %}is-on{% endif %}" href="?scope=overdue">عقب‌افتاده</a>
+    <a class="pnl-cases-chip {% if scope == 'new' %}is-on{% endif %}" href="?scope=new">جدید</a>
+    <a class="pnl-cases-chip {% if scope == 'mine' %}is-on{% endif %}" href="?scope=mine">مال من</a>
+    {% if is_manager %}
+    <a class="pnl-cases-chip {% if scope == 'unassigned' %}is-on{% endif %}" href="?scope=unassigned">بدون مسئول</a>
+    {% endif %}
+    <a class="pnl-cases-chip {% if scope == 'closed' %}is-on{% endif %}" href="?scope=closed">بسته</a>
+  </nav>
+
+  <form class="pnl-cases-filters {% if is_manager %}is-mgr{% endif %}" method="get">
+    <div class="pnl-cases-filters-grid">
+      {{ form.q }}
+      {{ form.scope }}
+      {{ form.source }}
+      {{ form.stage }}
+      {% if form.assignee %}{{ form.assignee }}{% endif %}
+    </div>
+    <div class="pnl-cases-filters-actions">
+      <a class="pnl-btn secondary" href="{% url 'panel:case_list' %}">پاک کردن</a>
+      <button class="pnl-btn" type="submit">اعمال فیلتر</button>
+    </div>
+  </form>
+
+  <section class="pnl-cases-panel">
+    <header class="pnl-cases-panel-h">
+      <h3>نتایج</h3>
+      <span>{{ cases_count|persian_numbers }}</span>
+    </header>
+    <div class="pnl-cases-list">
+      {% for c in cases %}
+        {% include "panel/_dash_case.html" %}
+      {% empty %}
+        <div class="pnl-cases-empty">
+          <div class="pnl-cases-empty-ico" aria-hidden="true">∅</div>
+          <strong>موردی پیدا نشد</strong>
+          <span>
+            {% if scope == 'unassigned' %}
+              همه پرونده‌های باز مسئول دارند.
+            {% else %}
+              فیلتر را عوض کنید یا پرونده جدید بسازید.
+            {% endif %}
+          </span>
+          {% if scope == 'unassigned' and is_manager %}
+            <a class="pnl-btn soft" href="{% url 'panel:manage' %}">رفتن به مدیریت تیم</a>
+          {% else %}
+            <a class="pnl-btn soft" href="{% url 'panel:case_create' %}">ساخت پرونده</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "panel/base.html" %}
+{% load jalali_filters %}
+{% block title %}صف پیگیری{% endblock %}
+{% block page_title %}صف پیگیری{% endblock %}
+{% block body_class %}pnl-page-follow{% endblock %}
+{% block content %}
+<div class="pnl-fu2" data-fu-root data-default-tab="{% if overdue_count %}overdue{% else %}today{% endif %}">
+
+  <header class="pnl-fu2-head">
+    <div>
+      <p class="pnl-fu2-date">{{ today_date|jalali }}</p>
+      <h2>صف کار امروز</h2>
+      <p class="pnl-fu2-sub">تماس → ثبت نتیجه → بعدی. بدون شلوغی.</p>
+    </div>
+    <div class="pnl-fu2-head-actions">
+      <a class="pnl-btn soft" href="?{% if mine %}{% else %}mine=1{% endif %}">{% if mine %}نمایش همه{% else %}فقط مال من{% endif %}</a>
+      <a class="pnl-btn secondary" href="{% url 'panel:flow' %}">Flow</a>
+    </div>
+  </header>
+
+  <div class="pnl-fu2-stats">
+    <button type="button" class="pnl-fu2-stat is-danger" data-fu-tab="overdue" aria-pressed="false">
+      <span>عقب‌افتاده</span>
+      <strong>{{ overdue_count|persian_numbers }}</strong>
+    </button>
+    <button type="button" class="pnl-fu2-stat is-warn" data-fu-tab="today" aria-pressed="false">
+      <span>امروز</span>
+      <strong>{{ today_count|persian_numbers }}</strong>
+    </button>
+    <button type="button" class="pnl-fu2-stat" data-fu-tab="all" aria-pressed="false">
+      <span>همه صف</span>
+      <strong>{{ total_queue|persian_numbers }}</strong>
+    </button>
+  </div>
+
+  {% if mine %}
+  <p class="pnl-fu2-filter-note">فیلتر فعال: فقط پرونده‌های شما</p>
+  {% endif %}
+
+  <section class="pnl-fu2-inbox" data-fu-panel="overdue" hidden>
+    <header class="pnl-fu2-inbox-h">
+      <h3>عقب‌افتاده</h3>
+      <span>{{ overdue_count|persian_numbers }} مورد</span>
+    </header>
+    <div class="pnl-fu2-list">
+      {% for c in overdue %}
+        {% include "panel/_fu_case.html" with priority="overdue" %}
+      {% empty %}
+        <div class="pnl-fu2-empty">
+          <div class="pnl-fu2-empty-ico" aria-hidden="true">✓</div>
+          <strong>عقب‌افتاده‌ای نیست</strong>
+          <span>برو سراغ موعدهای امروز</span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="pnl-fu2-inbox" data-fu-panel="today" hidden>
+    <header class="pnl-fu2-inbox-h">
+      <h3>پیگیری امروز</h3>
+      <span>{{ today_count|persian_numbers }} مورد</span>
+    </header>
+    <div class="pnl-fu2-list">
+      {% for c in due_today %}
+        {% include "panel/_fu_case.html" with priority="today" %}
+      {% empty %}
+        <div class="pnl-fu2-empty">
+          <div class="pnl-fu2-empty-ico" aria-hidden="true">○</div>
+          <strong>برنامه امروز خالی است</strong>
+          <span>از Flow یا پرونده‌های جدید ادامه بده</span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="pnl-fu2-inbox" data-fu-panel="all" hidden>
+    <header class="pnl-fu2-inbox-h">
+      <h3>کل صف</h3>
+      <span>{{ total_queue|persian_numbers }} مورد</span>
+    </header>
+    <div class="pnl-fu2-list">
+      {% if overdue_count %}
+      <div class="pnl-fu2-group">عقب‌افتاده</div>
+      {% for c in overdue %}
+        {% include "panel/_fu_case.html" with priority="overdue" %}
+      {% endfor %}
+      {% endif %}
+      {% if today_count %}
+      <div class="pnl-fu2-group">امروز</div>
+      {% for c in due_today %}
+        {% include "panel/_fu_case.html" with priority="today" %}
+      {% endfor %}
+      {% endif %}
+      {% if not overdue_count and not today_count %}
+        <div class="pnl-fu2-empty">
+          <div class="pnl-fu2-empty-ico" aria-hidden="true">✓</div>
+          <strong>صف کاملاً خالی است</strong>
+          <span>فعلاً پیگیری فوری نداری</span>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <footer class="pnl-fu2-dock" aria-label="وضعیت صف">
+    <div>
+      <strong data-fu-dock-n>{{ total_queue|persian_numbers }}</strong>
+      <span data-fu-dock-l>در صف کار</span>
+    </div>
+    <a class="pnl-btn" href="{% url 'panel:case_create' %}">+ پرونده</a>
+  </footer>
+
+</div>
+{% endblock %}

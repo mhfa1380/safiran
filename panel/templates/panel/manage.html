@@ -1,0 +1,161 @@
+{% extends "panel/base.html" %}
+{% load jalali_filters %}
+{% block title %}مدیریت تیم{% endblock %}
+{% block page_title %}مدیریت{% endblock %}
+{% block body_class %}pnl-page-manage{% endblock %}
+{% block content %}
+<div class="pnl-mgr">
+
+  <header class="pnl-mgr-head">
+    <div>
+      <p class="pnl-mgr-kicker">عملیات مدیر</p>
+      <h2>مدیریت تیم</h2>
+      <p class="pnl-mgr-sub">تخصیص، انتقال، همگام‌سازی و بار کاری — مینیمال و سریع.</p>
+    </div>
+    <div class="pnl-mgr-head-actions">
+      <a class="pnl-btn soft" href="{% url 'panel:settings' %}">تنظیمات</a>
+      <a class="pnl-btn secondary" href="{% url 'panel:report' %}">گزارش</a>
+    </div>
+  </header>
+
+  <section class="pnl-mgr-kpis" aria-label="خلاصه">
+    <div class="pnl-mgr-kpi">
+      <span>پرونده باز</span>
+      <strong>{{ open_total|persian_numbers }}</strong>
+    </div>
+    <a class="pnl-mgr-kpi is-danger" href="{% url 'panel:case_list' %}?scope=overdue">
+      <span>عقب‌افتاده</span>
+      <strong>{{ overdue|persian_numbers }}</strong>
+    </a>
+    <a class="pnl-mgr-kpi is-warn" href="{% url 'panel:case_list' %}?scope=unassigned">
+      <span>بدون مسئول</span>
+      <strong>{{ unassigned|persian_numbers }}</strong>
+    </a>
+    <a class="pnl-mgr-kpi is-accent" href="{% url 'panel:report' %}">
+      <span>آمار</span>
+      <strong>گزارش</strong>
+    </a>
+  </section>
+
+  <div class="pnl-mgr-grid">
+    <section class="pnl-mgr-card">
+      <header class="pnl-mgr-card-h">
+        <h3>تخصیص بدون‌مسئول</h3>
+        <span>گروهی</span>
+      </header>
+      <form method="post" class="pnl-mgr-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="bulk_assign">
+        <div class="pnl-mgr-field">
+          <label>مسئول مقصد</label>
+          <select class="pnl-input" name="assignee" required>
+            <option value="">— انتخاب —</option>
+            {% for u in staff_users %}
+              <option value="{{ u.pk }}">{{ u.get_full_name|default:u.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="pnl-mgr-field">
+          <label>حداکثر تعداد</label>
+          <input class="pnl-input" type="number" name="limit" value="50" min="1" max="300" dir="ltr">
+        </div>
+        <button class="pnl-btn" type="submit">تخصیص کن</button>
+      </form>
+      <form method="post" class="pnl-mgr-form pnl-mgr-form-sep">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="rebalance">
+        <p class="pnl-mgr-hint">بار بدون‌مسئول را بین پرسنل فعال پخش می‌کند.</p>
+        <button class="pnl-btn secondary" type="submit">توزیع خودکار</button>
+      </form>
+    </section>
+
+    <section class="pnl-mgr-card">
+      <header class="pnl-mgr-card-h">
+        <h3>انتقال بین پرسنل</h3>
+        <span>جابه‌جایی</span>
+      </header>
+      <form method="post" class="pnl-mgr-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="reassign_staff">
+        <div class="pnl-mgr-field">
+          <label>از</label>
+          <select class="pnl-input" name="from_user" required>
+            <option value="">—</option>
+            {% for u in staff_users %}
+              <option value="{{ u.pk }}">{{ u.get_full_name|default:u.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="pnl-mgr-field">
+          <label>به</label>
+          <select class="pnl-input" name="to_user" required>
+            <option value="">—</option>
+            {% for u in staff_users %}
+              <option value="{{ u.pk }}">{{ u.get_full_name|default:u.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="pnl-mgr-field">
+          <label>حداکثر تعداد</label>
+          <input class="pnl-input" type="number" name="re_limit" value="30" min="1" max="200" dir="ltr">
+        </div>
+        <button class="pnl-btn" type="submit">انتقال پرونده‌های باز</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="pnl-mgr-grid">
+    <section class="pnl-mgr-card">
+      <header class="pnl-mgr-card-h">
+        <h3>همگام‌سازی لید</h3>
+        <span>سایت → پنل</span>
+      </header>
+      <div class="pnl-mgr-form">
+        <p class="pnl-mgr-hint">ارزیابی، رزرو مشاوره و تماس‌با‌ما را به پرونده تبدیل می‌کند.</p>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="sync_leads">
+          <button class="pnl-btn soft" type="submit" style="width:100%">همگام‌سازی الان</button>
+        </form>
+        <div class="pnl-mgr-links">
+          <a href="{% url 'panel:settings' %}">اتوماسیون</a>
+          <a href="{% url 'panel:report_export' %}">خروجی CSV</a>
+          <a href="{% url 'panel:flow' %}">مسیر Flow</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="pnl-mgr-card">
+      <header class="pnl-mgr-card-h">
+        <h3>برد بار تیم</h3>
+        <span>زنده</span>
+      </header>
+      <div class="pnl-mgr-staff">
+        {% for r in staff_rows %}
+        <article class="pnl-mgr-staff-row">
+          <div class="pnl-mgr-staff-main">
+            <span class="pnl-mgr-avatar" aria-hidden="true">{{ r.name.0 }}</span>
+            <div>
+              <strong>{{ r.name }}</strong>
+              <div class="pnl-mgr-staff-meta">
+                <span>باز {{ r.open|persian_numbers }}</span>
+                <span class="{% if r.overdue %}is-danger{% endif %}">عقب {{ r.overdue|persian_numbers }}</span>
+                <span>امروز {{ r.today|persian_numbers }}</span>
+              </div>
+            </div>
+          </div>
+          {% if r.uid %}
+            <a class="pnl-btn soft" href="{% url 'panel:case_list' %}?assignee={{ r.uid }}">مشاهده</a>
+          {% else %}
+            <a class="pnl-btn soft" href="{% url 'panel:case_list' %}?scope=unassigned">مشاهده</a>
+          {% endif %}
+        </article>
+        {% empty %}
+        <div class="pnl-mgr-empty">پرسنلی ثبت نشده</div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+</div>
+{% endblock %}

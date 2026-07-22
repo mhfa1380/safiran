@@ -1,0 +1,249 @@
+{% extends "panel/base.html" %}
+{% load jalali_filters %}
+{% block title %}{{ case.customer.full_name }}{% endblock %}
+{% block page_title %}{{ case.customer.full_name }}{% endblock %}
+{% block body_class %}pnl-page-detail{% endblock %}
+{% block content %}
+<ol class="pnl-flow-rail" aria-label="مسیر مشتری">
+  {% for s in flow_steps %}
+  <li class="is-{{ s.state }}">
+    <span class="node" aria-hidden="true">
+      {% if s.state == 'done' or s.state == 'won' %}✓{% elif s.state == 'lost' %}✕{% elif s.state == 'current' %}●{% else %}{{ forloop.counter|persian_numbers }}{% endif %}
+    </span>
+    <span class="lab">{{ s.label }}</span>
+    <span class="sub">{% if s.state == 'done' %}انجام شد{% elif s.state == 'current' %}الان اینجاست{% elif s.state == 'won' %}موفق{% elif s.state == 'lost' %}مختومه{% else %}انجام نشده{% endif %}</span>
+  </li>
+  {% endfor %}
+</ol>
+
+<section class="pnl-card pnl-hero">
+  <div class="pnl-btn-row" style="justify-content:space-between;margin-bottom:8px">
+    <span class="pnl-chip source">{{ case.case_code|persian_numbers }}</span>
+    <span class="pnl-chip {{ case.follow_up_badge }}">{{ case.get_stage_display }} · {{ case.get_status_display }}</span>
+  </div>
+  <h2>{{ case.customer.full_name }}</h2>
+  <div class="pnl-case-meta">
+    <span>{{ case.customer.phone_display|default:case.customer.phone_normalized|persian_numbers }}</span>
+    {% if case.customer.email %}<span>{{ case.customer.email }}</span>{% endif %}
+    <span class="pnl-chip source">{{ case.get_source_type_display }}</span>
+  </div>
+  <div class="pnl-progress" title="{{ case.progress|persian_numbers }}٪"><span style="width:{{ case.progress }}%"></span></div>
+  <div class="pnl-case-meta">
+    <span>پیشرفت {{ case.progress|persian_numbers }}٪</span>
+    {% if case.next_follow_up_at %}<span>موعد: {{ case.next_follow_up_at|jalali }}</span>{% endif %}
+    <span>مسئول: {% if case.assigned_to %}{{ case.assigned_to.get_username }}{% else %}—{% endif %}</span>
+    {% if case.target_country %}<span>{{ case.target_country }}</span>{% endif %}
+    {% if case.target_degree %}<span>{{ case.target_degree }}</span>{% endif %}
+  </div>
+  <div class="pnl-btn-row" style="margin-top:14px">
+    {% if tel_href %}<a class="pnl-btn" href="{{ tel_href }}">☎ تماس</a>{% endif %}
+    {% if wa_href %}<a class="pnl-btn soft" href="{{ wa_href }}" target="_blank" rel="noopener">واتساپ</a>{% endif %}
+    {% if not case.assigned_to_id or is_manager %}
+    <form method="post" action="{% url 'panel:case_claim' case.pk %}">
+      {% csrf_token %}
+      <button class="pnl-btn secondary" type="submit">برداشت برای من</button>
+    </form>
+    {% endif %}
+  </div>
+  {% if case.loss_reason %}
+    <p style="margin:12px 0 0;color:var(--pnl-danger);font-weight:700">مختومه: {{ case.get_loss_reason_display }} — {{ case.loss_note }}</p>
+  {% endif %}
+</section>
+
+{% if can_edit and case.status != 'closed_lost' and case.status != 'closed_won' %}
+<nav class="pnl-action-dock" aria-label="اقدامات سریع">
+  <button type="button" class="pnl-btn" data-open-sheet="sheetCall">تماس</button>
+  <button type="button" class="pnl-btn soft" data-open-sheet="sheetStage">مرحله</button>
+  <button type="button" class="pnl-btn soft" data-open-sheet="sheetAppt">جلسه</button>
+  <button type="button" class="pnl-btn secondary" data-open-sheet="sheetAssign">تخصیص</button>
+  <button type="button" class="pnl-btn secondary" data-open-sheet="sheetDoc">مدرک</button>
+  <button type="button" class="pnl-btn danger" data-open-sheet="sheetClose">مختومه</button>
+</nav>
+{% elif can_edit %}
+<nav class="pnl-action-dock" style="grid-template-columns:1fr">
+  <form method="post" action="{% url 'panel:case_reopen' case.pk %}" style="width:100%">
+    {% csrf_token %}
+    <button class="pnl-btn" type="submit" style="width:100%">بازگشایی پرونده</button>
+  </form>
+</nav>
+{% endif %}
+
+{% if scripts %}
+<section class="pnl-card" style="margin-bottom:12px">
+  <div class="pnl-card-h"><span>اسکریپت این مرحله</span></div>
+  <ul class="pnl-script-list">
+    {% for line in scripts %}<li>{{ line }}</li>{% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<div class="pnl-grid-2">
+  <section class="pnl-card">
+    <div class="pnl-card-h"><span>چک‌لیست اعزام</span></div>
+    <div class="pnl-card-b" style="padding:12px">
+      {% if check_progress.has_checklist %}
+      <div class="pnl-check-summary">
+        <span class="pill-ok">✓ {{ check_progress.done|persian_numbers }} انجام‌شده</span>
+        <span class="pill-todo">○ {{ check_progress.todo_labels|length|persian_numbers }} مانده از {{ check_progress.total|persian_numbers }}</span>
+      </div>
+      <div class="pnl-flow-check-bar" style="margin-bottom:10px"><span style="width:{{ check_progress.pct }}%"></span></div>
+      {% endif %}
+      {% regroup checklist by group_label as groups %}
+      {% for g in groups %}
+        <div class="pnl-check-group">{{ g.grouper }}</div>
+        {% for item in g.list %}
+          <form method="post" action="{% url 'panel:case_checklist' case.pk %}" class="pnl-check-row">
+            {% csrf_token %}
+            <input type="hidden" name="key" value="{{ item.key }}">
+            <input type="hidden" name="done" value="{% if item.done %}0{% else %}1{% endif %}">
+            <button type="submit" class="pnl-check-btn {% if item.done %}is-done{% endif %}">
+              {% if item.done %}✓{% else %}○{% endif %} {{ item.label }}
+            </button>
+          </form>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </section>
+  <section class="pnl-card">
+    <div class="pnl-card-h"><span>تایم‌لاین</span></div>
+    <div class="pnl-card-b pnl-timeline">
+      {% for e in events %}
+      <div class="pnl-event">
+        <div class="when">{{ e.created_at|jalali }} · {% if e.created_by %}{{ e.created_by.get_username }}{% else %}سیستم{% endif %}</div>
+        <div class="etype">{{ e.get_event_type_display }}{% if e.contact_result %} — {{ e.get_contact_result_display }}{% endif %}</div>
+        {% if e.notes %}<div>{{ e.notes }}</div>{% endif %}
+        {% if e.next_follow_up_at %}<div class="when">پیگیری بعدی: {{ e.next_follow_up_at|jalali }}</div>{% endif %}
+      </div>
+      {% empty %}
+        <div class="pnl-empty">هنوز رویدادی نیست</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<div class="pnl-grid-2" style="margin-top:12px">
+  <section class="pnl-card">
+    <div class="pnl-card-h"><span>مدارک</span></div>
+    <div class="pnl-card-b" style="padding:12px">
+      {% for d in documents %}
+        <div class="pnl-report-row">
+          <a href="{{ d.file.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+          <span class="pnl-muted">{{ d.created_at|jalali }}</span>
+        </div>
+      {% empty %}
+        <div class="pnl-empty">مدرکی نیست — از دکمه «مدرک» آپلود کنید</div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="pnl-card">
+    <div class="pnl-card-h"><span>منبع و جلسات</span></div>
+    <div class="pnl-card-b" style="padding:14px;line-height:1.8">
+      {% if case.evaluation %}
+        <div><strong>ارزیابی #{{ case.evaluation_id|persian_numbers }}</strong></div>
+        <div>{{ case.evaluation.get_status_display }} · {{ case.evaluation.get_target_country_display }}</div>
+      {% endif %}
+      {% if case.consultation %}
+        <div style="margin-top:8px"><strong>رزرو مشاوره #{{ case.consultation_id|persian_numbers }}</strong></div>
+        <div>{{ case.consultation.get_consultation_type_display }}</div>
+      {% endif %}
+      {% if case.contact_message %}
+        <div style="margin-top:8px"><strong>تماس با ما</strong></div>
+        <div>{{ case.contact_message.subject }}</div>
+      {% endif %}
+      {% if appointments %}
+        <hr style="border:0;border-top:1px solid var(--pnl-line);margin:12px 0">
+        <strong>جلسات</strong>
+        {% for a in appointments %}
+          <div>{{ a.get_kind_display }} · {{ a.starts_at|jalali }} {{ a.starts_at|time:"H:i"|persian_numbers }}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block sheets %}
+{% if can_edit and case.status != 'closed_lost' and case.status != 'closed_won' %}
+<dialog class="pnl-sheet" id="sheetCall">
+  <div class="pnl-sheet-panel">
+    <div class="pnl-sheet-handle"></div>
+    <div class="pnl-sheet-head"><strong>ثبت تماس</strong><button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button></div>
+    <form method="post" action="{% url 'panel:case_call' case.pk %}" class="pnl-sheet-body">
+      {% csrf_token %}
+      <div class="pnl-field"><label>نتیجه</label>{{ call_form.contact_result }}</div>
+      <div class="pnl-field"><label>پیگیری بعدی</label>{{ call_form.follow_preset }}</div>
+      <div class="pnl-field"><label>تاریخ شمسی</label>{{ call_form.custom_jalali_date }}</div>
+      <div class="pnl-field"><label>یادداشت</label>{{ call_form.notes }}</div>
+      <button class="pnl-btn" type="submit" style="width:100%">ثبت</button>
+    </form>
+  </div>
+</dialog>
+
+<dialog class="pnl-sheet" id="sheetStage">
+  <div class="pnl-sheet-panel">
+    <div class="pnl-sheet-handle"></div>
+    <div class="pnl-sheet-head"><strong>تغییر مرحله</strong><button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button></div>
+    <form method="post" action="{% url 'panel:case_stage' case.pk %}" class="pnl-sheet-body">
+      {% csrf_token %}
+      <div class="pnl-field">{{ stage_form.stage }}</div>
+      <button class="pnl-btn" type="submit" style="width:100%">ذخیره مرحله</button>
+    </form>
+  </div>
+</dialog>
+
+<dialog class="pnl-sheet" id="sheetAssign">
+  <div class="pnl-sheet-panel">
+    <div class="pnl-sheet-handle"></div>
+    <div class="pnl-sheet-head"><strong>تخصیص مسئول</strong><button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button></div>
+    <form method="post" action="{% url 'panel:case_assign' case.pk %}" class="pnl-sheet-body">
+      {% csrf_token %}
+      <div class="pnl-field">{{ assign_form.assigned_to }}</div>
+      <button class="pnl-btn" type="submit" style="width:100%">ذخیره تخصیص</button>
+    </form>
+  </div>
+</dialog>
+
+<dialog class="pnl-sheet" id="sheetAppt">
+  <div class="pnl-sheet-panel">
+    <div class="pnl-sheet-handle"></div>
+    <div class="pnl-sheet-head"><strong>ست جلسه شمسی</strong><button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button></div>
+    <form method="post" action="{% url 'panel:case_appointment' case.pk %}" class="pnl-sheet-body">
+      {% csrf_token %}
+      <div class="pnl-field"><label>نوع</label>{{ appointment_form.kind }}</div>
+      <div class="pnl-field"><label>حالت</label>{{ appointment_form.mode }}</div>
+      <div class="pnl-field"><label>تاریخ شمسی</label>{{ appointment_form.jalali_date }}</div>
+      <div class="pnl-field"><label>ساعت</label>{{ appointment_form.time_hm }}</div>
+      <div class="pnl-field"><label>عنوان</label>{{ appointment_form.title }}</div>
+      <div class="pnl-field">{{ appointment_form.notes }}</div>
+      <button class="pnl-btn" type="submit" style="width:100%">ثبت در تقویم</button>
+    </form>
+  </div>
+</dialog>
+
+<dialog class="pnl-sheet" id="sheetDoc">
+  <div class="pnl-sheet-panel">
+    <div class="pnl-sheet-handle"></div>
+    <div class="pnl-sheet-head"><strong>آپلود مدرک</strong><button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button></div>
+    <form method="post" action="{% url 'panel:case_document' case.pk %}" enctype="multipart/form-data" class="pnl-sheet-body">
+      {% csrf_token %}
+      <div class="pnl-field">{{ doc_form.title }}</div>
+      <div class="pnl-field">{{ doc_form.file }}</div>
+      <button class="pnl-btn" type="submit" style="width:100%">آپلود</button>
+    </form>
+  </div>
+</dialog>
+
+<dialog class="pnl-sheet" id="sheetClose">
+  <div class="pnl-sheet-panel">
+    <div class="pnl-sheet-handle"></div>
+    <div class="pnl-sheet-head"><strong>مختومه کردن</strong><button type="button" class="pnl-btn ghost" data-close-sheet>بستن</button></div>
+    <form method="post" action="{% url 'panel:case_close' case.pk %}" class="pnl-sheet-body">
+      {% csrf_token %}
+      <div class="pnl-field">{{ close_form.loss_reason }}</div>
+      <div class="pnl-field">{{ close_form.loss_note }}</div>
+      <button class="pnl-btn danger" type="submit" style="width:100%">تأیید مختومه</button>
+    </form>
+  </div>
+</dialog>
+{% endif %}
+{% endblock %}

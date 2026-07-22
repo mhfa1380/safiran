@@ -1,0 +1,35 @@
+{% load jalali_filters %}
+<article class="pnl-case-wrap">
+  <a class="pnl-case" href="{% url 'panel:case_detail' c.pk %}">
+    <div class="pnl-case-title">{{ c.customer.full_name }}</div>
+    <div class="pnl-case-meta">
+      <span>{{ c.customer.phone_display|default:c.customer.phone_normalized|persian_numbers }}</span>
+      <span>{{ c.case_code|persian_numbers }}</span>
+      <span>{{ c.get_stage_display }}</span>
+      {% if c.next_follow_up_at %}<span>موعد {{ c.next_follow_up_at|jalali }}</span>{% endif %}
+    </div>
+    <div class="pnl-case-tags">
+      <span class="pnl-chip {{ c.follow_up_badge }}">
+        {% if c.follow_up_badge == 'overdue' %}عقب‌افتاده
+        {% elif c.follow_up_badge == 'today' %}امروز
+        {% elif c.follow_up_badge == 'new' %}جدید
+        {% elif c.follow_up_badge == 'closed' %}بسته
+        {% else %}فعال{% endif %}
+      </span>
+      <span class="pnl-chip source">{{ c.get_source_type_display }}</span>
+      {% if c.assigned_to %}<span class="pnl-chip">{{ c.assigned_to.get_username }}</span>{% else %}<span class="pnl-chip">بدون مسئول</span>{% endif %}
+    </div>
+  </a>
+  {% if c.status != 'closed_lost' and c.status != 'closed_won' %}
+  <div class="pnl-btn-row" style="padding:0 4px 8px;align-self:center">
+    <a class="pnl-btn soft icon" href="tel:{{ c.customer.phone_display|default:c.customer.phone_normalized }}" title="زنگ">☎</a>
+    <button
+      type="button"
+      class="pnl-btn pnl-quick-call"
+      data-case-id="{{ c.pk }}"
+      data-case-name="{{ c.customer.full_name }}"
+      data-case-phone="{{ c.customer.phone_display|default:c.customer.phone_normalized }}"
+    >تماس سریع</button>
+  </div>
+  {% endif %}
+</article>

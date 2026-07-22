@@ -1,0 +1,37 @@
+{% load jalali_filters %}
+<article class="pnl-dash-row {% if compact %}is-compact{% endif %}">
+  <a class="pnl-dash-row-main" href="{% url 'panel:case_detail' c.pk %}">
+    <span class="pnl-dash-avatar" aria-hidden="true">{{ c.customer.full_name.0 }}</span>
+    <div class="pnl-dash-row-body">
+      <div class="pnl-dash-row-top">
+        <strong>{{ c.customer.full_name }}</strong>
+        <span class="pnl-dash-badge badge-{{ c.follow_up_badge }}">
+          {% if c.follow_up_badge == 'overdue' %}عقب‌افتاده
+          {% elif c.follow_up_badge == 'today' %}امروز
+          {% elif c.follow_up_badge == 'new' %}جدید
+          {% elif c.follow_up_badge == 'closed' %}بسته
+          {% else %}فعال{% endif %}
+        </span>
+      </div>
+      <div class="pnl-dash-row-sub">
+        <span>{{ c.get_stage_display }}</span>
+        <span>{{ c.customer.phone_display|default:c.customer.phone_normalized|persian_numbers }}</span>
+        {% if c.next_follow_up_at %}<span>{{ c.next_follow_up_at|jalali }}</span>{% endif %}
+      </div>
+    </div>
+  </a>
+  {% if not compact and c.status != 'closed_lost' and c.status != 'closed_won' %}
+  <div class="pnl-dash-row-actions">
+    <a class="pnl-dash-icon-btn" href="tel:{{ c.customer.phone_display|default:c.customer.phone_normalized }}" title="تماس" aria-label="تماس">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M6.5 4.5c.6-.6 1.6-.5 2.1.2l1.3 1.8c.4.6.3 1.4-.2 1.9l-.9.9a12.5 12.5 0 0 0 5.4 5.4l.9-.9c.5-.5 1.3-.6 1.9-.2l1.8 1.3c.7.5.8 1.5.2 2.1l-1 1.1c-.5.5-1.2.8-1.9.7-3.3-.4-7.2-2.8-10-5.6S3.3 7.2 2.9 3.9c-.1-.7.2-1.4.7-1.9l1-1z"/></svg>
+    </a>
+    <button
+      type="button"
+      class="pnl-btn soft pnl-quick-call"
+      data-case-id="{{ c.pk }}"
+      data-case-name="{{ c.customer.full_name }}"
+      data-case-phone="{{ c.customer.phone_display|default:c.customer.phone_normalized }}"
+    >ثبت</button>
+  </div>
+  {% endif %}
+</article>

@@ -39,6 +39,54 @@ def gregorian_to_jalali(gy: int, gm: int, gd: int):
     return jy, jm, jd
 
 
+def jalali_to_gregorian(jy: int, jm: int, jd: int):
+    """تبدیل تاریخ شمسی به میلادی."""
+    if jy > 979:
+        gy = 1600
+        jy -= 979
+    else:
+        gy = 621
+    days = (365 * jy) + ((jy // 33) * 8) + (((jy % 33) + 3) // 4) + 78 + jd
+    if jm < 7:
+        days += (jm - 1) * 31
+    else:
+        days += ((jm - 7) * 30) + 186
+    gy += 400 * (days // 146097)
+    days %= 146097
+    if days > 36524:
+        days -= 1
+        gy += 100 * (days // 36524)
+        days %= 36524
+        if days >= 365:
+            days += 1
+    gy += 4 * (days // 1461)
+    days %= 1461
+    if days > 365:
+        gy += (days - 1) // 365
+        days = (days - 1) % 365
+    gd = days + 1
+    sal_a = [
+        0,
+        31,
+        29 if (gy % 4 == 0 and gy % 100 != 0) or (gy % 400 == 0) else 28,
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+    ]
+    gm = 1
+    while gm <= 12 and gd > sal_a[gm]:
+        gd -= sal_a[gm]
+        gm += 1
+    return gy, gm, gd
+
+
 def slot_has_started(slot, now) -> bool:
     """
     اگر اسلات امروز باشد و زمان شروعش گذشته یا در حال اجرا باشد، True برمی‌گرداند.

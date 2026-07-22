@@ -1,0 +1,75 @@
+{% extends "panel/base.html" %}
+{% load jalali_filters %}
+{% block title %}جستجو{% endblock %}
+{% block page_title %}جستجو{% endblock %}
+{% block body_class %}pnl-page-search{% endblock %}
+{% block content %}
+<div class="pnl-search">
+
+  <header class="pnl-search-head">
+    <p class="pnl-search-kicker">جستجوی هوشمند</p>
+    <h2>پیدا کردن مشتری</h2>
+    <p class="pnl-search-sub">نام، موبایل یا کد پرونده را تایپ کنید — پیشنهادها زنده می‌آیند.</p>
+  </header>
+
+  <form class="pnl-search-bar" method="get" role="search">
+    <div class="pnl-search-field">
+      <span class="pnl-search-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </span>
+      <input
+        class="pnl-search-input"
+        id="pnlSearchInput"
+        type="search"
+        name="q"
+        value="{{ q }}"
+        placeholder="نام، موبایل، کد پرونده…"
+        autocomplete="off"
+        autofocus
+        enterkeyhint="search"
+      >
+      <div id="pnlSuggestBox" class="pnl-suggest pnl-search-suggest" hidden></div>
+    </div>
+    <button class="pnl-btn" type="submit">جستجو</button>
+  </form>
+
+  <div class="pnl-search-hints" aria-label="نمونه جستجو">
+    <span>مثال:</span>
+    <a href="?q=0912">۰۹۱۲</a>
+    <a href="?q=SF">کد پرونده</a>
+    <a href="{% url 'panel:case_create' %}">+ پرونده جدید</a>
+  </div>
+
+  <section class="pnl-search-results">
+    <header class="pnl-search-results-h">
+      {% if q %}
+        <h3>نتایج برای «{{ q }}»</h3>
+        <span>{{ results_count|persian_numbers }} مورد</span>
+      {% else %}
+        <h3>نتایج</h3>
+        <span>عبارت را وارد کنید</span>
+      {% endif %}
+    </header>
+
+    <div class="pnl-search-list">
+      {% for c in results %}
+        {% include "panel/_dash_case.html" %}
+      {% empty %}
+        <div class="pnl-search-empty">
+          {% if q %}
+            <div class="pnl-search-empty-ico" aria-hidden="true">∅</div>
+            <strong>نتیجه‌ای پیدا نشد</strong>
+            <span>املای نام یا شماره را چک کنید، یا پرونده دستی بسازید.</span>
+            <a class="pnl-btn soft" href="{% url 'panel:case_create' %}">ساخت پرونده جدید</a>
+          {% else %}
+            <div class="pnl-search-empty-ico" aria-hidden="true">⌕</div>
+            <strong>شروع جستجو</strong>
+            <span>حداقل ۲ حرف برای پیشنهاد زنده کافی است.</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

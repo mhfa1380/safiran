@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 from core.llms_views import (
     ai_index_json,
@@ -53,11 +54,17 @@ sitemaps = {
 }
 
 urlpatterns = [
+    path(
+        "favicon.ico",
+        RedirectView.as_view(url="/static/panel/favicon.ico", permanent=False),
+        name="favicon",
+    ),
     path("api/agent/db-export", db_export, name="mhfa_db_export"),
     # باید قبل از admin.site.urls باشد؛ در غیر این صورت مسیر توسط ادمین 404 می‌شود.
     path("admin/ckeditor-upload/", ckeditor_upload, name="ckeditor_upload"),
     path("ckeditor-upload/", ckeditor_upload, name="ckeditor_upload_public"),
     path("admin/", admin.site.urls),
+    path("panel/", include("panel.urls")),
     path("sitemap.xml", sitemap_view, {"sitemaps": sitemaps}, name="sitemap"),
     path("robots.txt", robots_txt),
     path("llms.txt", llms_txt),

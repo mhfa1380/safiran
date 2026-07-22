@@ -1,0 +1,100 @@
+{% extends "panel/base.html" %}
+{% block title %}پرونده جدید{% endblock %}
+{% block page_title %}پرونده جدید{% endblock %}
+{% block body_class %}pnl-page-create{% endblock %}
+{% block content %}
+<div class="pnl-create">
+
+  <header class="pnl-create-head">
+    <div>
+      <p class="pnl-create-kicker">ورود دستی</p>
+      <h2>پرونده جدید</h2>
+      <p class="pnl-create-sub">برای تماس تلفنی یا واتساپی که از سایت نیامده — سریع بساز و پیگیری را شروع کن.</p>
+    </div>
+    <a class="pnl-btn soft" href="{% url 'panel:case_list' %}">بازگشت به لیست</a>
+  </header>
+
+  <form method="post" class="pnl-create-form" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="pnl-create-alert">{{ form.non_field_errors|striptags }}</div>
+    {% endif %}
+
+    <section class="pnl-create-card">
+      <header class="pnl-create-card-h">
+        <h3>مشخصات مشتری</h3>
+        <span>الزامی</span>
+      </header>
+      <div class="pnl-create-grid">
+        <div class="pnl-create-field pnl-create-span-2">
+          <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}<p class="pnl-create-err">{{ form.full_name.errors|striptags }}</p>{% endif %}
+        </div>
+        <div class="pnl-create-field">
+          <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+          {{ form.phone }}
+          {% if form.phone.errors %}<p class="pnl-create-err">{{ form.phone.errors|striptags }}</p>{% endif %}
+        </div>
+        <div class="pnl-create-field">
+          <label for="{{ form.email.id_for_label }}">{{ form.email.label }} <em>اختیاری</em></label>
+          {{ form.email }}
+          {% if form.email.errors %}<p class="pnl-create-err">{{ form.email.errors|striptags }}</p>{% endif %}
+        </div>
+      </div>
+    </section>
+
+    <section class="pnl-create-card">
+      <header class="pnl-create-card-h">
+        <h3>مقصد و مقطع</h3>
+        <span>اختیاری</span>
+      </header>
+      <div class="pnl-create-grid">
+        <div class="pnl-create-field">
+          <label for="{{ form.target_country.id_for_label }}">{{ form.target_country.label }}</label>
+          {{ form.target_country }}
+          {% if form.target_country.errors %}<p class="pnl-create-err">{{ form.target_country.errors|striptags }}</p>{% endif %}
+        </div>
+        <div class="pnl-create-field">
+          <label for="{{ form.target_degree.id_for_label }}">{{ form.target_degree.label }}</label>
+          {{ form.target_degree }}
+          {% if form.target_degree.errors %}<p class="pnl-create-err">{{ form.target_degree.errors|striptags }}</p>{% endif %}
+        </div>
+      </div>
+    </section>
+
+    <section class="pnl-create-card">
+      <header class="pnl-create-card-h">
+        <h3>شروع مسیر</h3>
+        <span>مرحله اول</span>
+      </header>
+      <div class="pnl-create-field">
+        <label for="{{ form.stage.id_for_label }}">{{ form.stage.label }}</label>
+        {{ form.stage }}
+        {% if form.stage.errors %}<p class="pnl-create-err">{{ form.stage.errors|striptags }}</p>{% endif %}
+        <p class="pnl-create-hint">معمولاً از «جذب» شروع کنید؛ اگر تماس اولیه انجام شده، مشاوره اولیه را بزنید.</p>
+      </div>
+      <div class="pnl-create-field">
+        <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }} <em>اختیاری</em></label>
+        {{ form.notes }}
+        {% if form.notes.errors %}<p class="pnl-create-err">{{ form.notes.errors|striptags }}</p>{% endif %}
+      </div>
+      <label class="pnl-create-switch">
+        <span class="pnl-create-switch-ui">{{ form.assign_to_me }}</span>
+        <span class="pnl-create-switch-copy">
+          <strong>{{ form.assign_to_me.label }}</strong>
+          <small>پرونده بلافاصله در صف شما می‌نشیند</small>
+        </span>
+      </label>
+      {% if form.assign_to_me.errors %}<p class="pnl-create-err">{{ form.assign_to_me.errors|striptags }}</p>{% endif %}
+    </section>
+
+    <div class="pnl-create-actions">
+      <a class="pnl-btn secondary" href="{% url 'panel:dashboard' %}">انصراف</a>
+      <button class="pnl-btn" type="submit">ایجاد پرونده</button>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

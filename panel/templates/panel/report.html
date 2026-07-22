@@ -1,0 +1,188 @@
+{% extends "panel/base.html" %}
+{% load jalali_filters %}
+{% block title %}گزارش مدیر{% endblock %}
+{% block page_title %}گزارش{% endblock %}
+{% block body_class %}pnl-page-report{% endblock %}
+{% block content %}
+<div class="pnl-rpt">
+
+  <header class="pnl-rpt-head">
+    <div>
+      <p class="pnl-rpt-kicker">تحلیل مدیریتی</p>
+      <h2>گزارش و آمار</h2>
+      <p class="pnl-rpt-sub">بازه: <strong>{{ period_label }}</strong></p>
+    </div>
+    <div class="pnl-rpt-head-actions">
+      <a class="pnl-btn soft" href="{% url 'panel:manage' %}">مدیریت تیم</a>
+      <a class="pnl-btn secondary" href="{% url 'panel:report_export' %}?period={{ period }}">خروجی CSV</a>
+    </div>
+  </header>
+
+  <nav class="pnl-rpt-periods" aria-label="بازه گزارش">
+    <a class="pnl-rpt-chip {% if period == '7' %}is-on{% endif %}" href="?period=7">۷ روز</a>
+    <a class="pnl-rpt-chip {% if period == '30' %}is-on{% endif %}" href="?period=30">۳۰ روز</a>
+    <a class="pnl-rpt-chip {% if period == 'month' %}is-on{% endif %}" href="?period=month">این ماه</a>
+    <a class="pnl-rpt-chip {% if period == 'all' %}is-on{% endif %}" href="?period=all">کل</a>
+  </nav>
+
+  <section class="pnl-rpt-kpis" aria-label="شاخص‌های اصلی">
+    <div class="pnl-rpt-kpi">
+      <span>کل پرونده‌ها</span>
+      <strong>{{ total|persian_numbers }}</strong>
+    </div>
+    <div class="pnl-rpt-kpi">
+      <span>باز</span>
+      <strong>{{ open_total|persian_numbers }}</strong>
+    </div>
+    <div class="pnl-rpt-kpi is-ok">
+      <span>موفق</span>
+      <strong>{{ closed_won|persian_numbers }}</strong>
+      <em>{{ win_rate|persian_numbers }}٪</em>
+    </div>
+    <div class="pnl-rpt-kpi is-danger">
+      <span>مختومه</span>
+      <strong>{{ closed_lost|persian_numbers }}</strong>
+      <em>{{ loss_rate|persian_numbers }}٪</em>
+    </div>
+  </section>
+
+  <section class="pnl-rpt-kpis pnl-rpt-kpis-link" aria-label="وضعیت صف">
+    <a class="pnl-rpt-kpi is-danger" href="{% url 'panel:case_list' %}?scope=overdue">
+      <span>عقب‌افتاده</span>
+      <strong>{{ overdue|persian_numbers }}</strong>
+    </a>
+    <a class="pnl-rpt-kpi is-warn" href="{% url 'panel:case_list' %}?scope=today">
+      <span>پیگیری امروز</span>
+      <strong>{{ due_today|persian_numbers }}</strong>
+    </a>
+    <a class="pnl-rpt-kpi is-warn" href="{% url 'panel:case_list' %}?scope=unassigned">
+      <span>بدون مسئول</span>
+      <strong>{{ unassigned|persian_numbers }}</strong>
+    </a>
+    <div class="pnl-rpt-kpi is-accent">
+      <span>جدید در بازه</span>
+      <strong>{{ new_period|persian_numbers }}</strong>
+    </div>
+  </section>
+
+  <section class="pnl-rpt-kpis" aria-label="فعالیت بازه">
+    <div class="pnl-rpt-kpi">
+      <span>تماس</span>
+      <strong>{{ calls|persian_numbers }}</strong>
+    </div>
+    <div class="pnl-rpt-kpi">
+      <span>تخصیص</span>
+      <strong>{{ assigns|persian_numbers }}</strong>
+    </div>
+    <div class="pnl-rpt-kpi is-ok">
+      <span>موفق بازه</span>
+      <strong>{{ won_period|persian_numbers }}</strong>
+    </div>
+    <div class="pnl-rpt-kpi">
+      <span>جلسه ۷ روز</span>
+      <strong>{{ appts_week|persian_numbers }}</strong>
+    </div>
+  </section>
+
+  <section class="pnl-rpt-card">
+    <header class="pnl-rpt-card-h">
+      <h3>روند ایجاد پرونده</h3>
+      <span>۷ روز اخیر</span>
+    </header>
+    <div class="pnl-rpt-trend">
+      {% for t in trend %}
+      <div class="pnl-rpt-trend-col" title="{{ t.count|persian_numbers }}">
+        <div class="pnl-rpt-trend-bar-wrap">
+          <div class="pnl-rpt-trend-bar" style="height:{{ t.pct }}%"></div>
+        </div>
+        <strong>{{ t.count|persian_numbers }}</strong>
+        <span>{{ t.date|jalali_day|persian_numbers }}</span>
+      </div>
+      {% empty %}
+      <div class="pnl-rpt-empty">داده‌ای نیست</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="pnl-rpt-grid">
+    <section class="pnl-rpt-card">
+      <header class="pnl-rpt-card-h">
+        <h3>عملکرد پرسنل</h3>
+        <span>زنده</span>
+      </header>
+      <div class="pnl-rpt-staff">
+        {% for r in staff_rows %}
+        <article class="pnl-rpt-staff-row">
+          <div class="pnl-rpt-staff-main">
+            <span class="pnl-rpt-avatar" aria-hidden="true">{{ r.name.0 }}</span>
+            <div>
+              {% if r.uid %}
+                <a href="{% url 'panel:case_list' %}?assignee={{ r.uid }}"><strong>{{ r.name }}</strong></a>
+              {% else %}
+                <a href="{% url 'panel:case_list' %}?scope=unassigned"><strong>{{ r.name }}</strong></a>
+              {% endif %}
+              <div class="pnl-rpt-staff-meta">
+                <span>باز {{ r.open|persian_numbers }}</span>
+                <span class="{% if r.overdue %}is-danger{% endif %}">عقب {{ r.overdue|persian_numbers }}</span>
+                <span>امروز {{ r.today|persian_numbers }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="pnl-rpt-staff-nums">
+            <span title="تماس"><em>تماس</em>{{ r.calls|persian_numbers }}</span>
+            <span title="موفق"><em>موفق</em>{{ r.won|persian_numbers }}</span>
+            <span title="مختومه"><em>مختومه</em>{{ r.lost|persian_numbers }}</span>
+          </div>
+        </article>
+        {% empty %}
+        <div class="pnl-rpt-empty">پرسنلی نیست</div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="pnl-rpt-card">
+      <header class="pnl-rpt-card-h">
+        <h3>پایپلاین باز</h3>
+        <a href="{% url 'panel:flow' %}">Flow</a>
+      </header>
+      <div class="pnl-rpt-pipes">
+        {% for s in stages %}
+        <div class="pnl-rpt-pipe">
+          <div class="pnl-rpt-pipe-meta">
+            <span>{{ s.label }}</span>
+            <strong>{{ s.count|persian_numbers }} · {{ s.pct|persian_numbers }}٪</strong>
+          </div>
+          <div class="pnl-rpt-pipe-track"><span style="width:{{ s.pct }}%"></span></div>
+        </div>
+        {% empty %}
+        <div class="pnl-rpt-empty">—</div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <div class="pnl-rpt-grid">
+    <section class="pnl-rpt-card">
+      <header class="pnl-rpt-card-h">
+        <h3>منبع پرونده‌های باز</h3>
+      </header>
+      <div class="pnl-rpt-rows">
+        {% for r in sources %}
+        <div class="pnl-rpt-row"><span>{{ r.label }}</span><strong>{{ r.count|persian_numbers }}</strong></div>
+        {% empty %}<div class="pnl-rpt-empty">—</div>{% endfor %}
+      </div>
+    </section>
+    <section class="pnl-rpt-card">
+      <header class="pnl-rpt-card-h">
+        <h3>دلایل مختومه</h3>
+      </header>
+      <div class="pnl-rpt-rows">
+        {% for r in losses %}
+        <div class="pnl-rpt-row"><span>{{ r.label }}</span><strong>{{ r.count|persian_numbers }}</strong></div>
+        {% empty %}<div class="pnl-rpt-empty">مختومه‌ای نیست</div>{% endfor %}
+      </div>
+    </section>
+  </div>
+
+</div>
+{% endblock %}

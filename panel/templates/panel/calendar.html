@@ -1,0 +1,135 @@
+{% extends "panel/base.html" %}
+{% load jalali_filters tz %}
+{% block title %}تقویم شمسی{% endblock %}
+{% block page_title %}تقویم{% endblock %}
+{% block body_class %}pnl-page-cal{% endblock %}
+{% block content %}
+<div class="pnl-calx">
+
+  <header class="pnl-calx-head">
+    <div>
+      <p class="pnl-calx-kicker">جلسات شمسی</p>
+      <h2>{{ title|persian_numbers }}</h2>
+      <p class="pnl-calx-sub">{{ month_count|persian_numbers }} جلسه در این ماه{% if mine_only %} · فقط مال من{% endif %}</p>
+    </div>
+    <div class="pnl-calx-nav">
+      <a class="pnl-calx-nav-btn" href="?jy={{ prev_y }}&jm={{ prev_m }}{% if mine_only %}&mine=1{% endif %}" aria-label="ماه قبل">‹</a>
+      {% if today_jy and today_jm %}
+      <a class="pnl-btn soft" href="?jy={{ today_jy }}&jm={{ today_jm }}&day={{ today_jd }}{% if mine_only %}&mine=1{% endif %}">امروز</a>
+      {% endif %}
+      <a class="pnl-calx-nav-btn" href="?jy={{ next_y }}&jm={{ next_m }}{% if mine_only %}&mine=1{% endif %}" aria-label="ماه بعد">›</a>
+    </div>
+  </header>
+
+  {% if is_manager %}
+  <nav class="pnl-calx-filters" aria-label="فیلتر جلسات">
+    <a class="pnl-calx-chip {% if not mine_only %}is-on{% endif %}" href="?jy={{ jy }}&jm={{ jm }}{% if selected_day %}&day={{ selected_day }}{% endif %}">همه جلسات</a>
+    <a class="pnl-calx-chip {% if mine_only %}is-on{% endif %}" href="?jy={{ jy }}&jm={{ jm }}&mine=1{% if selected_day %}&day={{ selected_day }}{% endif %}">جلسات من</a>
+  </nav>
+  {% endif %}
+
+  <div class="pnl-calx-board">
+    <div class="pnl-cal-grid pnl-calx-grid">
+      {% for w in weekdays %}<div class="pnl-cal-head">{{ w }}</div>{% endfor %}
+      {% for cell in cells %}
+        {% if cell.empty %}
+          <div class="pnl-cal-cell is-empty"></div>
+        {% else %}
+          <a class="pnl-cal-cell {% if cell.is_today %}is-today{% endif %} {% if cell.appointments %}has-items{% endif %} {% if selected_day == cell.jd %}is-selected{% endif %}"
+             href="?jy={{ jy }}&jm={{ jm }}&day={{ cell.jd }}{% if mine_only %}&mine=1{% endif %}">
+            <div class="d">
+              <span class="pnl-cal-daynum">{{ cell.jd|persian_numbers }}</span>
+              {% if cell.is_today %}<span class="pnl-cal-today-tag">امروز</span>{% endif %}
+              {% if cell.appointments %}<span class="pnl-calx-dot" aria-hidden="true"></span>{% endif %}
+            </div>
+            {% for a in cell.appointments|slice:":3" %}
+              <div class="ev kind-{{ a.kind }}" title="{{ a.case.customer.full_name }}">
+                <b>{{ a.starts_at|localtime|time:"H:i"|persian_numbers }}</b>
+                <span>{{ a.case.customer.full_name|truncatechars:10 }}</span>
+              </div>
+            {% endfor %}
+            {% with n=cell.appointments|length %}
+            {% if n > 3 %}<div class="more">+{{ n|add:"-3"|persian_numbers }}</div>{% endif %}
+            {% endwith %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <aside class="pnl-calx-side">
+      <section class="pnl-calx-panel">
+        <header class="pnl-calx-panel-h">
+          {% if selected_label %}
+            <h3>جلسات {{ selected_label|persian_numbers }}</h3>
+            <span>{{ day_list|length|persian_numbers }}</span>
+          {% else %}
+            <h3>روز را انتخاب کنید</h3>
+            <span>—</span>
+          {% endif %}
+        </header>
+        <div class="pnl-calx-list">
+          {% if selected_label %}
+            {% for a in day_list %}
+              <a class="pnl-calx-item" href="{% url 'panel:case_detail' a.case_id %}">
+                <div class="pnl-calx-time">
+                  <strong>{{ a.starts_at|localtime|time:"H:i"|persian_numbers }}</strong>
+                  {% if a.ends_at %}<span>{{ a.ends_at|localtime|time:"H:i"|persian_numbers }}</span>{% endif %}
+                </div>
+                <div class="pnl-calx-body">
+                  <strong>{{ a.case.customer.full_name }}</strong>
+                  <div class="pnl-calx-meta">
+                    <span>{{ a.get_kind_display }}</span>
+                    <span>{{ a.get_mode_display }}</span>
+                    <span>{{ a.case.case_code|persian_numbers }}</span>
+                  </div>
+                </div>
+              </a>
+            {% empty %}
+              <div class="pnl-calx-empty">
+                <strong>جلسه‌ای نیست</strong>
+                <span>برای این روز موردی ثبت نشده</span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="pnl-calx-empty">
+              <strong>یک روز را بزن</strong>
+              <span>جزئیات جلسات همان‌جا می‌آید</span>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="pnl-calx-panel pnl-calx-monthlist">
+    <header class="pnl-calx-panel-h">
+      <h3>فهرست ماه</h3>
+      <span>{{ month_count|persian_numbers }} جلسه</span>
+    </header>
+    <div class="pnl-calx-list">
+      {% for a in month_list %}
+        <a class="pnl-calx-item" href="{% url 'panel:case_detail' a.case_id %}">
+          <div class="pnl-calx-time">
+            <strong>{{ a.starts_at|jalali_day|persian_numbers }}</strong>
+            <span>{{ a.starts_at|localtime|time:"H:i"|persian_numbers }}</span>
+          </div>
+          <div class="pnl-calx-body">
+            <strong>{{ a.case.customer.full_name }}</strong>
+            <div class="pnl-calx-meta">
+              <span>{{ a.starts_at|jalali }}</span>
+              <span>{{ a.get_kind_display }}</span>
+              <span>{{ a.get_mode_display }}</span>
+            </div>
+          </div>
+        </a>
+      {% empty %}
+        <div class="pnl-calx-empty">
+          <strong>این ماه خالی است</strong>
+          <span>جلسه‌ای ثبت نشده</span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

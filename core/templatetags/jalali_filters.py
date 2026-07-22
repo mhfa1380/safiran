@@ -37,7 +37,7 @@ def jalali(value):
     d = _to_local_date(value)
     if d is None:
         return ""
-    return format_jalali_display(d)
+    return persian_numbers(format_jalali_display(d))
 
 
 @register.filter
@@ -47,7 +47,7 @@ def jalali_day(value):
     if d is None:
         return ""
     _, _, jd = gregorian_to_jalali(d.year, d.month, d.day)
-    return str(jd)
+    return persian_numbers(jd)
 
 
 @register.filter
@@ -58,4 +58,4 @@ def jalali_month_year(value):
         return ""
     jy, jm, _ = gregorian_to_jalali(d.year, d.month, d.day)
     month_name = JALALI_MONTH_NAMES[jm - 1] if 1 <= jm <= 12 else ""
-    return f"{month_name} {jy}"
+    return persian_numbers(f"{month_name} {jy}")

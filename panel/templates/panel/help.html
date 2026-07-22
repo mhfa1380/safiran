@@ -1,0 +1,128 @@
+{% extends "panel/base.html" %}
+{% block title %}راهنما{% endblock %}
+{% block page_title %}راهنما{% endblock %}
+{% block body_class %}pnl-page-help{% endblock %}
+{% block content %}
+<div class="pnl-help">
+
+  <header class="pnl-help-head">
+    <div>
+      <p class="pnl-help-kicker">اپراتور کال‌سنتر</p>
+      <h2>راهنمای سریع</h2>
+      <p class="pnl-help-sub">چند دقیقه برای مسلط شدن — بعد فقط صف، تماس، ثبت.</p>
+    </div>
+    <div class="pnl-help-head-actions">
+      <a class="pnl-btn" href="{% url 'panel:followup' %}">صف پیگیری</a>
+      <a class="pnl-btn soft" href="{% url 'panel:dashboard' %}">داشبورد</a>
+    </div>
+  </header>
+
+  <nav class="pnl-help-toc" aria-label="بخش‌های راهنما">
+    <a href="#help-morning">صبح</a>
+    <a href="#help-roles">نقش‌ها</a>
+    <a href="#help-notif">اعلان</a>
+    <a href="#help-shortcuts">میانبر</a>
+  </nav>
+
+  <section class="pnl-help-card" id="help-morning">
+    <header class="pnl-help-card-h">
+      <h3>صبح چه کار کنم؟</h3>
+      <span>۴ قدم</span>
+    </header>
+    <ol class="pnl-help-steps">
+      <li>
+        <strong>اولویت‌ها را ببین</strong>
+        <span>داشبورد یا صف پیگیری — اول عقب‌افتاده، بعد امروز.</span>
+      </li>
+      <li>
+        <strong>تماس سریع بزن</strong>
+        <span>نتیجه + موعد بعدی را همان لحظه ثبت کن.</span>
+      </li>
+      <li>
+        <strong>اگر جدی است جلو ببر</strong>
+        <span>مرحله را عوض کن یا جلسه در تقویم شمسی ست کن.</span>
+      </li>
+      <li>
+        <strong>اگر نمی‌خواهد ببند</strong>
+        <span>مختومه با دلیل — تاریخچه می‌ماند.</span>
+      </li>
+    </ol>
+  </section>
+
+  <div class="pnl-help-grid" id="help-roles">
+    <section class="pnl-help-card">
+      <header class="pnl-help-card-h">
+        <h3>پرسنل</h3>
+        <span>روزمره</span>
+      </header>
+      <ul class="pnl-help-list">
+        <li>پرونده‌های خودت + بدون‌مسئول را می‌بینی.</li>
+        <li>می‌توانی پرونده را «برداشت برای من» کنی.</li>
+        <li>تخصیص به دیگران فقط برای مدیر است.</li>
+        <li>مسیر Flow وضعیت مشتری را یک‌جا نشان می‌دهد.</li>
+      </ul>
+    </section>
+
+    <section class="pnl-help-card {% if not is_manager %}is-muted{% endif %}">
+      <header class="pnl-help-card-h">
+        <h3>مدیر</h3>
+        <span>کنترل</span>
+      </header>
+      <ul class="pnl-help-list">
+        <li>همه پرونده‌ها + فیلتر بر اساس مسئول.</li>
+        {% if is_manager %}
+        <li><a href="{% url 'panel:manage' %}">مدیریت تیم</a> — تخصیص گروهی و انتقال.</li>
+        <li><a href="{% url 'panel:report' %}">گزارش و آمار</a> — پایپلاین، روند، CSV.</li>
+        <li><a href="{% url 'panel:settings' %}">تنظیمات</a> — تخصیص خودکار و توزیع روزانه.</li>
+        {% else %}
+        <li>مدیریت تیم — تخصیص گروهی و انتقال.</li>
+        <li>گزارش و آمار — پایپلاین، روند، CSV.</li>
+        <li>تنظیمات — تخصیص خودکار و توزیع روزانه.</li>
+        {% endif %}
+      </ul>
+      {% if not is_manager %}
+      <p class="pnl-help-note">این بخش برای حساب مدیر فعال است.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  <section class="pnl-help-card" id="help-notif">
+    <header class="pnl-help-card-h">
+      <h3>اعلان‌ها</h3>
+      <span>مرورگر</span>
+    </header>
+    <ul class="pnl-help-list">
+      <li>دکمهٔ <strong>اعلان</strong> بالای صفحه را بزن و اجازهٔ مرورگر را بده.</li>
+      <li>پرونده جدید، تخصیص به تو، و جلسهٔ نزدیک به‌صورت نوتیف می‌آید.</li>
+      <li>بج قرمز روی منو برای صف پیگیری، جذب، تقویم و (برای مدیر) بدون‌مسئول.</li>
+    </ul>
+  </section>
+
+  <section class="pnl-help-card" id="help-shortcuts">
+    <header class="pnl-help-card-h">
+      <h3>میانبرهای مفید</h3>
+      <span>لینک سریع</span>
+    </header>
+    <div class="pnl-help-links">
+      <a href="{% url 'panel:case_create' %}">
+        <strong>پرونده دستی</strong>
+        <span>تماس واتساپ/تلفن خارج از سایت</span>
+      </a>
+      <a href="{% url 'panel:calendar' %}">
+        <strong>تقویم شمسی</strong>
+        <span>جلسات اولیه و تخصصی</span>
+      </a>
+      <a href="{% url 'panel:flow' %}">
+        <strong>مسیر Flow</strong>
+        <span>کجا ایستاده‌اند، چه مانده</span>
+      </a>
+      <a href="{% url 'panel:search' %}">
+        <strong>جستجو</strong>
+        <span>نام، موبایل، کد پرونده</span>
+      </a>
+    </div>
+    <p class="pnl-help-foot">روی هر پرونده: چک‌لیست پذیرش/ویزا/اعزام و آپلود مدرک در دسترس است.</p>
+  </section>
+
+</div>
+{% endblock %}
